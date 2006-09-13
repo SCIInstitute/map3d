@@ -1,0 +1,47 @@
+# Makefile.obj
+#
+# Written by Bryan Worthen, Feb 2002
+
+SRCS     = map3d.cc \
+	   Ball.cc \
+	   BallAux.cc \
+	   BallMath.cc\
+	   GenericWindow.cc \
+	   GeomWindow.cc \
+	   GeomWindowHandle.cc \
+	   GeomWindowRepaint.cc \
+	   GeomWindowMenu.cc \
+	   LegendWindow.cc\
+	   MainWindow.cc \
+	   MeshList.cc \
+	   ParseCommandLineOptions.cc \
+	   PickWindow.cc \
+	   ProcessCommandLineOptions.cc \
+	   Transforms.cc\
+	   WindowManager.cc \
+           colormaps.cc \
+	   drawlandmarks.cc \
+	   glprintf.cc \
+	   dot.cc \
+	   lock.cc \
+	   map3d-struct.cc\
+	   map3dmath.cc \
+	   readfiles.cc\
+	   reportstate.cc \
+ 	   savescreen.cc \
+	   savestate.cc \
+	   scalesubs.cc\
+	   usage.cc \
+           Contour_Info.cc \
+           Map3d_Geom.cc \
+           Surf_Data.cc \
+           dialogs.cc \
+	   regressiontest.cc \
+           ContourDialog.cc \
+           FidDialog.cc \
+           FileDialog.cc \
+           SaveDialog.cc \
+           ScaleDialog.cc \
+           texture.cc
+
+OBJS = $(SRCS:.cc=.o)

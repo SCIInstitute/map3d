@@ -1,0 +1,57 @@
+# set optimization flags here
+OPT_FLAGS=-O2
+
+# OS name.  Current support is for Darwin, IRIX64, and Linux
+OS=$(shell uname -s)
+
+# set these to your system's values
+ZLIB_INC=/usr/local/include
+ZLIB_LIB=/usr/local/lib
+GTK_INC=/usr/freeware/include
+GTK_LIB=/usr/freeware/lib
+GTKGL_INC=/usr/local/gtkgl/include
+GTKGL_LIB=/usr/local/gtlgl/lib
+
+# same, but for other components (like jpeg, png), should be in same dir
+LOCAL_INC=/usr/local/include
+LOCAL_LIB=/usr/local/include
+
+# You shouldn't need to change anything below here
+
+
+# include dependencies for the components
+CUTIL_INC=-I../graphicsio
+FIDS_INC=-I../cutil -I../fi -I../graphicsio
+GFILELIB_INC=-I../cutil -I../graphicsio -I../numseq
+FI_INC=
+GDBMP_INC=
+NUMSEQ_INC=
+TSDFLIB_INC=-I../cutil -I../gdbmp -I../fi
+MATLABIO_INC=
+GRAPHICSIO_INC=
+MAP3D_INC=-I../cutil -I../graphicsio -I../gdbmp -I../fids -I../fi -I../MatlabIO -I../tsdflib -I../gfilelib
+MAP3D_LIB=-L../cutil -L../graphicsio -L../gdbmp -L../fids -L../fi -L../MatlabIO -L../tsdflib -L../gfilelib
+MAP3D_LPATH=
+
+ifeq ("$(OS)","Darwin")
+  CXX=g++
+  CC=gcc
+  SYSEXT=-osx
+  ARCH_FLAGS=-MMD -DOSX
+else
+ifeq ("$(OS)","IRIX64")
+  CXX=CC
+  CC=cc
+  ARCH_FLAGS=-LANG:std -n32 -MDupdate depend.mk
+  SYSEXT=-sgi
+else
+ifeq ("$(OS)","Linux")
+  CXX=g++
+  CC=gcc
+  SYSEXT=-linux
+  ARCH_FLAGS=-MMD
+else
+  OS=Unknown
+endif
+endif
+endif

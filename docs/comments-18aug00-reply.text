@@ -1,0 +1,339 @@
+X-Authentication-Warning: carrot.cs.utah.edu: moulding owned process doing -bs
+Date: Mon, 28 Aug 2000 14:21:20 -0600
+From: Chris Moulding <moulding@cs.utah.edu>
+To: Rob MacLeod <macleod@cvrti.utah.edu>
+Subject: Re: map3d comments
+In-Reply-To: <200008281731.LAA04572@bianchi.cvrti.utah.edu>
+
+
+> Some suggestions for map3d features to talk about.  Guo is also interested
+> in working on this so perhaps you and I should talk first and then all
+> three of us to get this rolling?
+
+It'll really help to have someone who can spend their time on
+coding this stuff.  Most of the stuff below is do-able and much of it
+already has support code.  It just needs someone with time to do it.
+
+Each section has a Yep or nope indicating whether it can be done or
+not.  I then make a guess as to how long it would take.
+
+We can go over each item in more detail in the meeting.
+
+> I am not yet sure of my schedule for tomorrow but hope to be around in the
+> afternoon for a meeting.  I want to go to Chris' 5210 class from 2:00--3:40
+> so before or after should work.  What is your day like?
+
+I don't have any time specific appointments, so when ever you have time
+should work fine.
+
+
+> ----------------------------------------------------------------------
+> Ordered by no particular scheme, here are the things I can across that we
+> need to work on.
+> 
+> Surface rendering
+> 
+>  - show a shaded rendering of geometry even when there are no scalar values
+>    assigned to the nodes; this is useful for looking at a surface mesh
+
+Yep.
+
+This is the by-group and solid color shading from the old version
+right?
+
+1 or 2 days.
+
+
+> 
+>  - does the lighting work with band shading?  It seems to change colour
+>    with rotation but not much and it is not clear what the effect is.
+> 
+
+Yep.
+
+It does work, but it requires normals for the vertices that the band-shade
+polygon generator makes.  Right now lighting is turned off for
+band-shading because I couldn't find those normals anywhere.
+
+a couple of days to a couple of weeks, depending on how long it takes to
+get normals for the band polygons.
+
+> Pick mode
+> 
+>  - having the separate pick window pop up may not be worth the trouble as
+>    it is usually much handier to have this information stream by the
+>    calling window.  It is easier to copy and paste into some other 
+>    context or email message, it is easier to accumulate information
+>    from a number of points,
+
+I was shooting for a generalization of the scalar window, which would
+support picking of all kinds of objects for different purposes.  I guess I
+missed?  It is possible to have pick info show up in just one window
+(like the old version) instead of a new window each time.  I just haven't
+assigned a key or menu to that option yet.
+
+>    and when you close the pict display
+>    window, that kills the whole program, something we really have
+>    to avoid! 
+> 
+
+Nope.
+
+Unfortunately, this is a 'feature' in glut.  Unless we can convince Mark
+Kilgard to make a change I'm afraid we're stuck with it.
+
+We can put a close window option in a pulldown menu that will only close
+the window you are in.
+
+1 day.
+
+
+>  - can we expand picking and add some features like:
+>     - selection of picking object (node, triangle, segment, tet)
+
+Yep.
+
+There is already some support code for these entities, they
+just need to be coded up.
+
+a few weeks.
+
+>     - marking of the last object picked
+
+Yep.
+
+Currently, I mark the last node picked with a light-magenta colored
+sphere.  In fact, all recent picks have a sphere marker, the most recent
+being highlighted.
+
+>     - adjusting the picking window
+
+I'm not certain what you mean by adjust.  
+
+>     - when displaying node info, include coordinates of the nodes
+
+Yep.
+
+Consider it done - I'll add this immediately (it's easy enough :)
+
+
+> 
+> Clipping planes
+> 
+>  - can we get some sort of clipping planes going, even if they are just
+>    mashing the object into the frustrum?   This is a really handy feature
+>    for lots of applications.
+
+Yep.
+
+1 or 2 weeks.
+
+> 
+> General UI features
+> 
+>  - the fonts are pretty ugly still; is there no other way to render them?
+
+Yep.
+
+We do have a couple of options.  The issue isn't OS dependence or speed,
+it was simply the quickest thing to implement because I already had a
+texture mapping scheme set up.
+
+As with all things computer, each option has pro's and con's which we
+should discuss.
+
+1 or 2 weeks.
+
+> 
+>  - how are the pop up menus rendered?  They look so much better in the old
+>    version of map3d and I wonder if we can emulate that look?
+
+Nope.
+
+Yet another glut 'feature'.
+
+>  - can we get some translation control implemented?
+
+Yep.
+
+I have support for translation and scaling in the render section already,
+I just haven't coded the UI for doing translation. 
+
+1 week
+
+> 
+>  - I think we should map the rotation/translation to the keypad as we did
+>    before and put the line thickness in a pop-up.  In practice, setting
+>    line thickness is not needed very frequently.  I like the keypad layout
+>    as I had it before and found it fairly intuitive.
+
+Yep.
+
+1 or 2 days.
+
+> 
+>  - setting background color: can we have this interactively available? That
+>    brown is pretty drab.
+
+Yep.
+
+But it's a dark magenta, not brown :)  It does look a lot better on PC
+monitors (windows, linux).
+
+Maybe we should create a standard way of changing these kinds of things
+interactively.
+
+1 or 2 weeks.
+
+> 
+>  - window settings: can we generate some Xdefaults variables for map3d to
+>    control some look and feel aspects, colour, etc?  I defined a .map3drc
+>    file that worked well so this is one possiiblity
+
+Yep.
+
+1 or 2 weeks.
+
+>  
+>  - can we make the close event window-local?  It gets interpreted as a
+>    quite event now
+
+Nope.
+
+It's defined by glut and can't be changed.
+
+> 
+>  - can we build some more logic into the display information?  I am not
+>    sure saying surface #1 when there is only one is useful.  Or that if it
+>    is useful to have the geom filename when the potential data file is
+>    perhaps more relevant. I could imagine having a control to determine
+>    whether this info appears at the top or the bottom of the main window.
+
+Yep.
+
+I just made up some stuff that I could use to keep things straight as I
+was coding/debugging.  Any other text and attributes thereof would
+certainly be better.
+
+a few days?  (how do you put a time limit on creative technical writing :)
+
+> 
+>  - can we make the escape key kill the program, as in the old Map3d?
+>    Perhaps this is the way to get around some of the other premature kills
+>    we are getting at present?
+
+Yep.
+
+Consider this done as well.
+
+> 
+> Display of potentials
+> 
+>  - an we have the scaling window as an option and not each time a surface
+>    comes up?  Allow the user to turn it on via pop-up menu
+
+Yep.
+
+Currently it is on by default, and you can turn them off by pressing 'K'
+(uppercase).
+
+1 day.
+
+> 
+>  - same comment as above on the window close event--we need some way to get
+>    rid of an offspring window without killing the parent.
+
+Yep.
+
+we can use a menu option.
+
+1 day.
+
+> 
+>  - can we improve the look of the scaling window-again see the old map3d
+>    for how nice this looked.  Some specifics:
+>     - turn info off selectively per window
+
+Yep.  1 day.
+
+>     - when info is off, use the window space more completely
+
+Yep.  1 day.
+
+>     - truncate display of numbers to sensible number of digits
+
+Yep.  a couple of minutes.
+
+>     - add marking of contour lines over top of the color bar
+
+Yep.  a couple of minutes.
+
+>     - use Arial/Helvetica style font; works better at small point sizes;
+>       the current one is san serif, but has thin horizontal elements that
+>       disappear at small sizes
+
+Yep.  depends on how long new font system takes.
+
+> 
+>  - band shading is still messing up at the top level band; did you have
+>    time to look at this at all?
+
+Yep.
+
+I haven't looked at it yet, but can if/when time permits.
+
+> 
+> Borderless mode:
+> 
+>  - how does the user adjust the position of the inner windows within the
+>    main wi7ndow?
+
+Currently, the user uses 'ALT-left mouse' to move the windows, and
+'ALT-middle mouse' to change size.
+
+>  
+>  - the -as option does not seem to work but how will it interact with the
+>    borderless option?  I am thinking here of being able to lay out multi
+>    panel displays via a script, as we frequently do now.
+
+Yep.
+
+There are many options that the parser reads (as in the old version) but
+don't get used.  We should identify which ones are needed for the first 
+release.
+
+> 
+> File IO:
+> 
+>  - reading .geom files; we need to handle this file type and also the
+>    multiple surfaces a file like this can contain (I am working on this
+>    now) 
+
+Yep.
+
+There is some support code in place already, but I couldn't resolve the
+difference in API usages.  Someone with more knowledge of these can
+address this better than I can I think.
+
+>  - writing geometry files: old map3d allows the user to apply the viewing
+>    transforms to the geometry and save the results in a new geometry file;
+>    very handy feature...
+
+Yep.
+
+I'm not familiar enough with the old code that did this, but it will
+simply be a matter of properly using the API for writing .geom files I
+suppose.
+
+several weeks?
+
+> 
+>  - landmarks reader needed, also landmark writer if we are to support the
+>    landmark ediitng that oldmap3d does.
+> 
+
+
+Yep.
+
+a few weeks?
+

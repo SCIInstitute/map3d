@@ -1,0 +1,101 @@
+Chris,
+
+Some suggestions for map3d features to talk about:
+
+Committing changes
+
+- before you proceed, we should get my changes committed.  They are not
+  significant, but I also need to update the libraries.  More generally, we
+  need to figure out the mechanics of the CVS respository across machines.
+
+Surface rendering
+
+ - show a shaded rendering of geometry even when there are no scalar values
+   assigned to the nodes; this is useful for looking at a surface mesh
+
+ - does the lighting work with band shading?  It seems to change colour
+   with rotation but not much and it is not clear what the effect is.
+
+Pick mode
+
+ - having the separate pick window pop up may not be worth the trouble as
+   it is usually much handier to have this information stream by the
+   calling window.  It is easier to copy and paste into some other context
+   or email message, it is easier to accumulate information from a number
+   of points, and when you close the pict display window, that kills the
+   whole program, something we really have to avoid! 
+
+ - can we expand picking and add some features like:
+    - selection of picking object (node, triangle, segment, tet)
+    - marking of the last object picked
+    - adjusting the picking window
+    - when displaying node info, include coordinates of the nodes
+
+
+Clipping planes
+
+ - can we get some sort of clipping planes going, even if they are just
+   mashing the object into the frustrum?   This is a really handy feature
+   for lots of applications.
+
+General UI features
+
+ - the fonts are pretty ugly still; is there no other way to render them?
+   Even if we made this part OS dependent, I think it would be worth it to
+   have better font quality.
+
+ - how are the fonts done and generally how are the pop up menus rendered?
+   They look so much better in the old version of map3d and I wonder if we
+   can emulate that look?
+
+ - can we get some translation control implemented for the main window?
+
+ - I think we should map the rotation/translation to the keypad as we did
+   before and put the line thickness in a pop-up.  In practice, setting
+   line thickness is not needed very frequently.
+
+ - setting background color: can we have this interactively available 
+
+ - window settings: can we generate some Xdefaults variables for map3d to
+   control some look and feel aspects, colour, etc?  I defined a .map3drc
+   file that worked well so this is one possiiblity
+ 
+ - can we make the close event window-local?  It gets interpreted as a
+   quite event now
+
+ - can we build some more logic into the display information?  I am not
+   sure saying surface #1 when there is only one is useful.  Or that if it
+   is useful to have the geom filename when the potential data file is
+   perhaps more relevant. I could imagine having a control to determine
+   whether this info appears at the top or the bottom of the main window.
+
+Display of potentials
+
+ - an we have the scaling window as an option and not each time a surface
+   comes up?  Allow the user to turn it on via pop-up menu
+
+ - same comment as above on the window close event--we need some way to get
+   rid of an offspring window without killing the parent.
+
+ - can we improve the look of the scaling window-again see the old map3d
+   for how nice this looked.  Some specifics:
+    - turn info off selectively per window
+    - when info is off, use the window space more completely
+    - truncate display of numbers to sensible number of digits
+    - add marking of contour lines over top of the color bar
+    - use Arial/Helvetica style font; works better at small point sizes;
+      the current one is san serif, but has thin horizontal elements that
+      disappear at small sizes
+
+ - band shading is still messing up at the top level band; did you have
+   time to look at this at all?
+
+Borderless mode:
+
+ - how does the user adjust the position of the inner windows within the
+   main window?
+ 
+ - the -as option does not seem to work but how will it interact with the
+   borderless option?  I am thinking here of being able to lay out multi
+   panel displays via a script, as we frequently do now.
+
