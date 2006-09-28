@@ -132,6 +132,10 @@ void Init_Surf_Input(Surf_Input * s)
   s->axes_color[0] = s->axes_color[1] = s->axes_color[2] = -1;
   s->translation[0] = 0; s->translation[1] = 0; s->translation[2] = -FLT_MAX;
   s->rotationQuat.w = s->rotationQuat.x = s->rotationQuat.y = s->rotationQuat.z = -FLT_MAX;
+  s->all_mark = s->all_sphere = s->all_value = -1;
+  s->extrema_mark = s->extrema_sphere = -1;
+  s->pick_mark = s->pick_sphere = -1;
+  s->lead_mark = s->lead_sphere = -1;
 }
 
 

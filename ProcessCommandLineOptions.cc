@@ -46,6 +46,25 @@
 #define MIN(x,y) ((x<y)?x:y)
 #endif
 
+  // we initialize these values to -1 (or -FLT_MAX) for most types, so if the values are -1
+  // do not use them.  This will compensate for when there is a global option set and the
+  // local option is set to the default value to override.
+
+  // so the structure is:
+  // if the surface has a value other than -1, use it
+  // else: if the global option is not -1, use that
+  // else: use a default value.
+
+  //   origVal is the value to compare for it to be unset
+#define INITIALIZE_VALUE(surfVar, meshVar, origVal, defaultVal) \
+  if (s->##surfVar != origVal) m->##meshVar = s->##surfVar; \
+  else if (globalSurf->##surfVar != origVal) m->##meshVar = globalSurf->##surfVar; \
+  else m->##meshVar = defaultVal;
+#define INITIALIZE_VALUE_WITH_ACTION(surfVar, meshVar, origVal, action) \
+  if (s->##surfVar != origVal) m->##meshVar = s->##surfVar; \
+  else if (globalSurf->##surfVar != origVal) m->##meshVar = globalSurf->##surfVar; \
+  else { action; } 
+
 Map3d_Geom *map3d_geom;
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
@@ -1147,86 +1166,51 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   // be set globally OR for each mesh. Make sure mesh-specific values were
   // not set before using the global options
   
-  // we initialize these values to -1 (or -FLT_MAX) for all types, so if the values are -1
-  // do not use them.  This will compensate for when there is a global option set and the
-  // local option is set to the default value to override.
 
   // we do need to set the clipping plane rotation, the vfov, and bg/fg color 
   // when we create the geom window
 
-  // so the structure is:
-  // if the surface has a value other than -1, use it
-  // else: if the global option is not -1, use that
-  // else: use a default value.
 
   // Mesh color
-  if (s->colour_mesh[0] != -1 && s->colour_mesh[1] != -1 && s->colour_mesh[2] != -1) {
-    m->meshcolor[0] = s->colour_mesh[0] / 255.f;
-    m->meshcolor[1] = s->colour_mesh[1] / 255.f;
-    m->meshcolor[2] = s->colour_mesh[2] / 255.f;
-  }
-  else if (globalSurf->colour_mesh[0] != -1 && globalSurf->colour_mesh[1] != -1 && globalSurf->colour_mesh[2] != -1){
-    m->meshcolor[0] = globalSurf->colour_mesh[0] / 255.f;
-    m->meshcolor[1] = globalSurf->colour_mesh[1] / 255.f;
-    m->meshcolor[2] = globalSurf->colour_mesh[2] / 255.f;
-  }
-  else {
-    m->meshcolor[0] = DEF_MESH_RED / 255.f;
-    m->meshcolor[1] = DEF_MESH_GREEN / 255.f;
-    m->meshcolor[2] = DEF_MESH_BLUE / 255.f;
-  }    
+  INITIALIZE_VALUE(colour_mesh[0], meshcolor[0], -1, DEF_MESH_RED);
+  INITIALIZE_VALUE(colour_mesh[1], meshcolor[1], -1, DEF_MESH_GREEN);
+  INITIALIZE_VALUE(colour_mesh[2], meshcolor[2], -1, DEF_MESH_BLUE);
+  m->meshcolor[0] /= 255.f;
+  m->meshcolor[1] /= 255.f;
+  m->meshcolor[2] /= 255.f;
 
   // contour spacing
-  if (s->contourstep != 0) // 0 in this case is unset
-    m->contourspacing = s->contourstep;
-  else if (globalSurf->contourstep != 0)
-    m->contourspacing = globalSurf->contourstep;
-  else
-    m->contourspacing = DEF_CONTOURSPACING; // set it to a default later, after we've read data
-
+  // set it to a default later, after we've read data
+  INITIALIZE_VALUE(contourstep, contourspacing, 0, DEF_CONTOURSPACING)
   // Shading mode
-  if (s->shadingmodel != -1)
-    m->shadingmodel = s->shadingmodel;
-  else if (globalSurf->shadingmodel != -1)
-    m->shadingmodel = globalSurf->shadingmodel;
-  else
-    m->shadingmodel = DEF_SHADINGMODEL;
+  INITIALIZE_VALUE(shadingmodel, shadingmodel, -1, DEF_SHADINGMODEL);
 
   // Rendering mode
-  if (s->drawmesh != -1)
-    m->drawmesh = s->drawmesh;
-  else if (globalSurf->drawmesh != -1)
-    m->drawmesh = globalSurf->drawmesh;
-  else if (m->geom->numpts > 0)
-    m->drawmesh = RENDER_MESH_PTS_CONN;
-  else
-    m->drawmesh = DEF_DRAWMESH;
+  INITIALIZE_VALUE_WITH_ACTION(drawmesh, drawmesh, -1, 
+    if (m->geom->numpts > 0) m->drawmesh = RENDER_MESH_PTS_CONN;
+    else m->drawmesh = DEF_DRAWMESH);
 
   // inverted colormap
-  if (s->invert != -1)
-    m->invert = s->invert != 0;
-  else if (globalSurf->invert != -1)
-    m->invert = globalSurf->invert != 0;
-  else
-    m->invert = DEF_INVERT;
+  INITIALIZE_VALUE(invert, invert, -1, DEF_INVERT);
 
   // lighting
-  if (s->lighting != -1)
-    m->lighting = s->lighting != 0;
-  else if (globalSurf->lighting != -1)
-    m->lighting = globalSurf->lighting != 0;
-  else
-    m->lighting = DEF_LIGHTING;
+  INITIALIZE_VALUE(lighting, lighting, -1, DEF_LIGHTING);
 
   // fogging
-  if (s->fogging != -1)
-    m->fogging = s->fogging != 0;
-  else if (globalSurf->fogging != -1)
-    m->fogging = globalSurf->fogging != 0;
-  else
-    m->fogging = DEF_FOGGING;
+  INITIALIZE_VALUE(fogging, fogging, -1, DEF_FOGGING);
 
-  // rotation quaternion
+  // node marks
+  INITIALIZE_VALUE(all_sphere, mark_all_sphere, -1, 0);
+  INITIALIZE_VALUE(all_mark, mark_all_number, -1, 0);
+  INITIALIZE_VALUE(all_value, mark_all_sphere_value, -1, 0);
+  INITIALIZE_VALUE(extrema_sphere, mark_extrema_sphere, -1, 0);
+  INITIALIZE_VALUE(extrema_mark, mark_extrema_number, -1, 0);
+  INITIALIZE_VALUE(lead_sphere, mark_lead_sphere, -1, 0);
+  INITIALIZE_VALUE(lead_mark, mark_lead_number, -1, 0);
+  INITIALIZE_VALUE(pick_sphere, mark_ts_sphere, -1, 0);
+  INITIALIZE_VALUE(pick_mark, mark_ts_number, -1, 0);
+
+  // rotation quaternion - special case
   if (s->rotationQuat.w != -FLT_MAX && s->rotationQuat.x != -FLT_MAX && 
       s->rotationQuat.y != -FLT_MAX && s->rotationQuat.z != -FLT_MAX) {
     m->tran->setRotationQuaternion(s->rotationQuat);
@@ -1240,22 +1224,12 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   }
 
   // translation coordinates
-  if (s->translation[0] != -FLT_MAX && s->translation[1] != -FLT_MAX && s->translation[2] != -FLT_MAX) {
-    m->tran->tx = s->translation[0];
-    m->tran->ty = s->translation[1];
-    m->tran->tz = s->translation[2];
-  }
-  else if (globalSurf->translation[0] != -FLT_MAX && globalSurf->translation[1] != -FLT_MAX && 
-           globalSurf->translation[2] != -FLT_MAX) {
-    m->tran->tx = globalSurf->translation[0];
-    m->tran->ty = globalSurf->translation[1];
-    m->tran->tz = globalSurf->translation[2];
-  }
-  else {
-    m->tran->tx = m->tran->ty = m->tran->tz = 0;
-  }
+  INITIALIZE_VALUE(translation[0], tran->tx, -FLT_MAX, 0);
+  INITIALIZE_VALUE(translation[1], tran->ty, -FLT_MAX, 0);
+  INITIALIZE_VALUE(translation[2], tran->tz, -FLT_MAX, 0);
 
   // show legend window (or not)
+  INITIALIZE_VALUE(showlegend, showlegend, -1, DEF_SHOWLEGEND);
   if (s->showlegend != -1)
     m->showlegend = s->showlegend != 0;
   else if (globalSurf->showlegend != -1)
@@ -1264,22 +1238,13 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
     m->showlegend = DEF_SHOWLEGEND;
 
   // show contour lines (or not)
-  if (s->drawcont != -1)
-    m->drawcont = s->drawcont != 0;
-  else if (globalSurf->drawcont != -1)
-    m->drawcont = globalSurf->drawcont != 0;
-  else
-    m->drawcont = DEF_DRAWCONT;
+  INITIALIZE_VALUE(drawcont, drawcont, -1, DEF_DRAWCONT);
 
   // whether to draw the negative contours dashed or not
-  if (s->negcontdashed != -1)
-    m->negcontdashed = s->negcontdashed != 0;
-  else if (globalSurf->negcontdashed != -1)
-    m->negcontdashed = globalSurf->negcontdashed != 0;
-  else
-    m->negcontdashed = DEF_NEGCONTDASHED;
+  INITIALIZE_VALUE(negcontdashed, negcontdashed, -1, DEF_NEGCONTDASHED);
 
   // draw axes (or not)
+  INITIALIZE_VALUE(axes, axes, -1, DEF_AXES);
   if (s->axes != -1)
     m->axes = s->axes != 0;
   else if (globalSurf->axes != -1)
@@ -1288,19 +1253,13 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
     m->axes = DEF_AXES;
 
   // axes color
-  if (s->axes_color[0] != -1 && s->axes_color[1] != -1 && s->axes_color[2] != -1) {
-    m->axescolor[0] = s->axes_color[0]/255.0f;
-    m->axescolor[1] = s->axes_color[1]/255.0f;
-    m->axescolor[2] = s->axes_color[2]/255.0f;
-  }
-  else if (globalSurf->axes_color[0] != -1 && globalSurf->axes_color[1] != -1 && globalSurf->axes_color[2] != -1) {
-    m->axescolor[0] = globalSurf->axes_color[0]/255.0f;
-    m->axescolor[1] = globalSurf->axes_color[1]/255.0f;
-    m->axescolor[2] = globalSurf->axes_color[2]/255.0f;
-  }
-  else {
-    m->axescolor[0] = m->axescolor[1] = m->axescolor[2] = DEF_AXES_COLOR_RGB;
-  }
+  INITIALIZE_VALUE(axes_color[0], axescolor[0], -1, DEF_AXES_COLOR_RGB);
+  INITIALIZE_VALUE(axes_color[1], axescolor[1], -1, DEF_AXES_COLOR_RGB);
+  INITIALIZE_VALUE(axes_color[2], axescolor[2], -1, DEF_AXES_COLOR_RGB);
+  m->axescolor[0] /= 255.0f;
+  m->axescolor[1] /= 255.0f;
+  m->axescolor[2] /= 255.0f;
+
   // set up vfov in the surf for when we create the window so we can copy it to the window
   if (s->vfov == -FLT_MAX) {
     if (globalSurf->vfov != -FLT_MAX)

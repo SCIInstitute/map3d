@@ -100,6 +100,12 @@ struct Surf_Input
   long negcontdashed;
   long axes;
   long axes_color[3];
+
+  // node marking options
+  long all_sphere, all_mark, all_value;
+  long extrema_sphere, extrema_mark;
+  long pick_sphere, pick_mark;
+  long lead_sphere, lead_mark;
 };
 typedef Surf_Input *Surf_Input_p;
 

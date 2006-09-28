@@ -99,9 +99,9 @@ void outputGlobalInfo(FILE* f, char* cont, SaveDialog* sd)
 
   // save general, transform, frame lock
   fprintf(f, "-l %d %d %d%s", 
-    map3d_info.lockgeneral?1:0, 
-    map3d_info.lockrotate?1:0, 
-    map3d_info.lockframes?1:0,cont);
+    map3d_info.lockgeneral, 
+    map3d_info.lockrotate, 
+    map3d_info.lockframes,cont);
 
   // report level
   fprintf(f, "-rl %d%s", map3d_info.reportlevel,cont);
@@ -151,6 +151,14 @@ void outputMeshInfo(FILE* f, char* cont, SaveDialog* sd, Mesh_Info* mesh)
     if (mesh->axes) {
       fprintf(f, "-xc %d %d %d%s", (int)(mesh->axescolor[0]*255),(int)(mesh->axescolor[1]*255),(int)(mesh->axescolor[2]*255),cont);
     }
+    // draw node marks (all)
+    fprintf(f, "-nma %d %d %d%s",mesh->mark_all_sphere, mesh->mark_all_number, mesh->mark_all_sphere_value, cont);
+    // draw node marks (extrema)
+    fprintf(f, "-nme %d %d%s",mesh->mark_extrema_sphere, mesh->mark_extrema_number, cont);
+    // draw node marks (pick)
+    fprintf(f, "-nmp %d %d%s",mesh->mark_ts_sphere, mesh->mark_ts_number, cont);
+    // draw node marks (lead)
+    fprintf(f, "-nml %d %d%s",mesh->mark_lead_sphere, mesh->mark_lead_number, cont);
   }
   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(sd->settings_transform))) {
     // rotation matrix

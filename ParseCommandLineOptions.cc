@@ -97,7 +97,7 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       /* -v print the map3d version info */
       OPTION_CODE("-v", 0, printf("Map3D version " VERSION "\n");)
 
-      /* OPTIONS THAT COULD AFFECT ALL MESHES (if done before first -f
+      /* OPTIONS THAT COULD AFFECT ALL MESHES (if done before first -f)
           OR THE CURRENT MESH ONLY */
 
       /* -c set the default or current mesh color index */
@@ -129,6 +129,18 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_1("-nc", globalInput.SurfList[globalInput.numgeomfiles]->negcontdashed)
       OPTION_1("-x", globalInput.SurfList[globalInput.numgeomfiles]->axes)
       OPTION_ARRAY("-xc", 3, globalInput.SurfList[globalInput.numgeomfiles]->axes_color)
+
+      // node marking options
+      OPTION_3("-nma", globalInput.SurfList[globalInput.numgeomfiles]->all_sphere,
+                       globalInput.SurfList[globalInput.numgeomfiles]->all_mark,
+                       globalInput.SurfList[globalInput.numgeomfiles]->all_value)
+      OPTION_2("-nme", globalInput.SurfList[globalInput.numgeomfiles]->extrema_sphere,
+                       globalInput.SurfList[globalInput.numgeomfiles]->extrema_mark)
+      OPTION_2("-nmp", globalInput.SurfList[globalInput.numgeomfiles]->pick_sphere,
+                       globalInput.SurfList[globalInput.numgeomfiles]->pick_mark)
+      OPTION_2("-nml", globalInput.SurfList[globalInput.numgeomfiles]->lead_sphere,
+                       globalInput.SurfList[globalInput.numgeomfiles]->lead_mark)
+
       /* OPTIONS THAT OPEN FILES - each is matched with the geom file in the preceding -f */
 
       /* -f geometry filename */
