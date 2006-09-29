@@ -123,7 +123,8 @@ void GLWindow::popWindow()
     initialized = false;
     ready = false;
     drawarea = gtk_drawing_area_new();
-    gtk_widget_set_gl_capability(drawarea, glconfig, NULL, TRUE, GDK_GL_RGBA_TYPE);
+    gtk_widget_set_gl_capability(drawarea, glconfig, gtk_widget_get_gl_context(map3d_info.share_widget), 
+                                 TRUE, GDK_GL_RGBA_TYPE);
     setupEventHandlers();
     gtk_fixed_put(GTK_FIXED(masterWindow->fixed), drawarea, x, y);
     gtk_widget_show(drawarea);

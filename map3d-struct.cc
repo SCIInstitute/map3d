@@ -22,7 +22,7 @@
 
 void Init_Global_Input(Global_Input * s)
 {
-  s->numgeomfiles = MAX_SURFS;
+  s->numgeomfiles = -1;
   s->qnoborders = false;
   s->qsinglewin = true;
   s->qnovalidity = false;

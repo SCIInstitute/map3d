@@ -169,7 +169,6 @@ int ProcessCommandLineOptions(Global_Input & g)
     }
     //map3d_info.posy += masterWindow->textLines * 30;
   }
-
   // build all windows to start (try to work around gtk issues),
   // then fill them with relevent stuff as they are "processed"
   int win;
@@ -181,11 +180,13 @@ int ProcessCommandLineOptions(Global_Input & g)
     gtk_widget_show(map3d_info.legendwins[win]->drawarea);
   }
 
-  for (win = 0; win < MAX_SURFS*2; win++) {
+  // the master window can't handle more than ~100 windows
+  // (as we have to create them all and pop them in to get them to work)
+  // and we don't want more than about 20 Pick Windows anyway
+  for (win = 0; win < MAX_PICKS; win++) {
     map3d_info.pickwins[win] = new PickWindow(false);
     gtk_widget_show(map3d_info.pickwins[win]->drawarea);
   }
-
 
   /* load the data indicated in the global parse struct.
    * copy from g.SurfList[] to meshes.
@@ -215,7 +216,7 @@ int ProcessCommandLineOptions(Global_Input & g)
     }
   }
 
-  if (loop == MAX_SURFS)
+  if (loop == MAX_SURFS && loop != length)
     printf("Surfaces after the %dth surface are ignored\n", MAX_SURFS);
 
   length = meshes->size();
@@ -238,6 +239,8 @@ int ProcessCommandLineOptions(Global_Input & g)
       width = si.xmax - si.xmin - HORIZ;
       height = si.ymax - si.ymin - VERTICAL;
       PickWindow *pickPriv = PickWindow::PickWindowCreate(width, height, si.xmin, si.ymin, 328, 144);
+      if (!pickPriv) // can fail if more than MAX_PICKS
+        continue;
 
       pickPriv->parentid = map3d_info.parentid;
       pickPriv->showinfotext = 1;
@@ -283,7 +286,6 @@ int ProcessCommandLineOptions(Global_Input & g)
   // create the files dialog if not already (and have it hidden)
   if (!filedialog) 
     filesDialogCreate(false);
-
 
   if (masterWindow) {
     gtk_window_move(GTK_WINDOW(masterWindow->window),masterWindow->x, masterWindow->y);
@@ -1123,34 +1125,34 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
       else{
         lpriv = LegendWindow::LegendWindowCreate(width, height, mesh->lw_xmin, mesh->lw_ymin, 170, 256, false);
       }
-      if (lpriv == NULL)
-        fprintf(stderr, "Allocation of Legend Window failed\n");
+      if (lpriv != NULL) {
+        // can fail if more than MAX_SURFS l-wins.
+        lpriv->parentid = map3d_info.parentid;
+        lpriv->orientation = surf->lworientation;
+        lpriv->nticks = mesh->data->numconts + 2;
+        lpriv->surf = s;
+        lpriv->mesh = mesh;
+        lpriv->map = &mesh->cmap;
+        mesh->legendwin = lpriv;
+        
+        // background color
+        lpriv->bgcolor[0] = mesh->mysurf->colour_bg[0] / 255.f;
+        lpriv->bgcolor[1] = mesh->mysurf->colour_bg[1] / 255.f;
+        lpriv->bgcolor[2] = mesh->mysurf->colour_bg[2] / 255.f;
+        lpriv->fgcolor[0] = mesh->mysurf->colour_fg[0] / 255.f;
+        lpriv->fgcolor[1] = mesh->mysurf->colour_fg[1] / 255.f;
+        lpriv->fgcolor[2] = mesh->mysurf->colour_fg[2] / 255.f;
 
-      lpriv->parentid = map3d_info.parentid;
-      lpriv->orientation = surf->lworientation;
-      lpriv->nticks = mesh->data->numconts + 2;
-      lpriv->surf = s;
-      lpriv->mesh = mesh;
-      lpriv->map = &mesh->cmap;
-      mesh->legendwin = lpriv;
-      
-      // background color
-      lpriv->bgcolor[0] = mesh->mysurf->colour_bg[0] / 255.f;
-      lpriv->bgcolor[1] = mesh->mysurf->colour_bg[1] / 255.f;
-      lpriv->bgcolor[2] = mesh->mysurf->colour_bg[2] / 255.f;
-      lpriv->fgcolor[0] = mesh->mysurf->colour_fg[0] / 255.f;
-      lpriv->fgcolor[1] = mesh->mysurf->colour_fg[1] / 255.f;
-      lpriv->fgcolor[2] = mesh->mysurf->colour_fg[2] / 255.f;
-
-      lpriv->setPosAndShow();
-      if (!mesh->showlegend) {
-        if (masterWindow)
-          gtk_widget_hide(lpriv->drawarea);
-        else
-          gtk_widget_hide(lpriv->window);
+        lpriv->setPosAndShow();
+        if (!mesh->showlegend) {
+          if (masterWindow)
+            gtk_widget_hide(lpriv->drawarea);
+          else
+            gtk_widget_hide(lpriv->window);
+        }
+        mesh->showlegend = 1;
+        GlobalMinMax();
       }
-      mesh->showlegend = 1;
-      GlobalMinMax();
     }
     else if (s->mesh->legendwin) {
       // otherwise, set the current legend win to the new surf data

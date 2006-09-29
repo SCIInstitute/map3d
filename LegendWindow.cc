@@ -94,6 +94,10 @@ void LegendWindow::setupEventHandlers()
 //static
 LegendWindow* LegendWindow::LegendWindowCreate(int _width, int _height, int _x, int _y, int def_width, int def_height, bool hidden)
 {
+  if (map3d_info.numLegendwins >= MAX_SURFS) {
+    printf("Warning: cannot create more than %d Colormap Windows\n", MAX_SURFS);
+    return 0;
+  }
   LegendWindow* win = map3d_info.legendwins[map3d_info.numLegendwins++];
   win->parentid = map3d_info.parentid;
   if(!hidden){

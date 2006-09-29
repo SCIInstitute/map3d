@@ -127,6 +127,10 @@ void PickWindow::setupEventHandlers()
 //static
 PickWindow* PickWindow::PickWindowCreate(int _width, int _height, int _x, int _y, int def_width, int def_height)
 {
+  if (map3d_info.numPickwins >= MAX_PICKS) {
+    printf("Warning: cannot create more than %d Time Series Windows\n", MAX_PICKS);
+    return 0;
+  }
   PickWindow* win = map3d_info.pickwins[map3d_info.numPickwins++];
   win->parentid = map3d_info.parentid;
   win->positionWindow(_width, _height, _x, _y, def_width, def_height);

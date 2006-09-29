@@ -1,150 +1,102 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="map3d"
 	ProjectGUID="{5E93C8D9-6376-4299-BC28-24C74A049F73}"
-	>
+	SccProjectName=""
+	SccLocalPath="">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="."
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/map3d.tlb"
-			/>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="0"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="false"
+				OmitFramePointers="FALSE"
+				OptimizeForProcessor="0"
+				OptimizeForWindowsApplication="FALSE"
 				AdditionalIncludeDirectories="../cutil;../graphicsio;../fids;../gfilelib;../tsdflib;../MatlabIO;../fi;../gdbmp;/local/include"
-				PreprocessorDefinitions="WIN32,_WIN32,_CRT_SECURE_NO_DEPRECATE"
-				StringPooling="false"
-				MinimalRebuild="false"
+				PreprocessorDefinitions="WIN32,_WIN32"
+				StringPooling="FALSE"
+				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="false"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="FALSE"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
 				ProgramDataBaseFileName="$(IntDir)/vc70.pdb"
 				WarningLevel="4"
-				SuppressStartupBanner="true"
-			/>
+				SuppressStartupBanner="TRUE"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="Glu32.lib OpenGL32.lib libjpeg.lib libpng.lib zlib.lib gtk-win32-2.0.lib gdk-win32-2.0.lib gdkglext-win32-1.0.lib gtkglext-win32-1.0.lib gdk_pixbuf-2.0.lib gobject-2.0.lib gmodule-2.0.lib glib-2.0.lib pango-1.0.lib libtsdflib.lib libcutil.lib libgraphicsio.lib libgfilelib.lib libfids.lib libfi.lib libmatlabio.lib  libgdbmp.lib"
+				OutputFile="map3d.exe"
+				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="\local\lib;../lib"
+				IgnoreDefaultLibraryNames="LIBC.LIB"
+				GenerateDebugInformation="FALSE"
+				ProgramDatabaseFile=""
+				SubSystem="1"
+				OptimizeReferences="2"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Release/map3d.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"
-			/>
+				Culture="1033"/>
 			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="Glu32.lib OpenGL32.lib libjpeg.lib libpng.lib zlib.lib gtk-win32-2.0.lib gdk-win32-2.0.lib gdkglext-win32-1.0.lib gtkglext-win32-1.0.lib gdk_pixbuf-2.0.lib gobject-2.0.lib gmodule-2.0.lib glib-2.0.lib pango-1.0.lib libtsdflib.lib libcutil.lib libgraphicsio.lib libgfilelib.lib libfids.lib libfi.lib libmatlabio.lib libgdbmp.lib"
-				OutputFile="map3d.exe"
-				LinkIncremental="2"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="\local\lib;../lib"
-				IgnoreDefaultLibraryNames="LIBC.LIB"
-				GenerateDebugInformation="false"
-				ProgramDatabaseFile=""
-				SubSystem="1"
-				OptimizeReferences="2"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCWebDeploymentTool"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="."
 			IntermediateDirectory=".\.Debug"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\./map3d.tlb"
-			/>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../cutil;../graphicsio;../fids;../gfilelib;../tsdflib;../MatlabIO;../fi;../gdbmp;/local/include"
-				PreprocessorDefinitions="WIN32,_WIN32,_CRT_SECURE_NO_DEPRECATE"
-				GeneratePreprocessedFile="0"
-				MinimalRebuild="true"
-				ExceptionHandling="1"
-				RuntimeLibrary="1"
-				BufferSecurityCheck="false"
+				PreprocessorDefinitions="WIN32,_WIN32"
+				MinimalRebuild="TRUE"
+				ExceptionHandling="TRUE"
+				RuntimeLibrary="0"
+				BufferSecurityCheck="FALSE"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				PrecompiledHeaderFile=""
@@ -152,59 +104,47 @@
 				ObjectFile="$(IntDir)/"
 				ProgramDataBaseFileName="$(IntDir)/vc70.pdb"
 				WarningLevel="4"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="2"
-			/>
+				CompileAs="2"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				RegisterOutput="true"
+				RegisterOutput="TRUE"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="Glu32.lib OpenGL32.lib libjpeg.lib libpng.lib zlib.lib gtk-win32-2.0.lib gdk-win32-2.0.lib gdkglext-win32-1.0.lib gtkglext-win32-1.0.lib gdk_pixbuf-2.0.lib gobject-2.0.lib gmodule-2.0.lib glib-2.0.lib pango-1.0.lib libcutil-dbg.lib libgraphicsio-dbg.lib libgfilelib-dbg.lib libfids-dbg.lib libfi-dbg.lib libmatlabio-dbg.lib libtsdflib-dbg.lib libgdbmp-dbg.lib"
 				OutputFile="map3d-dbg.exe"
 				LinkIncremental="2"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="\local\lib;../lib"
-				IgnoreAllDefaultLibraries="false"
+				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames="libc.lib;libcd.lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=""
-				SubSystem="1"
-			/>
+				SubSystem="1"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"
+				TypeLibraryName=".\./map3d.tlb"/>
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCResourceCompilerTool"
+				Culture="1033"/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
+				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
+				Name="VCXMLDataGeneratorTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -212,342 +152,259 @@
 	<Files>
 		<Filter
 			Name="source"
-			>
+			Filter="">
 			<File
-				RelativePath=".\Ball.cc"
-				>
+				RelativePath=".\Ball.cc">
 			</File>
 			<File
-				RelativePath=".\BallAux.cc"
-				>
+				RelativePath=".\BallAux.cc">
 			</File>
 			<File
-				RelativePath=".\BallMath.cc"
-				>
+				RelativePath=".\BallMath.cc">
 			</File>
 			<File
-				RelativePath=".\colormaps.cc"
-				>
+				RelativePath=".\colormaps.cc">
 			</File>
 			<File
-				RelativePath=".\Contour_Info.cc"
-				>
+				RelativePath=".\Contour_Info.cc">
 			</File>
 			<File
-				RelativePath=".\ContourDialog.cc"
-				>
+				RelativePath=".\ContourDialog.cc">
 			</File>
 			<File
-				RelativePath=".\dialogs.cc"
-				>
+				RelativePath=".\dialogs.cc">
 			</File>
 			<File
-				RelativePath=".\dot.cc"
-				>
+				RelativePath=".\dot.cc">
 			</File>
 			<File
-				RelativePath=".\drawlandmarks.cc"
-				>
+				RelativePath=".\drawlandmarks.cc">
 			</File>
 			<File
-				RelativePath=".\FidDialog.cc"
-				>
+				RelativePath=".\FidDialog.cc">
 			</File>
 			<File
-				RelativePath=".\FileDialog.cc"
-				>
+				RelativePath=".\FileDialog.cc">
 			</File>
 			<File
-				RelativePath=".\GenericWindow.cc"
-				>
+				RelativePath=".\GenericWindow.cc">
 			</File>
 			<File
-				RelativePath=".\GeomWindow.cc"
-				>
+				RelativePath=".\GeomWindow.cc">
 			</File>
 			<File
-				RelativePath=".\GeomWindowHandle.cc"
-				>
+				RelativePath=".\GeomWindowHandle.cc">
 			</File>
 			<File
-				RelativePath=".\GeomWindowMenu.cc"
-				>
+				RelativePath=".\GeomWindowMenu.cc">
 			</File>
 			<File
-				RelativePath=".\GeomWindowRepaint.cc"
-				>
+				RelativePath=".\GeomWindowRepaint.cc">
 			</File>
 			<File
-				RelativePath=".\glprintf.cc"
-				>
+				RelativePath=".\glprintf.cc">
 			</File>
 			<File
-				RelativePath=".\LegendWindow.cc"
-				>
+				RelativePath=".\LegendWindow.cc">
 			</File>
 			<File
-				RelativePath=".\lock.cc"
-				>
+				RelativePath=".\lock.cc">
 			</File>
 			<File
-				RelativePath=".\MainWindow.cc"
-				>
+				RelativePath=".\MainWindow.cc">
 			</File>
 			<File
-				RelativePath=".\map3d-struct.cc"
-				>
+				RelativePath=".\map3d-struct.cc">
 			</File>
 			<File
-				RelativePath=".\map3d.cc"
-				>
+				RelativePath=".\map3d.cc">
 			</File>
 			<File
-				RelativePath=".\Map3d_Geom.cc"
-				>
+				RelativePath=".\Map3d_Geom.cc">
 			</File>
 			<File
-				RelativePath=".\map3dmath.cc"
-				>
+				RelativePath=".\map3dmath.cc">
 			</File>
 			<File
-				RelativePath=".\MeshList.cc"
-				>
+				RelativePath=".\MeshList.cc">
 			</File>
 			<File
-				RelativePath=".\ParseCommandLineOptions.cc"
-				>
+				RelativePath=".\ParseCommandLineOptions.cc">
 			</File>
 			<File
-				RelativePath=".\PickWindow.cc"
-				>
+				RelativePath=".\PickWindow.cc">
 			</File>
 			<File
-				RelativePath=".\ProcessCommandLineOptions.cc"
-				>
+				RelativePath=".\ProcessCommandLineOptions.cc">
 			</File>
 			<File
-				RelativePath=".\readfiles.cc"
-				>
+				RelativePath=".\readfiles.cc">
 			</File>
 			<File
-				RelativePath=".\regressiontest.cc"
-				>
+				RelativePath=".\regressiontest.cc">
 			</File>
 			<File
-				RelativePath=".\reportstate.cc"
-				>
+				RelativePath=".\reportstate.cc">
 			</File>
 			<File
-				RelativePath=".\SaveDialog.cc"
-				>
+				RelativePath=".\SaveDialog.cc">
 			</File>
 			<File
-				RelativePath=".\savescreen.cc"
-				>
+				RelativePath=".\savescreen.cc">
 			</File>
 			<File
-				RelativePath=".\savestate.cc"
-				>
+				RelativePath=".\savestate.cc">
 			</File>
 			<File
-				RelativePath=".\ScaleDialog.cc"
-				>
+				RelativePath=".\ScaleDialog.cc">
 			</File>
 			<File
-				RelativePath=".\scalesubs.cc"
-				>
+				RelativePath=".\scalesubs.cc">
 			</File>
 			<File
-				RelativePath=".\Surf_Data.cc"
-				>
+				RelativePath=".\Surf_Data.cc">
 			</File>
 			<File
-				RelativePath=".\texture.cc"
-				>
+				RelativePath=".\texture.cc">
 			</File>
 			<File
-				RelativePath=".\Transforms.cc"
-				>
+				RelativePath=".\Transforms.cc">
 			</File>
 			<File
-				RelativePath=".\usage.cc"
-				>
+				RelativePath=".\usage.cc">
 			</File>
 			<File
-				RelativePath=".\WindowManager.cc"
-				>
+				RelativePath=".\WindowManager.cc">
 			</File>
 		</Filter>
 		<Filter
 			Name="headers"
-			>
+			Filter="">
 			<File
-				RelativePath="Arcball.h"
-				>
+				RelativePath="Arcball.h">
 			</File>
 			<File
-				RelativePath="Ball.h"
-				>
+				RelativePath="Ball.h">
 			</File>
 			<File
-				RelativePath="BallAux.h"
-				>
+				RelativePath="BallAux.h">
 			</File>
 			<File
-				RelativePath="BallMath.h"
-				>
+				RelativePath="BallMath.h">
 			</File>
 			<File
-				RelativePath="colormaps.h"
-				>
+				RelativePath="colormaps.h">
 			</File>
 			<File
-				RelativePath="Contour_Info.h"
-				>
+				RelativePath="Contour_Info.h">
 			</File>
 			<File
-				RelativePath=".\ContourDialog.h"
-				>
+				RelativePath=".\ContourDialog.h">
 			</File>
 			<File
-				RelativePath="dialogs.h"
-				>
+				RelativePath="dialogs.h">
 			</File>
 			<File
-				RelativePath=".\dot.h"
-				>
+				RelativePath=".\dot.h">
 			</File>
 			<File
-				RelativePath="drawlandmarks.h"
-				>
+				RelativePath="drawlandmarks.h">
 			</File>
 			<File
-				RelativePath="eventdata.h"
-				>
+				RelativePath="eventdata.h">
 			</File>
 			<File
-				RelativePath=".\FidDialog.h"
-				>
+				RelativePath=".\FidDialog.h">
 			</File>
 			<File
-				RelativePath=".\FileDialog.h"
-				>
+				RelativePath=".\FileDialog.h">
 			</File>
 			<File
-				RelativePath="GenericWindow.h"
-				>
+				RelativePath="GenericWindow.h">
 			</File>
 			<File
-				RelativePath="GeomWindow.h"
-				>
+				RelativePath="GeomWindow.h">
 			</File>
 			<File
-				RelativePath="GeomWindowMenu.h"
-				>
+				RelativePath="GeomWindowMenu.h">
 			</File>
 			<File
-				RelativePath="glprintf.h"
-				>
+				RelativePath="glprintf.h">
 			</File>
 			<File
-				RelativePath="LegendWindow.h"
-				>
+				RelativePath="LegendWindow.h">
 			</File>
 			<File
-				RelativePath="lock.h"
-				>
+				RelativePath="lock.h">
 			</File>
 			<File
-				RelativePath="MainWindow.h"
-				>
+				RelativePath="MainWindow.h">
 			</File>
 			<File
-				RelativePath="map3d-struct.h"
-				>
+				RelativePath="map3d-struct.h">
 			</File>
 			<File
-				RelativePath="Map3d_Geom.h"
-				>
+				RelativePath="Map3d_Geom.h">
 			</File>
 			<File
-				RelativePath="map3dmath.h"
-				>
+				RelativePath="map3dmath.h">
 			</File>
 			<File
-				RelativePath="MeshList.h"
-				>
+				RelativePath="MeshList.h">
 			</File>
 			<File
-				RelativePath="ParseCommandLineOptions.h"
-				>
+				RelativePath="ParseCommandLineOptions.h">
 			</File>
 			<File
-				RelativePath="pickinfo.h"
-				>
+				RelativePath="pickinfo.h">
 			</File>
 			<File
-				RelativePath="PickWindow.h"
-				>
+				RelativePath="PickWindow.h">
 			</File>
 			<File
-				RelativePath="ProcessCommandLineOptions.h"
-				>
+				RelativePath="ProcessCommandLineOptions.h">
 			</File>
 			<File
-				RelativePath="readfiles.h"
-				>
+				RelativePath="readfiles.h">
 			</File>
 			<File
-				RelativePath="regressionlist.h"
-				>
+				RelativePath="regressionlist.h">
 			</File>
 			<File
-				RelativePath="regressiontest.h"
-				>
+				RelativePath="regressiontest.h">
 			</File>
 			<File
-				RelativePath="reportstate.h"
-				>
+				RelativePath="reportstate.h">
 			</File>
 			<File
-				RelativePath=".\SaveDialog.h"
-				>
+				RelativePath=".\SaveDialog.h">
 			</File>
 			<File
-				RelativePath="savescreen.h"
-				>
+				RelativePath="savescreen.h">
 			</File>
 			<File
-				RelativePath="savestate.h"
-				>
+				RelativePath="savestate.h">
 			</File>
 			<File
-				RelativePath=".\ScaleDialog.h"
-				>
+				RelativePath=".\ScaleDialog.h">
 			</File>
 			<File
-				RelativePath="scalesubs.h"
-				>
+				RelativePath="scalesubs.h">
 			</File>
 			<File
-				RelativePath="Surf_Data.h"
-				>
+				RelativePath="Surf_Data.h">
 			</File>
 			<File
-				RelativePath=".\texture.h"
-				>
+				RelativePath=".\texture.h">
 			</File>
 			<File
-				RelativePath="Transforms.h"
-				>
+				RelativePath="Transforms.h">
 			</File>
 			<File
-				RelativePath="usage.h"
-				>
+				RelativePath="usage.h">
 			</File>
 			<File
-				RelativePath="WindowManager.h"
-				>
+				RelativePath="WindowManager.h">
 			</File>
 		</Filter>
 	</Files>

@@ -12,9 +12,8 @@
 
 using std::vector;
 
-#ifndef MAX_SURFS
 #define MAX_SURFS 40
-#endif
+#define MAX_PICKS 20
 
 class GeomWindow;
 class LegendWindow;
@@ -174,7 +173,7 @@ public:
   // create all these windows at start time, and refer to how many are in use
   GeomWindow* geomwins[MAX_SURFS+1];
   LegendWindow* legendwins[MAX_SURFS];
-  PickWindow* pickwins[MAX_SURFS*2];
+  PickWindow* pickwins[MAX_PICKS];
   int numGeomwins;
   int numLegendwins;
   int numPickwins;

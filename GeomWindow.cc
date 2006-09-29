@@ -733,11 +733,11 @@ void GeneratePick(PickInfo * pick)
     mesh->pickstack[mesh->pickstacktop] = pick;
   }
   else {
-    mesh->pickstacktop++;
-    mesh->pickstack[mesh->pickstacktop] = pick;
-
     // use default x,y pos
     ppriv = PickWindow::PickWindowCreate(-1, -1, -1, -1, 325, 140);
+    if (!ppriv) return; // can fail if more than MAX_PICKS
+    mesh->pickstacktop++;
+    mesh->pickstack[mesh->pickstacktop] = pick;
     ppriv->pick = pick;
     ppriv->mesh = mesh;
     ppriv->setPosAndShow();;
