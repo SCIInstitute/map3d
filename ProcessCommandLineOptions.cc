@@ -57,12 +57,12 @@
 
   //   origVal is the value to compare for it to be unset
 #define INITIALIZE_VALUE(surfVar, meshVar, origVal, defaultVal) \
-  if (s->##surfVar != origVal) m->##meshVar = s->##surfVar; \
-  else if (globalSurf->##surfVar != origVal) m->##meshVar = globalSurf->##surfVar; \
-  else m->##meshVar = defaultVal;
+  if (s->surfVar != origVal) m->meshVar = s->surfVar; \
+  else if (globalSurf->surfVar != origVal) m->meshVar = globalSurf->surfVar; \
+  else m->meshVar = defaultVal;
 #define INITIALIZE_VALUE_WITH_ACTION(surfVar, meshVar, origVal, action) \
-  if (s->##surfVar != origVal) m->##meshVar = s->##surfVar; \
-  else if (globalSurf->##surfVar != origVal) m->##meshVar = globalSurf->##surfVar; \
+  if (s->surfVar != origVal) m->meshVar = s->surfVar; \
+  else if (globalSurf->surfVar != origVal) m->meshVar = globalSurf->surfVar; \
   else { action; } 
 
 Map3d_Geom *map3d_geom;
