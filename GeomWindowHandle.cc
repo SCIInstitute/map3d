@@ -210,6 +210,14 @@ void GeomWindowKPress(GtkWidget * widget, GdkEventKey * event, gpointer data)
     case 'l':
       MAP3D_MESH_LOCK_TOGGLE(map3d_info.lockgeneral, lighting);
       break;
+
+      /* L - reLoad geometry and data */
+
+    case 'L':
+      mdata.data = mesh_both_reload;
+      GeomWindowHandleMenu(&mdata);
+      loop = length;
+      break;
     case 'g':
       if (mesh->gouraudstyle == SHADE_GOURAUD)
         mesh->gouraudstyle = SHADE_TEXTURED;
