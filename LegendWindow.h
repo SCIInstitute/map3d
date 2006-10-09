@@ -4,6 +4,7 @@
 #define LEGENDWINDOW_H
 
 #include "GenericWindow.h"
+#include "GeomWindowMenu.h" // for MenuGroup
 
 class ColorMap;
 class Surf_Data;
@@ -24,7 +25,7 @@ public:
   Surf_Data *surf;
   Mesh_Info *mesh;
   GtkWidget *vert_orient, *horiz_orient;
-  GtkWidget *tick2, *tick4, *tick8, *tick_match;
+  MenuGroup ticks;
 
   // if we start hidden and have -al coordinates set, set to true
   bool specifiedCoordinates;

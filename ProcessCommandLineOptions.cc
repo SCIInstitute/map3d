@@ -1129,7 +1129,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
         // can fail if more than MAX_SURFS l-wins.
         lpriv->parentid = map3d_info.parentid;
         lpriv->orientation = surf->lworientation;
-        lpriv->nticks = mesh->data->numconts + 2;
+        //lpriv->nticks = mesh->data->numconts + 2;
         lpriv->surf = s;
         lpriv->mesh = mesh;
         lpriv->map = &mesh->cmap;

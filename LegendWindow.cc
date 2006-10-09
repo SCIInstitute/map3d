@@ -56,13 +56,17 @@ LegendWindow::LegendWindow() : GLWindow(LEGENDWINDOW, "Colormap Legend",120,135)
   vert_orient = AddCheckMenuEntry(ms, "Vertical", 1, this, MapOrientation);
   horiz_orient = AddCheckMenuEntry(ms, "Horizontal", 0, this, MapOrientation);
   GtkWidget *cm = AddSubMenu(menu, "Number of Tick Marks");
-  tick2 = AddCheckMenuEntry(cm, "2", 2, this, MapTicks);
-  tick4 = AddCheckMenuEntry(cm, "4", 4, this, MapTicks);
-  tick8 = AddCheckMenuEntry(cm, "8", 8, this, MapTicks);
-  tick_match = AddCheckMenuEntry(cm, "Match Contours", 128, this, MapTicks);
+  ticks.add(AddCheckMenuEntry(cm, "0", 0, this, MapTicks));
+  ticks.add(AddCheckMenuEntry(cm, "1", 1, this, MapTicks));
+  ticks.add(AddCheckMenuEntry(cm, "2", 2, this, MapTicks));
+  ticks.add(AddCheckMenuEntry(cm, "3", 3, this, MapTicks));
+  ticks.add(AddCheckMenuEntry(cm, "4", 4, this, MapTicks));
+  ticks.add(AddCheckMenuEntry(cm, "5", 5, this, MapTicks));
+  ticks.add(AddCheckMenuEntry(cm, "6", 6, this, MapTicks));
+  ticks.add(AddCheckMenuEntry(cm, "Match Contours", 128, this, MapTicks));
   menulock = true;
+  ticks.setActive(7);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(vert_orient), true);
-  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(tick_match), true);
   menulock = false;
 
   setupEventHandlers();
@@ -151,6 +155,16 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   if (!priv->initialized)
     LegendWindowReshape(widget, NULL, data);
 
+  if (!priv->mesh->data || !priv->mesh->cont)
+    return;
+  int numconts = priv->mesh->cont->numlevels;
+
+  if (priv->matchContours)
+    priv->nticks = numconts;
+
+  // for the top and bottom
+  int actualTicks = priv->nticks + 2;
+
   GdkGLContext *glcontext = gtk_widget_get_gl_context(widget);
   GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(widget);
 
@@ -162,7 +176,7 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   int length = (*(priv->map))->max;
   float nextval, lastval, colorval;
 
-  int tick_length = length / (priv->nticks - 1);
+  int tick_length = length / (actualTicks - 1);
   int loop;
 
   unsigned char color[3];
@@ -175,9 +189,6 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   float factor;
   float potmin, potmax;
   Surf_Data *cursurf = priv->surf;
-  if (!priv->mesh->data || !priv->mesh->cont)
-    return;
-  int numconts = priv->mesh->cont->numlevels;
 
   cursurf->get_minmax(potmin, potmax);
 
@@ -342,14 +353,14 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   }
 
   //set up window vars
-  if (size / priv->nticks > 3)
+  if (size / actualTicks > 3)
     size_adjuster = 0;
-  else if (size / priv->nticks > 2)
+  else if (size / actualTicks > 2)
     size_adjuster = 1;
   else
     size_adjuster = 2;
   delta = ((float)size) / length;
-  factor = (float)(size / (priv->nticks - 1));
+  factor = (float)(size / (actualTicks - 1));
 
   //draw surface color if mesh is displayed as solid color
   if (priv->mesh->drawmesh == RENDER_MESH_ELTS || priv->mesh->drawmesh == RENDER_MESH_ELTS_CONN) {
@@ -443,14 +454,14 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
     else {
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       glBegin(GL_QUADS);
-      for (loop = 0; loop < priv->nticks - 1; loop++) {
+      for (loop = 0; loop < actualTicks - 1; loop++) {
         nextval = priv->mesh->cont->isolevels[loop];
         if (!priv->mesh->invert)
           glColor3ub(map[loop * tick_length * 3], map[loop * tick_length * 3 + 1], map[loop * tick_length * 3 + 2]);
         else
-          glColor3ub(map[(priv->nticks - loop - 2) * tick_length * 3],
-                     map[(priv->nticks - loop - 2) * tick_length * 3 + 1],
-                     map[(priv->nticks - loop - 2) * tick_length * 3 + 2]);
+          glColor3ub(map[(actualTicks - loop - 2) * tick_length * 3],
+                     map[(actualTicks - loop - 2) * tick_length * 3 + 1],
+                     map[(actualTicks - loop - 2) * tick_length * 3 + 2]);
         //horiz
         if (!priv->orientation) {
           glVertex2d(left + loop * factor, vsize);
@@ -529,14 +540,16 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
     }
   }
   else {
-    for (loop = 0; loop < priv->nticks; loop++) {
-      if (priv->mesh->shadingmodel != SHADE_NONE)
-        if (!priv->mesh->invert)
+    for (loop = 0; loop < actualTicks; loop++) {
+      if (priv->mesh->shadingmodel == SHADE_NONE)
+        if (loop == 0 || loop == actualTicks-1) 
+          glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
+        else if (!priv->mesh->invert)
           glColor3ub(map[loop * tick_length * 3], map[loop * tick_length * 3 + 1], map[loop * tick_length * 3 + 2]);
         else
-          glColor3ub(map[(priv->nticks - loop - 1) * tick_length * 3],
-                     map[(priv->nticks - loop - 1) * tick_length * 3 + 1],
-                     map[(priv->nticks - loop - 1) * tick_length * 3 + 2]);
+          glColor3ub(map[(actualTicks - loop - 1) * tick_length * 3],
+                     map[(actualTicks - loop - 1) * tick_length * 3 + 1],
+                     map[(actualTicks - loop - 1) * tick_length * 3 + 2]);
 
       //horiz
       if (!priv->orientation) {
@@ -564,7 +577,7 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
     position[1] = (float)bottom - 15;
     position[2] = 0;
 
-    //int numconts = priv->nticks;
+    //int numconts = actualTicks;
     int stagger = 0;            //which row you're on
     int rowpos[2] = { -15, -100 };  //
     int endpos = (int)(left - getFontWidth(priv->mesh->gpriv->small_font) * 2.5 + size);
@@ -649,7 +662,7 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   }
   //vertical
   else {
-    //int numconts = priv->nticks;
+    //int numconts = actualTicks;
     int prevcont = bottom;
     int lastcont = bottom + size;
     for (loop = -1; loop <= numconts; loop++) {
@@ -874,40 +887,16 @@ void MapTicks(menu_data * data)
   LegendWindow *priv = (LegendWindow *) data->priv; //GetCurrentWindow();
 
   if (entry == 128) {
-    entry = priv->surf->numconts + 2;
+    entry = priv->surf->numconts;
     priv->matchContours = 1;
     menulock = true;
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick2), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick4), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick8), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick_match), true);
+    priv->ticks.setActive(7); // the index for match contours
     menulock = false;
   }
-  else if(entry == 2){
+  else {
     priv->matchContours = 0;
     menulock = true;
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick2), true);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick4), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick8), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick_match), false);
-    menulock = false;
-  }
-  else if(entry == 4){
-    priv->matchContours = 0;
-    menulock = true;
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick2), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick4), true);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick8), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick_match), false);
-    menulock = false;
-  }
-  else if(entry == 8){
-    priv->matchContours = 0;
-    menulock = true;
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick2), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick4), false);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick8), true);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->tick_match), false);
+    priv->ticks.setActive(entry); // the indices start at 0, and the first one is 0
     menulock = false;
   }
   priv->nticks = entry;
