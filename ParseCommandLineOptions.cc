@@ -115,7 +115,7 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_1("-sm", globalInput.SurfList[GEOM_INDEX]->shadingmodel)
       OPTION_1("-rm", globalInput.SurfList[GEOM_INDEX]->drawmesh)
       OPTION_1("-ic", globalInput.SurfList[GEOM_INDEX]->invert)
-      //OPTION_1("-nc", globalInput.SurfList[GEOM_INDEX]->numconts)
+      OPTION_1("-nco", globalInput.SurfList[GEOM_INDEX]->numconts)
       OPTION_4("-rq", globalInput.SurfList[GEOM_INDEX]->rotationQuat.w,
                       globalInput.SurfList[GEOM_INDEX]->rotationQuat.x,
                       globalInput.SurfList[GEOM_INDEX]->rotationQuat.y,
@@ -123,6 +123,7 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_ARRAY("-tc", 3, globalInput.SurfList[GEOM_INDEX]->translation)
       OPTION_1("-zf", globalInput.SurfList[GEOM_INDEX]->vfov)
       OPTION_1("-slw", globalInput.SurfList[GEOM_INDEX]->showlegend)
+      OPTION_1("-lwt", globalInput.SurfList[GEOM_INDEX]->legendticks)
       OPTION_1("-el", globalInput.SurfList[GEOM_INDEX]->lighting)
       OPTION_1("-ef", globalInput.SurfList[GEOM_INDEX]->fogging)
       /* -gn group number for scaling with groups */
@@ -131,6 +132,9 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_1("-nc", globalInput.SurfList[GEOM_INDEX]->negcontdashed)
       OPTION_1("-x", globalInput.SurfList[GEOM_INDEX]->axes)
       OPTION_ARRAY("-xc", 3, globalInput.SurfList[GEOM_INDEX]->axes_color)
+
+      OPTION_1("-sit", globalInput.SurfList[GEOM_INDEX]->showinfotext)
+      OPTION_1("-sli", globalInput.SurfList[GEOM_INDEX]->showlocks)
 
       // node marking options
       OPTION_3("-nma", globalInput.SurfList[GEOM_INDEX]->all_sphere,

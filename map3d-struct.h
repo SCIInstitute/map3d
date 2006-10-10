@@ -93,12 +93,16 @@ struct Surf_Input
   float translation[3];
   float vfov;
   long showlegend;
+  long legendticks;
   long lighting;
   long fogging;
   long drawcont;
   long negcontdashed;
   long axes;
   long axes_color[3];
+
+  long showinfotext;
+  long showlocks;
 
   // node marking options
   long all_sphere, all_mark, all_value;

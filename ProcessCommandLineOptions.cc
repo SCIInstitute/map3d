@@ -1102,7 +1102,12 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
     if (mesh->contourspacing)
       map3d_info.use_spacing = true;
     else {
-      mesh->data->numconts = 10;
+      if (mesh->mysurf->numconts != DEF_NUMCONTS) 
+        mesh->data->numconts = mesh->mysurf->numconts;
+      else if (mesh->mysurf->parent->SurfList[MAX_SURFS]->numconts != DEF_NUMCONTS)
+        mesh->data->numconts = mesh->mysurf->parent->SurfList[MAX_SURFS]->numconts;
+      else
+        mesh->data->numconts = 10;
     }
 
     // reslave meshes that were originally assigned to this surf
@@ -1119,17 +1124,16 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
       int width, height;
       width = mesh->lw_xmax - mesh->lw_xmin - HORIZ;
       height = mesh->lw_ymax - mesh->lw_ymin - VERTICAL;
-      if(!mesh->showlegend){
-        lpriv = LegendWindow::LegendWindowCreate(width, height, mesh->lw_xmin, mesh->lw_ymin, 170, 256, true);
-      }
-      else{
-        lpriv = LegendWindow::LegendWindowCreate(width, height, mesh->lw_xmin, mesh->lw_ymin, 170, 256, false);
-      }
+      lpriv = LegendWindow::LegendWindowCreate(width, height, mesh->lw_xmin, mesh->lw_ymin, 170, 256, !mesh->showlegend);
+
       if (lpriv != NULL) {
         // can fail if more than MAX_SURFS l-wins.
         lpriv->parentid = map3d_info.parentid;
         lpriv->orientation = surf->lworientation;
-        //lpriv->nticks = mesh->data->numconts + 2;
+        if (mesh->mysurf->legendticks != -1) {
+          lpriv->nticks = mesh->mysurf->legendticks;
+          lpriv->matchContours = false;
+        }
         lpriv->surf = s;
         lpriv->mesh = mesh;
         lpriv->map = &mesh->cmap;
@@ -1183,7 +1187,7 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
 
   // contour spacing
   // set it to a default later, after we've read data
-  INITIALIZE_VALUE(contourstep, contourspacing, 0, DEF_CONTOURSPACING)
+  INITIALIZE_VALUE(contourstep, contourspacing, 0, DEF_CONTOURSPACING);
   // Shading mode
   INITIALIZE_VALUE(shadingmodel, shadingmodel, -1, DEF_SHADINGMODEL);
 
@@ -1239,6 +1243,10 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   else
     m->showlegend = DEF_SHOWLEGEND;
 
+  // number of ticks in LW
+  if (s->legendticks == -1 && globalSurf->legendticks != -1)
+    s->legendticks = globalSurf->legendticks;
+
   // show contour lines (or not)
   INITIALIZE_VALUE(drawcont, drawcont, -1, DEF_DRAWCONT);
 
@@ -1269,6 +1277,12 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
     else
       s->vfov = DEF_VFOV;
   }
+
+  if (s->showinfotext == -1 && globalSurf->showinfotext != -1)
+    s->showinfotext = globalSurf->showinfotext;
+  if (s->showlocks == -1 && globalSurf->showlocks != -1)
+    s->showlocks = globalSurf->showlocks;
+
   
   // background color - set up here and copy to window later
   if (s->colour_bg[0] == -1 || s->colour_bg[1] == -1 || s->colour_bg[2] == -1) {

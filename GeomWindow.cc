@@ -239,6 +239,9 @@ void GeomWindow::addMesh(Mesh_Info *curmesh)
     large_font = (float)curmesh->mysurf->large_font;
     med_font = (float)curmesh->mysurf->med_font;
     small_font = (float)curmesh->mysurf->small_font; 
+
+    if (curmesh->mysurf->showinfotext != -1) showinfotext = curmesh->mysurf->showinfotext;
+    if (curmesh->mysurf->showlocks != -1) showlocks = curmesh->mysurf->showlocks;
   }
 
   // make legend window's fg/bg equal to this one

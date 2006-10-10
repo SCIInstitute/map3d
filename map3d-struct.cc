@@ -124,6 +124,7 @@ void Init_Surf_Input(Surf_Input * s)
   s->negcontdashed = -1;
   s->drawcont = -1;
   s->showlegend = -1;
+  s->legendticks = -1;
   s->lighting = -1;
   s->fogging = -1;
   s->numconts = DEF_NUMCONTS; // -1 -> when we get this on the command line
@@ -136,6 +137,9 @@ void Init_Surf_Input(Surf_Input * s)
   s->extrema_mark = s->extrema_sphere = -1;
   s->pick_mark = s->pick_sphere = -1;
   s->lead_mark = s->lead_sphere = -1;
+
+  s->showinfotext = -1;
+  s->showlocks = -1;
 }
 
 

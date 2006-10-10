@@ -385,18 +385,21 @@ void addRowToOtherDialogs()
   gtk_entry_set_width_chars(GTK_ENTRY(cont_surfname), 22);
   gtk_widget_show(cont_surfname);
   
-  rowdata->cs_adj = gtk_adjustment_new(rowdata->orig_numspaces,0.01,surfmax-surfmin,0.01,0.1,0.1);
-  rowdata->contourspacing = gtk_spin_button_new((GtkAdjustment*)rowdata->cs_adj,1,2);
+  float cs_min = (surfmax-surfmin)/1000;  // 1000 because local windows can often be a small subset of the data range
+  float high = MAX(fabs(surfmax), fabs(surfmin));
+
+  rowdata->cs_adj = gtk_adjustment_new(rowdata->orig_numspaces,cs_min,surfmax-surfmin,cs_min,cs_min*10,cs_min*10);
+  rowdata->contourspacing = gtk_spin_button_new((GtkAdjustment*)rowdata->cs_adj,.1,4);
   gtk_widget_show(rowdata->contourspacing);
   
   rowdata->cn_adj = gtk_adjustment_new(rowdata->orig_numconts,1,100,1,1,1);
   rowdata->numcontours = gtk_spin_button_new((GtkAdjustment*)rowdata->cn_adj,1,0);
   gtk_widget_show(rowdata->numcontours);
-  rowdata->lr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmin:0,-2*fabs(surfmin), 2*fabs(surfmax),1,5,5);
-  rowdata->cont_low_range = gtk_spin_button_new((GtkAdjustment*)rowdata->lr_adj,1,2);
+  rowdata->lr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmin:0,-3*high, 3*high,1,5,5);
+  rowdata->cont_low_range = gtk_spin_button_new((GtkAdjustment*)rowdata->lr_adj,1,3);
   gtk_widget_show(rowdata->cont_low_range);
-  rowdata->hr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmax:0,-2*fabs(surfmin), 2*fabs(surfmax),1,5,5);
-  rowdata->cont_high_range = gtk_spin_button_new((GtkAdjustment*)rowdata->hr_adj,1,2);
+  rowdata->hr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmax:0,-3*high, 3*high,1,5,5);
+  rowdata->cont_high_range = gtk_spin_button_new((GtkAdjustment*)rowdata->hr_adj,1,3);
   gtk_widget_show(rowdata->cont_high_range);
   rowdata->cont_default_range = gtk_check_button_new();
   gtk_widget_show(rowdata->cont_default_range);

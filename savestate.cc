@@ -128,13 +128,10 @@ void outputMeshInfo(FILE* f, char* cont, SaveDialog* sd, Mesh_Info* mesh)
       fprintf(f, "-ic 1%s",cont);
     else
       fprintf(f, "-ic 0%s",cont);
-    // contourstep OR number of contours
-    // if (1 /* not default contour spacing*/)
-    //fprintf(f, "-cs %f%s", mesh->contourspacing,cont);
-    //if (mesh->data)
-      //fprintf(f, "-nc %d%s", mesh->data->numconts,cont);
     // show legend?
     fprintf(f, "-slw %d%s",mesh->showlegend?1:0, cont);
+    // legend ticks?
+    fprintf(f, "-lwt %d%s",mesh->legendwin&&mesh->legendwin->matchContours?-1:mesh->legendwin->nticks, cont);
     // lighting
     fprintf(f, "-el %d%s",mesh->lighting?1:0, cont);
     // depth cue
@@ -159,6 +156,10 @@ void outputMeshInfo(FILE* f, char* cont, SaveDialog* sd, Mesh_Info* mesh)
     fprintf(f, "-nmp %d %d%s",mesh->mark_ts_sphere, mesh->mark_ts_number, cont);
     // draw node marks (lead)
     fprintf(f, "-nml %d %d%s",mesh->mark_lead_sphere, mesh->mark_lead_number, cont);
+    // show info text in windows
+    fprintf(f, "-sit %d ", mesh->gpriv->showinfotext);
+    // show locks
+    fprintf(f, "-sli %d ", mesh->gpriv->showlocks );
   }
   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(sd->settings_transform))) {
     // rotation matrix
@@ -261,6 +262,15 @@ void SaveSettings(SaveDialog* sd)
         if (mesh->data) {
           fprintf(f, "-p %s@%d ", mesh->data->potfilename, mesh->mysurf->timeseries);
           fprintf(f, "-s %d %d -i %d ", mesh->data->ts_start+1, mesh->data->ts_end+1, mesh->data->ts_sample_step);
+          // contourstep OR number of contours
+          if (map3d_info.use_spacing)
+            fprintf(f, "-cs %f ", mesh->contourspacing);
+          else
+            fprintf(f, "-nco %d ", mesh->data->numconts);
+          if (mesh->data->userpotmax != mesh->data->userpotmin) {
+            fprintf(f, "-pl %f -ph %f ", mesh->data->userpotmin, mesh->data->userpotmax);
+          }
+
         }
         if (mesh->mysurf->llfilename && strlen(mesh->mysurf->llfilename) > 0)
           fprintf(f, "-ll %s ", mesh->mysurf->llfilename);

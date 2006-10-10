@@ -923,14 +923,12 @@ void GeomWindowHandleMenu(menu_data * data)
       case window_attr_info_on:
         priv->showinfotext = 1;
         if (lpriv) {
-          lpriv->showinfotext = 1;
           gtk_widget_queue_draw(mesh->legendwin->drawarea);
         }
           break;
       case window_attr_info_off:
         priv->showinfotext = 0;
         if (lpriv) {
-          lpriv->showinfotext = 0;
           gtk_widget_queue_draw(mesh->legendwin->drawarea);
         }
           break;

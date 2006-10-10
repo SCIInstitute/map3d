@@ -49,8 +49,8 @@ public:
 #if 1
   char label[100]; /*** String to use for label ***/
   char shortlabel[100]; /*** same as label, without series and surface number ***/
-  char filepath[100]; /*** Datafilepath for .data files ***/
-  char potfilename[100]; /*** Filename for this surface of data ***/
+  char filepath[512]; /*** Datafilepath for .data files ***/
+  char potfilename[512]; /*** Filename for this surface of data ***/
 #else
   char *label;
   char *shortlabel;

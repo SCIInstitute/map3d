@@ -50,8 +50,8 @@ public:
   long* tetragroups;
 
   char label[100]; /*** A string with the label for this surface ***/
-  char filepath[100]; /*** Path name for the geom files ***/
-  char basefilename[257]; /*** Base filename for this geometry ***/
+  char filepath[512]; /*** Path name for the geom files ***/
+  char basefilename[512]; /*** Base filename for this geometry ***/
   Land_Mark *landmarks; /*** Landmarks for this surface. ***/
 
   float xmin, xmax, ymin, ymax, zmin, zmax;

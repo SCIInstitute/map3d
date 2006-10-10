@@ -312,9 +312,22 @@ void updateContourDialogValues(Mesh_Info* mesh)
           rowdata->orig_numspaces  = (max - min)/float(mesh->data->numconts+1);
           rowdata->orig_numconts = (float) mesh->data->numconts;
 
+          // reset the adjustments
+          float surfmin = mesh->data->potmin, surfmax = mesh->data->potmax;
+          float cs_min = (surfmax-surfmin)/1000;  // 1000 because local windows can often be a small subset of the data range
+          float high = MAX(fabs(surfmax), fabs(surfmin));
+          rowdata->cs_adj = gtk_adjustment_new(rowdata->orig_numspaces,cs_min,surfmax-surfmin,cs_min,cs_min*10,cs_min*10);
+          rowdata->lr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmin:0,-3*high, 3*high,1,5,5);
+          rowdata->hr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmax:0,-3*high, 3*high,1,5,5);
+          gtk_spin_button_set_adjustment(GTK_SPIN_BUTTON(rowdata->contourspacing), (GtkAdjustment*)rowdata->lr_adj);
+          gtk_spin_button_set_adjustment(GTK_SPIN_BUTTON(rowdata->cont_low_range), (GtkAdjustment*)rowdata->lr_adj);
+          gtk_spin_button_set_adjustment(GTK_SPIN_BUTTON(rowdata->cont_high_range), (GtkAdjustment*)rowdata->hr_adj);
+
           gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->contourspacing),rowdata->orig_numspaces);
           gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->numcontours),rowdata->orig_numconts);
           gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_occlusion_gradient),mesh->data->potmax-mesh->data->potmin);
+          gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_low_range),0);
+          gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_high_range),0);
           continue;
         }
         if (gtk_toggle_button_get_active(&GTK_RADIO_BUTTON(contourdialog->lock_contspacing)->check_button.toggle_button)){
@@ -360,7 +373,7 @@ void cont_get_minmax(FilesDialogRowData* rowdata, float& min, float& max)
   else {
     max = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_high_range));
     min = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_low_range));
-    if (min == 0.0f && max == 0.0f) {
+    if (min == 0.0f && max == 0.0f && rowdata->mesh->data) {
       // set it to the current min/max
       // rather than just setting it to 0
       contourdialog->field_lock = true;
@@ -370,7 +383,7 @@ void cont_get_minmax(FilesDialogRowData* rowdata, float& min, float& max)
       rowdata->mesh->data->user_scaling = tempval;
       gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_high_range), max);
       gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_low_range), min);
-      contourdialog->field_lock = false;
+      //contourdialog->field_lock = false;
     }
   }
 }
@@ -467,7 +480,7 @@ void modifyContourDialogRow_NumContChange(FilesDialogRowData* rowdata)
     // update spacing if the num conts changed
 
     // round down at the end to make sure we get the number of conts we ask for
-    spaces = (max - min)/float(numconts+1) - .005;
+    spaces = (max - min)/float(numconts+1) - .000005;
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->contourspacing),spaces);
   }
   else {

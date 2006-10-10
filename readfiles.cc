@@ -971,7 +971,7 @@ Return:	    pointer to updated surf_data array or NULL for error
       }
     }
     else {
-      fprintf(stderr, "Cannot find potential data in file %s\n");
+      fprintf(stderr, "Cannot find potential data in file %s\n", sinputlist->potfilename);
       fprintf(stderr, "Use matlab matrix with name 'potvals', 'data', 'field', or 'scalarfield'\n");
       return 0;
     }

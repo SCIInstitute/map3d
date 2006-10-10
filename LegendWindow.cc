@@ -47,7 +47,7 @@ LegendWindow::LegendWindow() : GLWindow(LEGENDWINDOW, "Colormap Legend",120,135)
   
   bgcolor[0] = bgcolor[1] = bgcolor[2] = 0;
   fgcolor[0] = fgcolor[1] = fgcolor[2] = 1;
-  showinfotext = 1;
+  //showinfotext = 1;
   is_displayed = 1;
   matchContours = 1;
 
@@ -65,7 +65,6 @@ LegendWindow::LegendWindow() : GLWindow(LEGENDWINDOW, "Colormap Legend",120,135)
   ticks.add(AddCheckMenuEntry(cm, "6", 6, this, MapTicks));
   ticks.add(AddCheckMenuEntry(cm, "Match Contours", 128, this, MapTicks));
   menulock = true;
-  ticks.setActive(7);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(vert_orient), true);
   menulock = false;
 
@@ -131,6 +130,12 @@ void LegendWindowInit(GtkWidget *, GdkEvent *, gpointer data)
   if (!priv->standardInitialize())
     return;
 
+  if (priv->matchContours)
+    priv->ticks.setActive(7);
+  else
+    priv->ticks.setActive(priv->nticks);
+
+
   gdk_gl_drawable_gl_begin(priv->gldrawable, priv->glcontext);
   glLineWidth(3);
   glDisable(GL_DEPTH_TEST);
@@ -176,7 +181,6 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   int length = (*(priv->map))->max;
   float nextval, lastval, colorval;
 
-  int tick_length = length / (actualTicks - 1);
   int loop;
 
   unsigned char color[3];
@@ -192,6 +196,21 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
 
   cursurf->get_minmax(potmin, potmax);
 
+  // contvals will be all the lines drawn, whether in matchContours mode or not, including the min and max line
+  vector<float> contvals;
+  contvals.push_back(potmin);
+  if (priv->matchContours) {
+    priv->nticks = priv->mesh->cont->numlevels;
+    for (unsigned i = 0; i < priv->mesh->cont->numlevels; i++)
+      contvals.push_back(priv->mesh->cont->isolevels[i]);
+  }
+  else {
+    float tick_range = (potmax-potmin)/(priv->nticks+1);
+    for (unsigned i = 0; i < priv->nticks; i++)
+      contvals.push_back(potmin + (tick_range*(i+1)));
+  }
+  contvals.push_back(potmax);
+
   float coloroffset = .5;
 
   if (priv->bgcolor[0] + .3 > 1 || priv->bgcolor[1] + .3 > 1 || priv->bgcolor[2] + .3 > 1)
@@ -202,7 +221,8 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
 
   glColor3f(priv->fgcolor[0], priv->fgcolor[1], priv->fgcolor[2]);
 
-  if (priv->showinfotext) {
+  // link info to geom window
+  if (priv->mesh->gpriv->showinfotext) {
     /*position[0] = -6*CHAR_WIDTH*aspect*1.5;
       glprintf(position,normal,up,CHAR_WIDTH*aspect*1.5,CHAR_HEIGHT*1.5,"Surface # %d",cursurf->surfnum);
       position[0] = -((strlen(cursurf->potfilename)+3)/2.0f)*CHAR_WIDTH*aspect;
@@ -332,7 +352,7 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
     //vsize = ((priv->height > 150) ? (int)(priv->height * .75 - 30) : (int)(priv->height - 80));
     left = 20;
     size = priv->width - 40;
-    if (priv->showinfotext)
+    if (priv->mesh->gpriv->showinfotext)
       vsize = priv->height - (getFontHeight(priv->mesh->gpriv->large_font) +
 			     getFontHeight(priv->mesh->gpriv->med_font)+10);
     else
@@ -342,7 +362,7 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   }
   //vertical
   else {
-    if (priv->showinfotext)
+    if (priv->mesh->gpriv->showinfotext)
       size = priv->height - (getFontHeight(priv->mesh->gpriv->large_font) +
 			     3*getFontHeight(priv->mesh->gpriv->med_font)+20);
     else
@@ -353,9 +373,9 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   }
 
   //set up window vars
-  if (size / actualTicks > 3)
+  if (size / contvals.size() > 4)
     size_adjuster = 0;
-  else if (size / actualTicks > 2)
+  else if (size / contvals.size() > 3)
     size_adjuster = 1;
   else
     size_adjuster = 2;
@@ -387,9 +407,11 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
       glEnd();
     }
   }
-  //gouraud shading
+  //gouraud shading (or band-shading without matching contours - it wouldn't make sense to 
+  // draw bands that don't correspond to the display)
   else if (priv->mesh->shadingmodel == SHADE_GOURAUD || 
-           priv->mesh->shadingmodel == SHADE_FLAT) {
+           priv->mesh->shadingmodel == SHADE_FLAT ||
+           (priv->mesh->shadingmodel == SHADE_BANDED && !priv->matchContours)) {
 
     glBegin(GL_QUAD_STRIP);
 
@@ -410,77 +432,41 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   }
   //band shading
   else if (priv->mesh->shadingmodel == SHADE_BANDED) {
-    if (priv->matchContours) {
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      glBegin(GL_QUADS);
-      for (loop = -1; loop < numconts; loop++) {
-        if (loop == -1) {
-          nextval = priv->mesh->cont->isolevels[loop + 1];
-          lastval = potmin;
-          colorval = potmin;
-        }
-        else if (loop == numconts - 1) {
-          nextval = potmax;
-          lastval = priv->mesh->cont->isolevels[loop];
-          colorval = potmax;
-        }
-        else {
-          nextval = priv->mesh->cont->isolevels[loop + 1];
-          lastval = priv->mesh->cont->isolevels[loop];
-          float* conts = priv->mesh->cont->isolevels;
-          colorval = conts[loop] + (conts[loop+1]-conts[loop])*(loop+1)/(numconts);
-        }
-        // don't get color by the potval, but by the ratio between the low/high vals
-        getContColor(colorval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
-        glColor3ubv(color);
-
-
-        //horiz
-        if (!priv->orientation) {
-          glVertex2d(left + (lastval - potmin) / (potmax - potmin) * size, vsize);
-          glVertex2d(left + (lastval - potmin) / (potmax - potmin) * size, bottom);
-          glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, bottom);
-          glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, vsize);
-        }
-        else {
-          glVertex2d(left, bottom + (lastval - potmin) / (potmax - potmin) * size);
-          glVertex2d(hsize, bottom + (lastval - potmin) / (potmax - potmin) * size);  // -.85 to .4
-          glVertex2d(hsize, bottom + (nextval - potmin) / (potmax - potmin) * size);  // -.85 to .4
-          glVertex2d(left, bottom + (nextval - potmin) / (potmax - potmin) * size);
-        }
+    // assumes matched contours
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBegin(GL_QUADS);
+    for (loop = 0; loop < contvals.size()-1; loop++) {
+      nextval = contvals[loop + 1];
+      lastval = contvals[loop];
+      if (loop == 0) {
+        colorval = potmin;
       }
-      glEnd();
-    }
-    else {
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      glBegin(GL_QUADS);
-      for (loop = 0; loop < actualTicks - 1; loop++) {
-        nextval = priv->mesh->cont->isolevels[loop];
-        if (!priv->mesh->invert)
-          glColor3ub(map[loop * tick_length * 3], map[loop * tick_length * 3 + 1], map[loop * tick_length * 3 + 2]);
-        else
-          glColor3ub(map[(actualTicks - loop - 2) * tick_length * 3],
-                     map[(actualTicks - loop - 2) * tick_length * 3 + 1],
-                     map[(actualTicks - loop - 2) * tick_length * 3 + 2]);
-        //horiz
-        if (!priv->orientation) {
-          glVertex2d(left + loop * factor, vsize);
-          glVertex2d(left + loop * factor, bottom);
-          glVertex2d(left + loop * factor + factor, bottom);
-          glVertex2d(left + loop * factor + factor, vsize);
-
-        }
-        //vert
-        else {
-          glVertex2d(left, bottom + loop * factor);
-          glVertex2d(hsize, bottom + loop * factor);
-          glVertex2d(hsize, bottom + loop * factor + factor);
-          glVertex2d(left, bottom + loop * factor + factor);
-        }
+      else if (loop == contvals.size() - 2) {
+        colorval = potmax;
       }
-      glEnd();
-    }
+      else {
+        colorval = contvals[loop] + (contvals[loop+1]-contvals[loop])*(loop)/(numconts);
+      }
+      // don't get color by the potval, but by the ratio between the low/high vals
+      getContColor(colorval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
+      glColor3ubv(color);
 
+
+      //horiz
+      if (!priv->orientation) {
+        glVertex2d(left + (lastval - potmin) / (potmax - potmin) * size, vsize);
+        glVertex2d(left + (lastval - potmin) / (potmax - potmin) * size, bottom);
+        glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, bottom);
+        glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, vsize);
+      }
+      else {
+        glVertex2d(left, bottom + (lastval - potmin) / (potmax - potmin) * size);
+        glVertex2d(hsize, bottom + (lastval - potmin) / (potmax - potmin) * size);  // -.85 to .4
+        glVertex2d(hsize, bottom + (nextval - potmin) / (potmax - potmin) * size);  // -.85 to .4
+        glVertex2d(left, bottom + (nextval - potmin) / (potmax - potmin) * size);
+      }
+    }
+    glEnd();
   }
 
   /* draw legend outline */
@@ -509,180 +495,116 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
 
 
   //draw contour lines in legend window
-  if (priv->matchContours) {
-    for (loop = -1; loop <= numconts; loop++) {
-      if (loop == -1)
-        nextval = potmin;
-      else if (loop == numconts)
-        nextval = potmax;
-      else
-        nextval = priv->mesh->cont->isolevels[loop];
-      if (priv->mesh->shadingmodel == SHADE_NONE) {
-        if (loop == -1 || loop == numconts){
-          glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
-     	}
-        else {
-          getContColor(nextval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
-          glColor3ubv(color);
-        }
-      }
-      //horiz
-      if (!priv->orientation) {
-        glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, vsize);  // -.85 to .4
-        glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, bottom - 5);
-      }
-      //vert
+  for (loop = 0; loop < contvals.size(); loop++) {
+    nextval = contvals[loop];
+    if (priv->mesh->shadingmodel == SHADE_NONE) {
+      if (loop == 0 || loop == contvals.size()-1){
+        glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
+   	  }
       else {
-        glVertex2d(left, bottom + (nextval - potmin) / (potmax - potmin) * size); // -.85 to .4
-        glVertex2d(hsize + 5, bottom + (nextval - potmin) / (potmax - potmin) * size);
-      }
-
-    }
-  }
-  else {
-    for (loop = 0; loop < actualTicks; loop++) {
-      if (priv->mesh->shadingmodel == SHADE_NONE)
-        if (loop == 0 || loop == actualTicks-1) 
-          glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
-        else if (!priv->mesh->invert)
-          glColor3ub(map[loop * tick_length * 3], map[loop * tick_length * 3 + 1], map[loop * tick_length * 3 + 2]);
-        else
-          glColor3ub(map[(actualTicks - loop - 1) * tick_length * 3],
-                     map[(actualTicks - loop - 1) * tick_length * 3 + 1],
-                     map[(actualTicks - loop - 1) * tick_length * 3 + 2]);
-
-      //horiz
-      if (!priv->orientation) {
-        glVertex2d(left + loop * factor, vsize);
-        glVertex2d(left + loop * factor, bottom - 5);
-      }
-      else {
-        glVertex2d(left, bottom + loop * factor);
-        glVertex2d(hsize + 5, bottom + loop * factor);
+        getContColor(nextval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
+        glColor3ubv(color);
       }
     }
+    //horiz
+    if (!priv->orientation) {
+      glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, vsize);  // -.85 to .4
+      glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, bottom - 5);
+    }
+    //vert
+    else {
+      glVertex2d(left, bottom + (nextval - potmin) / (potmax - potmin) * size); // -.85 to .4
+      int extension = (loop == 0 || loop == contvals.size()-1) ? 5 : 0;
+      glVertex2d(hsize + extension, bottom + (nextval - potmin) / (potmax - potmin) * size);
+    }
+
   }
   glEnd();
-  glLineWidth(3);
+  //glLineWidth(3);
 
-  position[0] = (float)hsize + 10;
-  position[1] = 0;
-  position[2] = 0;
-  glColor3f(priv->fgcolor[0], priv->fgcolor[1], priv->fgcolor[2]);
-
-  //write contour values
-  //horizontal
-  if (!priv->orientation) {
+  if (priv->orientation) {
+    position[0] = (float)hsize + 10;
+    position[1] = 0;
+    position[2] = 0;
+  }
+  else {
     position[0] = (float)left;
     position[1] = (float)bottom - 15;
     position[2] = 0;
+  }
 
-    //int numconts = actualTicks;
-    int stagger = 0;            //which row you're on
-    int rowpos[2] = { -15, -100 };  //
-    int endpos = (int)(left - getFontWidth(priv->mesh->gpriv->small_font) * 2.5 + size);
-    char string[256] = { '\0' };
-    for (loop = -1; loop <= numconts; loop++) {
-      if (loop == -1)
-        nextval = potmin;
-      else if (loop == numconts)
-        nextval = potmax;
-      else
-        nextval = priv->mesh->cont->isolevels[loop];
+  //write contour values
+  // vars used in inner loop
+  char string[256] = { '\0' };
+  int prevcont = bottom;
+  int lastcont = bottom + size;
+  int stagger = 0;            //which row you're on
+  int rowpos[2] = { -15, -100 };  //
+  int endpos = (int)(left - getFontWidth(priv->mesh->gpriv->small_font) * 2.5 + size);
 
-      if (nextval >= 0 && nextval < 10) //2 decimal precision
-        sprintf(string, "%.2f", nextval);
-      else                      //1 decimal precision
-        sprintf(string, "%.1f", nextval);
 
+  for (loop = 0; loop < contvals.size(); loop++) {
+    glColor3f(priv->fgcolor[0], priv->fgcolor[1], priv->fgcolor[2]);
+    nextval = contvals[loop];
+
+    if (nextval > -.1 && nextval < .1) // 3-decimal precision
+      sprintf(string, "%.3f", nextval);
+    else if (nextval >= .1 && nextval < 10) //2 decimal precision
+      sprintf(string, "%.2f", nextval);
+    else                      //1 decimal precision
+      sprintf(string, "%.1f", nextval);
+    //horizontal
+    if (!priv->orientation) {
       position[0] = left - getFontWidth(priv->mesh->gpriv->small_font) * 2.5f + ((nextval - potmin) / (potmax - potmin) * size);
       //glprintf(position,normal,up,mod_width*aspect,mod_height,"%.2f\0",nextval);
-      if (loop == -1 || loop == numconts) {
-	glColor3f(priv->fgcolor[0], priv->fgcolor[1], priv->fgcolor[2]);
+      if (loop == 0 || loop == contvals.size()-1 || (rowpos[stagger] + getFontWidth(priv->mesh->gpriv->small_font) * 6 < position[0] &&
+          (position[0] + getFontWidth(priv->mesh->gpriv->small_font) * 6 < endpos ||
+          rowpos[(stagger + 1) % 2] + getFontWidth(priv->mesh->gpriv->small_font) * 6 < endpos))) {
+        glColor3f(priv->fgcolor[0], priv->fgcolor[1], priv->fgcolor[2]);
         renderString3f(position[0], position[1] - 12 * stagger, position[2], priv->mesh->gpriv->small_font, string);
-	//Extend the contour line if number is staggered(on the bottom)
-	if(stagger == 1){
-	  glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
-	  if (priv->matchContours) {
-	    if (priv->mesh->shadingmodel == SHADE_NONE) {
-	      if (loop == -1 || loop == numconts){
-		glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
-	      }
-	      else {
-		getContColor(nextval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
-		glColor3ubv(color);
-	      }
-	    }
-	    glLineWidth((float)(3 - size_adjuster));
-	    glBegin(GL_LINES);
-	    glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, bottom - 5);  
-	    glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, position[1] - 2 * stagger);
-	    glEnd();
-	    glLineWidth(3);
-	  }
-	}
-	//end draw contour line
+        //Extend the contour line if number is staggered(on the bottom)
+        if(stagger == 1){
+          glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
+          if (priv->mesh->shadingmodel == SHADE_NONE && loop != 0 && loop != contvals.size()-1) {
+            getContColor(nextval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
+            glColor3ubv(color);
+          }
+          glBegin(GL_LINES);
+          glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, bottom - 5); 
+          glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, position[1] - 2 * stagger);
+          glEnd();
+          glLineWidth(3);
+        }
+        //end draw contour line
         rowpos[stagger] = (int)position[0];
         stagger = (stagger + 1) % 2;
-
       }
-      else
-        if (rowpos[stagger] + getFontWidth(priv->mesh->gpriv->small_font) * 6 < position[0] &&
-            (position[0] + getFontWidth(priv->mesh->gpriv->small_font) * 6 < endpos ||
-	     rowpos[(stagger + 1) % 2] + getFontWidth(priv->mesh->gpriv->small_font) * 6 < endpos)) {
-	  glColor3f(priv->fgcolor[0], priv->fgcolor[1], priv->fgcolor[2]);
-	  renderString3f(position[0], position[1] - 12 * stagger, position[2], priv->mesh->gpriv->small_font, string);
-	  //Extend the contour line if number is staggered(on the bottom)
-	  if(stagger == 1){
-	    glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
-	    if (priv->matchContours) {
-	      if (priv->mesh->shadingmodel == SHADE_NONE) {
-		if (loop == -1 || loop == numconts){
-		  glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
-		}
-		else {
-		  getContColor(nextval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
-		  glColor3ubv(color);
-		}
-	      }
-	      glLineWidth((float)(3 - size_adjuster));
-	      glBegin(GL_LINES);
-	      glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, bottom - 5); 
-	      glVertex2d(left + (nextval - potmin) / (potmax - potmin) * size, position[1] - 2 * stagger);
-	      glEnd();
-	      glLineWidth(3);
-	    }
-	  }
-	  //end draw contour line
-	  rowpos[stagger] = (int)position[0];
-	  stagger = (stagger + 1) % 2;
-	}
     }
-
-  }
-  //vertical
-  else {
-    //int numconts = actualTicks;
-    int prevcont = bottom;
-    int lastcont = bottom + size;
-    for (loop = -1; loop <= numconts; loop++) {
-      if (loop == -1)
-        nextval = potmin;
-      else if (loop == numconts)
-        nextval = potmax;
-      else
-        nextval = priv->mesh->cont->isolevels[loop];
+    //vertical
+    else {
+      //int numconts = actualTicks;
       position[1] = bottom - 3 + ((nextval - potmin) / (potmax - potmin) * size);
-      if (loop == -1)
-        prevcont = (int)position[1];
-
-
+      int font_height = getFontHeight(priv->mesh->gpriv->small_font);
       //determines based on 12 pixels per character which contour val to write
-      if (loop == -1 || loop == numconts)
-        renderString3f(position[0], position[1], position[2], priv->mesh->gpriv->small_font, "%.2f\0", nextval);
-      else if (position[1] >= prevcont + 12 && position[1] <= lastcont - 12) {
-        renderString3f(position[0], position[1], position[2], priv->mesh->gpriv->small_font, "%.2f\0", nextval);
+      if (loop == 0 || loop == contvals.size()-1 || 
+          position[1] >= prevcont + font_height && position[1] <= lastcont - font_height) {
+        renderString3f(position[0], position[1], position[2], priv->mesh->gpriv->small_font, string);
         prevcont = (int)position[1];
+        if (loop != 0 && loop != contvals.size()-1) {
+          // extend the contour line, so we can see which value it points to
+          glBegin(GL_LINES);
+          if (priv->mesh->shadingmodel != SHADE_NONE) {
+            glColor3f(priv->bgcolor[0] + coloroffset, priv->bgcolor[1] + coloroffset, priv->bgcolor[2] + coloroffset);
+          }
+          else {
+            getContColor(nextval, potmin, potmax, *(priv->map), color, priv->mesh->invert);
+            glColor3ubv(color);
+          }
+
+          glVertex2d(left, bottom + (nextval - potmin) / (potmax - potmin) * size); // -.85 to .4
+          glVertex2d(hsize + 5, bottom + (nextval - potmin) / (potmax - potmin) * size);
+          glEnd();
+        }
       }
     }
   }
