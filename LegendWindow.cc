@@ -196,6 +196,22 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
 
   cursurf->get_minmax(potmin, potmax);
 
+  if (map3d_info.scale_mapping == SYMMETRIC) {
+    if (fabs(potmax) > fabs(potmin))
+      potmin = -potmax;
+    else
+      potmax = -potmin;
+  }
+  
+  if (map3d_info.scale_mapping == SEPARATE) {
+    if (potmax < 0)
+      potmax = 0;
+    if (potmin > 0)
+      potmin = 0;
+  }
+  
+
+
   // contvals will be all the lines drawn, whether in matchContours mode or not, including the min and max line
   vector<float> contvals;
   contvals.push_back(potmin);
@@ -367,7 +383,8 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
 			     3*getFontHeight(priv->mesh->gpriv->med_font)+20);
     else
       size = priv->height - 40;
-    hsize = ((priv->width > 180) ? (int)(priv->width * .75) : (int)(priv->width - 50));
+    hsize = priv->width - 5*getFontWidth(priv->mesh->gpriv->small_font)-20;
+    if (hsize < 40) hsize = 40; // make at least 20 pizels for the color bar
     bottom = 20;
     left = 20;
   }
@@ -541,7 +558,7 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
   int stagger = 0;            //which row you're on
   int rowpos[2] = { -15, -100 };  //
   int endpos = (int)(left - getFontWidth(priv->mesh->gpriv->small_font) * 2.5 + size);
-
+  int font_height = getFontHeight(priv->mesh->gpriv->small_font);
 
   for (loop = 0; loop < contvals.size(); loop++) {
     glColor3f(priv->fgcolor[0], priv->fgcolor[1], priv->fgcolor[2]);
@@ -583,9 +600,8 @@ void LegendWindowRepaint(GtkWidget * widget, GdkEvent *, gpointer data)
     //vertical
     else {
       //int numconts = actualTicks;
-      position[1] = bottom - 3 + ((nextval - potmin) / (potmax - potmin) * size);
-      int font_height = getFontHeight(priv->mesh->gpriv->small_font);
-      //determines based on 12 pixels per character which contour val to write
+      position[1] = bottom - font_height/4 + ((nextval - potmin) / (potmax - potmin) * size);
+      //determines which contour val to write
       if (loop == 0 || loop == contvals.size()-1 || 
           position[1] >= prevcont + font_height && position[1] <= lastcont - font_height) {
         renderString3f(position[0], position[1], position[2], priv->mesh->gpriv->small_font, string);
