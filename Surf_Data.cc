@@ -286,6 +286,8 @@ void Surf_Data::get_minmax(float &min, float &max)
     break;
   case SLAVE_FRAME:
     if (mastersurf)
+      mastersurf->get_minmax(min, max);
+#if 0
       if (mastersurf->minmaxframes != NULL) {
         max = mastersurf->minmaxframes[mastersurf->framenum].potmax;
         min = mastersurf->minmaxframes[mastersurf->framenum].potmin;
@@ -294,6 +296,7 @@ void Surf_Data::get_minmax(float &min, float &max)
         max = 0;
         min = 0;
       }
+#endif
     else if (minmaxframes != NULL) {
       max = minmaxframes[curframe].potmax;
       min = minmaxframes[curframe].potmin;
@@ -305,8 +308,11 @@ void Surf_Data::get_minmax(float &min, float &max)
     break;
   case SLAVE_GLOBAL:
     if (mastersurf) {
+      mastersurf->get_minmax(min, max);
+#if 0
       max = mastersurf->potmax;
       min = mastersurf->potmin;
+#endif
     }
     else {
       max = potmax;

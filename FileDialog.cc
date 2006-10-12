@@ -388,7 +388,7 @@ void addRowToOtherDialogs()
   float cs_min = (surfmax-surfmin)/1000;  // 1000 because local windows can often be a small subset of the data range
   float high = MAX(fabs(surfmax), fabs(surfmin));
 
-  rowdata->cs_adj = gtk_adjustment_new(rowdata->orig_numspaces,cs_min,surfmax-surfmin,cs_min,cs_min*10,cs_min*10);
+  rowdata->cs_adj = gtk_adjustment_new(rowdata->orig_numspaces,1e-6,surfmax-surfmin,cs_min,cs_min*10,cs_min*10);
   rowdata->contourspacing = gtk_spin_button_new((GtkAdjustment*)rowdata->cs_adj,.1,4);
   gtk_widget_show(rowdata->contourspacing);
   

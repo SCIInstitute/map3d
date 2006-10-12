@@ -316,7 +316,7 @@ void updateContourDialogValues(Mesh_Info* mesh)
           float surfmin = mesh->data->potmin, surfmax = mesh->data->potmax;
           float cs_min = (surfmax-surfmin)/1000;  // 1000 because local windows can often be a small subset of the data range
           float high = MAX(fabs(surfmax), fabs(surfmin));
-          rowdata->cs_adj = gtk_adjustment_new(rowdata->orig_numspaces,cs_min,surfmax-surfmin,cs_min,cs_min*10,cs_min*10);
+          rowdata->cs_adj = gtk_adjustment_new(rowdata->orig_numspaces,1e-6,surfmax-surfmin,cs_min,cs_min*10,cs_min*10);
           rowdata->lr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmin:0,-3*high, 3*high,1,5,5);
           rowdata->hr_adj = gtk_adjustment_new(mesh->data?mesh->data->userpotmax:0,-3*high, 3*high,1,5,5);
           gtk_spin_button_set_adjustment(GTK_SPIN_BUTTON(rowdata->contourspacing), (GtkAdjustment*)rowdata->lr_adj);
