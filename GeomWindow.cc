@@ -147,12 +147,6 @@ void GeomWindowInit(GtkWidget *, GdkEvent *, gpointer data)
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glShadeModel(GL_FLAT);
 
-  // these are probably initialized to true in meshlist.cc
-  priv->node_pick_sphere.setActive(0);
-  priv->node_lead_sphere.setActive(0);
-  priv->node_lead.setValue(3, true);
-  priv->lighting.setActive(6);
-
   glFogfv(GL_FOG_COLOR, priv->bgcolor);
   glFogi(GL_FOG_MODE, GL_LINEAR);
   glLightfv(GL_LIGHT0, GL_POSITION, priv->light_position);
@@ -1053,6 +1047,9 @@ void GeomWindow::setInitialMenuChecks()
   int contour_num = 2;
   int draw_contours = 1;
   bool invert = false;
+  bool all_node_sphere = false, ext_node_sphere = false, pick_node_sphere = false, lead_node_sphere = false;
+  bool all_value = false;
+  int all_node_num = 0, ext_node_num = 0, pick_node_num = 0, lead_node_num = 0;
   for (unsigned i = 0; i < meshes.size(); i++) {
     Mesh_Info* mesh = meshes[i];
     if (mesh->cmap == &Grayscale) surface_color = 2;
@@ -1064,6 +1061,15 @@ void GeomWindow::setInitialMenuChecks()
 //    if (mesh->use_spacing) contour_num = 0;
     if (mesh->negcontdashed) draw_contours = 0;
     if (mesh->invert) invert = true;
+    if (mesh->mark_all_sphere) all_node_sphere = true;
+    if (mesh->mark_all_sphere_value) all_node_sphere = all_value = true;
+    if (mesh->mark_extrema_sphere) ext_node_sphere = true;
+    if (mesh->mark_ts_sphere) pick_node_sphere = true;
+    if (mesh->mark_lead_sphere) lead_node_sphere = true;
+    all_node_num = mesh->mark_all_number;
+    ext_node_num = mesh->mark_extrema_number;
+    pick_node_num = mesh->mark_ts_number;
+    lead_node_num = mesh->mark_lead_number;
   }
   menulock = true;
   surf_color.setActive(surface_color);
@@ -1072,6 +1078,18 @@ void GeomWindow::setInitialMenuChecks()
   cont_num.setActive(contour_num);
   cont_draw_style.setActive(draw_contours);
   surf_invert.setValue(0, invert);
+
+  node_all_sphere.setValue(0, all_node_sphere);
+  node_all_sphere.setValue(1, all_value);
+  node_ext_sphere.setValue(0, ext_node_sphere);
+  node_pick_sphere.setValue(0, pick_node_sphere);
+  node_lead_sphere.setValue(0, lead_node_sphere);
+
+  if (all_node_num > 0) node_all.setActive(all_node_num-1);
+  if (ext_node_num > 0) node_ext.setActive(ext_node_num-1);
+  if (pick_node_num > 0) node_pick.setActive(pick_node_num-1);
+  if (lead_node_num > 0) node_lead.setActive(lead_node_num-1);
+
 
   int frame_step = 0;
   if (fstep == 1) frame_step = 1;

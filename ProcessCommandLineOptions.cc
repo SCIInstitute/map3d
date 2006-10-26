@@ -1211,10 +1211,10 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   INITIALIZE_VALUE(all_value, mark_all_sphere_value, -1, 0);
   INITIALIZE_VALUE(extrema_sphere, mark_extrema_sphere, -1, 0);
   INITIALIZE_VALUE(extrema_mark, mark_extrema_number, -1, 0);
-  INITIALIZE_VALUE(lead_sphere, mark_lead_sphere, -1, 0);
-  INITIALIZE_VALUE(lead_mark, mark_lead_number, -1, 0);
-  INITIALIZE_VALUE(pick_sphere, mark_ts_sphere, -1, 0);
-  INITIALIZE_VALUE(pick_mark, mark_ts_number, -1, 0);
+  INITIALIZE_VALUE(lead_sphere, mark_lead_sphere, -1, 1);
+  INITIALIZE_VALUE(lead_mark, mark_lead_number, -1, 4);
+  INITIALIZE_VALUE(pick_sphere, mark_ts_sphere, -1, 1);
+  INITIALIZE_VALUE(pick_mark, mark_ts_number, -1, 3);
 
   // rotation quaternion - special case
   if (s->rotationQuat.w != -FLT_MAX && s->rotationQuat.x != -FLT_MAX && 

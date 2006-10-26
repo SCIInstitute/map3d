@@ -21,7 +21,10 @@
 #include <limits.h>
 #include <deque>
 #include <algorithm>
+#include <set>
 #include <math.h>
+
+using std::set;
 
 #include "Contour_Info.h"
 #include "Map3d_Geom.h"
@@ -43,9 +46,6 @@
 #include "reportstate.h"
 #include "GeomWindowMenu.h"
 #include "scalesubs.h"
-
-#include <algorithm>
-using std::sort;
 
 extern Map3d_Info map3d_info;
 extern GLuint citext;
@@ -1219,24 +1219,15 @@ void DrawNodes(Mesh_Info * curmesh)
     cursurf->get_minmax(min, max);
   unsigned char color[3];
   
-  // have a sorted list of leads and nodes.  Then when we iterate through nodes, we can easily
-  // see if the current node is a pick or a lead.  If it is, pop it off (so we can see the 
-  // next one), and push it into the other list
-  std::deque<int> pick_nodes, pick_nodes2;
-  std::deque<int> lead_nodes, lead_nodes2;
   map<int, char*> lead_labels;
+  set<int> pick_nodes;
 
   for (int i = 0; i <= curmesh->pickstacktop; i++)
-    pick_nodes.push_back(curmesh->pickstack[i]->node);
-  sort(pick_nodes.begin(), pick_nodes.end());
-  pick_nodes2 = pick_nodes;
+    pick_nodes.insert(curmesh->pickstack[i]->node);
 
   for (int i  = 0; i < curgeom->numleadlinks; i++) {
-    lead_nodes.push_back(curgeom->leadlinks[i]);
     lead_labels[curgeom->leadlinks[i]] = curgeom->leadlinklabels[i];
   }
-  sort(lead_nodes.begin(), lead_nodes.end());
-  lead_nodes2 = lead_nodes;
   
   if (curmesh->mark_all_sphere || curmesh->mark_extrema_sphere || curmesh->mark_ts_sphere || curmesh->mark_lead_sphere || 
       ((map3d_info.pickmode == TRIANGULATE_PICK_MODE || map3d_info.pickmode == EDIT_NODE_PICK_MODE) && curmesh->num_selected_pts > 0)) {
@@ -1267,16 +1258,14 @@ void DrawNodes(Mesh_Info * curmesh)
       }
       
       // leadlink node
-      else if (curmesh->mark_lead_sphere && lead_nodes.size() > 0 && lead_nodes.front() == loop) {
-        lead_nodes.pop_front();
+      else if (curmesh->mark_lead_sphere && lead_labels[loop] != 0) {
         glColor3f(curmesh->mark_lead_color[0], curmesh->mark_lead_color[1], curmesh->mark_lead_color[2]);
         glPointSize(priv->height / 200 * curmesh->mark_lead_size);
         sphere_size = curmesh->mark_lead_size;
       }
       
       // pick node
-      else if (curmesh->mark_ts_sphere && pick_nodes.size() > 0 && pick_nodes.front() == loop) {
-        pick_nodes.pop_front();
+      else if (curmesh->mark_ts_sphere && pick_nodes.size() > 0 && pick_nodes.find(loop) != pick_nodes.end()) {
         if (loop == curmesh->curpicknode)
           glColor3f(1.0, 0.1, 1.f);
         else
@@ -1369,15 +1358,13 @@ void DrawNodes(Mesh_Info * curmesh)
       int number = 0;
       
       // leadlink node
-      if (curmesh->mark_lead_number && lead_nodes2.size() > 0 && lead_nodes2.front() == loop) {
-        lead_nodes2.pop_front();
+      if (curmesh->mark_lead_number && lead_labels[loop] != 0) {
         glColor3f(curmesh->mark_lead_color[0], curmesh->mark_lead_color[1], curmesh->mark_lead_color[2]);
         number = curmesh->mark_lead_number;
       }
       
       // pick node
-      else if (curmesh->mark_ts_number && pick_nodes2.size() > 0 && pick_nodes2.front() == loop) {
-        pick_nodes2.pop_front();
+      else if (curmesh->mark_ts_number && pick_nodes.find(loop) != pick_nodes.end()) {
         if (loop == curmesh->curpicknode)
           glColor3f(1.0, 0.1, 1.f);
         else
@@ -1421,7 +1408,7 @@ void DrawNodes(Mesh_Info * curmesh)
         // case 4 is dependent on which type of mark it is
         //   if it is a leadlink, and its value is 4, then print the lead label.
         //   if it is a fid, and its value is 4, then print the fid label
-        if (curmesh->mark_lead_number == 4 && curgeom->leadlinklabels[loop]) {
+        if (curmesh->mark_lead_number == 4 && lead_labels[loop]) {
           printf("Node: %d\n", loop);
           renderString3f(pos[0], pos[1], pos[2], (int)priv->small_font, "%s", lead_labels[loop]);
           break;
