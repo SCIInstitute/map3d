@@ -726,6 +726,7 @@ void GeneratePick(PickInfo * pick)
 
     pick->pickwin = top;
     top->pick = pick;
+    top->mesh = mesh;
     gtk_widget_queue_draw(top->drawarea);
     mesh->pickstack[mesh->pickstacktop] = pick;
   }
