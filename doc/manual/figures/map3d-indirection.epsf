@@ -1,0 +1,429 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Creator: Tailor_Mac_To_EPS
+%%For: (Rob MacLeod) (University of Utah)
+%%Title: (Rob's BigMac:Docs:Computer:Docs:Map3d:map3d-indirection.epsf)
+%%CreationDate: (Fri Sep 08 17:52:33  2000)
+%%BoundingBox: 143 110 649 502
+%%DocumentProcessColors: Black
+%%DocumentFonts: Helvetica-BoldOblique
+%%+ Courier-Bold
+%%+ Helvetica-Bold
+%%DocumentNeededResources: font Helvetica-BoldOblique
+%%+ font Courier-Bold
+%%+ font Helvetica-Bold
+%%Extensions: CMYK
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset (Tailor_Mac_Gen) 2.0 7
+/TailorDict 200 dict def TailorDict begin/bd{bind def}bind def/ld{load
+def}bd/setoverprint where{pop}{/setoverprint{pop}bd}ifelse/setcmykcolor
+where{pop}{/setcmykcolor{1 exch sub dup dup 6 -1 roll sub dup 0 lt{pop
+0}if 5 1 roll 4 -1 roll sub dup 0 lt{pop 0}if 3 1 roll exch sub dup
+0 lt{pop 0}if setrgbcolor}bd}ifelse/TailorGroupBegin{pop}bd/TailorGroupEnd
+{}bd/TailorSetUniformStroke{pop}bd/TailorSetSpotColor{pop pop}bd/setdefaults
+{0 setgray false setoverprint 1 setlinewidth 0 setlinecap 0 setlinejoin
+10 setmiterlimit[]0 setdash false TailorSetUniformStroke M0 setmatrix
+1 0 0 1 0 0 M1 astore pop}bd/S0 0 def/M0 matrix def/M1 matrix def/BP
+{/S0 save def 0 ne{90 rotate 0 6 index neg translate}if translate 0
+eq{pop pop pop pop}{moveto 1 index 0 rlineto 0 exch rlineto neg 0 rlineto
+closepath clip newpath}ifelse M0 currentmatrix pop setdefaults}bd/EP
+{S0 restore}bd/BG{TailorGroupBegin}bd/EG{TailorGroupEnd}bd/BM{gsave
+TailorGroupBegin}bd/EM{TailorGroupEnd grestore setdefaults}bd/N{M0
+setmatrix 1 0 0 1 0 0 M1 astore pop}bd/M{M0 setmatrix M1 astore concat
+}bd/X{M0 setmatrix M1 exch 4 exch put M1 concat}bd/Y{M0 setmatrix M1
+exch 5 exch put M1 concat}bd/Z{M0 setmatrix M1 exch 5 exch put M1 exch
+4 exch put M1 concat}bd/G{setgray}bd/R{setrgbcolor}bd/K{setcmykcolor}
+bd/S{TailorSetSpotColor}bd/O{0 ne setoverprint}bd/W/setlinewidth ld
+/C/setlinecap ld/J/setlinejoin ld/L/setmiterlimit ld/D/setdash ld/U
+{0 ne TailorSetUniformStroke}bd/m/moveto ld/l/lineto ld/c/curveto ld
+/h/closepath ld/r/stroke ld/f/fill ld/g/eofill ld/p{clip newpath}bd
+/q{eoclip newpath}bd end
+%%EndResource
+%%BeginResource: procset (Tailor_Mac_Text) 2.0 7
+TailorDict begin/TailorEncoding[StandardEncoding 0 39 getinterval aload
+pop/quotesingle StandardEncoding 40 56 getinterval aload pop/grave
+StandardEncoding 97 31 getinterval aload pop 128{/.notdef}repeat]def
+/EncodingsDict 0 def/BE{/EncodingsDict exch dict def}bd/DE{TailorEncoding
+256 array copy dup 128 4 -1 roll putinterval EncodingsDict 3 1 roll
+put}bd/FontsDict 0 def/BF{/FontsDict exch dict def}bd/EF{cvn findfont
+dup length dict begin{1 index/FID ne{def}{pop pop}ifelse}forall dup
+type/nametype eq{/Encoding exch EncodingsDict exch get def}{pop}ifelse
+dup currentdict end definefont dup setfont FontsDict 3 1 roll put}
+bd/F{FontsDict exch get setfont}bd/s{0.0 0.0 moveto show}bd/a{0.0 0.0
+moveto exch 1000.0 div exch 0.0 exch ashow}bd/b{0.0 0.0 moveto 3 1
+roll 1000.0 div 3 1 roll 1000.0 div 3 1 roll ashow}bd/v{0.0 0.0 moveto
+3 2 roll 1000.0 div 0.0 4 2 roll widthshow}bd/w{0.0 0.0 moveto 4 2
+roll 1000.0 div 4 1 roll 1000.0 div 4 1 roll widthshow}bd/z{0.0 0.0
+moveto 6 1 roll 1000.0 div 6 1 roll 1000.0 div 6 2 roll 1000.0 div
+6 1 roll 1000.0 div 6 1 roll awidthshow}bd end
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Helvetica-BoldOblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Helvetica-Bold
+TailorDict begin 504.334 391.9171 -18.12604 -0.207107 1 161.959 110.2486 0 BP
+1 BE
+3 BF
+%%EndSetup
+(* Title: map3d-indirection.epsf\012* Creator: CLARIS EPSF Export Filter V1.0\012* Creation date: 5/19/94  1:20:59 p.m.\012\
+)BG
+0 0 0 0 K
+81 315.5 m
+99 315.5 l
+99 171.5 l
+81 171.5 l
+h
+f
+2 C
+0 0 0 1 K
+81 315.5 m
+99 315.5 l
+99 171.5 l
+81 171.5 l
+h
+r
+0 0 0 0 K
+261 315.5 m
+279 315.5 l
+279 99.5 l
+261 99.5 l
+h
+f
+0 0 0 1 K
+261 315.5 m
+279 315.5 l
+279 99.5 l
+261 99.5 l
+h
+r
+0 0 0 0 K
+351 315.5 m
+369 315.5 l
+369 36.5 l
+351 36.5 l
+h
+f
+0 0 0 1 K
+351 315.5 m
+369 315.5 l
+369 36.5 l
+351 36.5 l
+h
+r
+0 0 0 0 K
+441 315.5 m
+459 315.5 l
+459 99.5 l
+441 99.5 l
+h
+f
+0 0 0 1 K
+441 315.5 m
+459 315.5 l
+459 99.5 l
+441 99.5 l
+h
+r
+/E0[]DE
+/F0/E0(Helvetica-BoldOblique)EF
+12 0 0 12 64.4659 337 M
+(leadlinks)s
+161.793 X
+(points)s
+243.4609 X
+(channels)s
+331.798 336.5 Z
+(time series)s
+423.9579 X
+(time series)s
+0 0 0 0 K
+N
+153 315.5 m
+207 315.5 l
+207 99.5 l
+153 99.5 l
+h
+f
+0 0 0 1 K
+153 315.5 m
+207 315.5 l
+207 99.5 l
+153 99.5 l
+h
+r
+172 316 m
+171 316 l
+171 99 l
+172 99 l
+h
+f
+190 316 m
+189 316 l
+189 99 l
+190 99 l
+h
+f
+/F1/E0(Helvetica-Bold)EF
+12 0 0 12 159.001 318.5 M
+(X)s
+177.001 X
+(Y)s
+195.165 X
+(Z)s
+18 0 0 18 164.739 378.5 M
+(Indirections in map3d)s
+12 0 0 12 0.957947 283.5 M
+(leadnum)s
+N
+54 289.5 m
+54 288.5 l
+79 288.5 l
+79 289.5 l
+h
+f
+81 288.5 m
+66.9002 284.9785 l
+66.9017 292.0275 l
+h
+f
+99 289 m
+99 288 l
+151.463 244.281 l
+151.463 245.281 l
+h
+f
+153 243.5 m
+139.9142 249.8219 l
+144.4283 255.2359 l
+h
+f
+207 244.5 m
+207 243.5 l
+259 243.5 l
+259 244.5 l
+h
+f
+261 243.5001 m
+246.9003 239.9785 l
+246.9017 247.0275 l
+h
+f
+279.5 243.5 m
+278.5 243.5 l
+349.171 163.995 l
+350.171 163.995 l
+h
+f
+351 162.5 m
+339.0012 170.6997 l
+344.2711 175.3813 l
+h
+f
+368.2526 163.1643 m
+369.7474 161.8357 l
+375.7266 168.5624 l
+374.2318 169.891 l
+h
+380.211 176.6177 m
+381.7057 175.2891 l
+387.6849 182.0157 l
+386.1902 183.3444 l
+h
+392.1694 190.071 m
+393.6641 188.7424 l
+399.6433 195.4691 l
+398.1486 196.7977 l
+h
+404.1277 203.5244 m
+405.6225 202.1958 l
+411.6017 208.9225 l
+410.1069 210.2511 l
+h
+416.0861 216.9778 m
+417.5809 215.6492 l
+423.5601 222.3759 l
+422.0653 223.7045 l
+h
+428.0445 230.4312 m
+429.5392 229.1025 l
+435.5184 235.8292 l
+434.0237 237.1578 l
+h
+f
+441 243.5 m
+432.9759 228.1555 l
+426.6992 233.7364 l
+h
+f
+143 63.5 m
+143 62.5 l
+196 62.5 l
+196 63.5 l
+h
+f
+198 62.5 m
+183.9003 58.9785 l
+183.9017 66.0275 l
+h
+f
+145 38.5 m
+145 36.5 l
+154 36.5 l
+154 38.5 l
+h
+163 38.5 m
+163 36.5 l
+172 36.5 l
+172 38.5 l
+h
+181 38.5 m
+181 36.5 l
+190 36.5 l
+190 38.5 l
+h
+f
+197 37.5 m
+180.2001 33.304 l
+180.2018 41.703 l
+h
+f
+12 0 0 12 214.665 58.5 M
+(=)s
+228.3409 X
+(p)s
+235.671 X
+(o)s
+243.001 X
+(i)s
+246.334 X
+(n)s
+253.665 X
+(t)s
+257.6609 X
+(s)s
+267.668 X
+(t)s
+271.665 X
+(o)s
+216.0099 35.5 Z
+(=)s
+229.6859 X
+(c)s
+236.3599 X
+(o)s
+243.6899 X
+(p)s
+251.02 X
+(y)s
+261.028 X
+(c)s
+267.7009 X
+(o)s
+275.0309 X
+(n)s
+282.361 X
+(t)s
+286.3569 X
+(e)s
+293.0309 X
+(n)s
+300.361 X
+(t)s
+304.3569 X
+(s)s
+/F2/E0(Courier-Bold)EF
+65.9549 295.5 Z
+(4)s
+83.187 283.5 Z
+(2)s
+89.8599 X
+(2)s
+123.187 240.5 Z
+(2)s
+129.8599 X
+(2)s
+262.1079 241.5 Z
+(9)s
+268.7819 X
+(2)s
+324.1079 160.5 Z
+(9)s
+330.7819 X
+(2)s
+242.187 251.5 Z
+(2)s
+248.8599 X
+(2)s
+418.187 238.5 Z
+(2)s
+424.8599 X
+(2)s
+/F1 F
+9.17096 342 Z
+(A)s
+17.83795 X
+(r)s
+22.50696 X
+(r)s
+27.1759 X
+(a)s
+33.8499 X
+(y)s
+9.17096 329 Z
+(n)s
+16.50195 X
+(a)s
+23.17493 X
+(m)s
+33.8439 X
+(e)s
+40.5179 X
+(:)s
+0 0 0 0 K
+N
+81 144.5 m
+115 144.5 l
+115 0.5 l
+81 0.5 l
+h
+f
+1.535241 W
+0 0 0 1 K
+81.6556 144.5 m
+116.3444 144.5 l
+116.3444 0.5 l
+81.6556 0.5 l
+h
+1.255279 0 0 -0.651364 0 0 M
+r
+/F0 F
+12 0 0 12 -18.54205 114.5 M
+(channelnum)s
+N
+54 118.5 m
+54 117.5 l
+79 117.5 l
+79 118.5 l
+h
+f
+81 117.5 m
+66.9002 113.9785 l
+66.9017 121.0275 l
+h
+f
+/F1 F
+12 0 0 12 86.7349 112.5 M
+("V1")s
+/F0 F
+54.631 152.5 Z
+(channellinks)s
+424.4579 324.5 Z
+(\(in map3d\))s
+343.4579 323.5 Z
+(\(in file\))s
+EG
+%%Trailer
+EP end
+showpage
+%%EOF

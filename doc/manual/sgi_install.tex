@@ -1,0 +1,145 @@
+% -*-latex-*-
+% Document name: sgi_install.tex
+% Creator: Bryan Worthen [worthen@sci.utah.edu]
+% Last update: Fri Mar 26 20:00:00 2004 by Bryan Worthen
+%    - release 6.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{SGI Installation Instructions}
+\label{sec:sgi-install}
+
+The SGI installation is relatively straightforward.  You'll need to 
+download \map{}'s dependencies, then download \map{} itself.
+
+\subsubsection{SGI Dependencies}
+There are two phases to this part.  First we need to get GTK+ and its
+dependencies.  The easiest way to do this is for SGI is to run a browser
+with root access and go to SGI's freeware site at \htmladdnormallink
+{\texttt{http://freeware.sgi.com}} {http://freeware.sgi.com}.  On that page
+near the bottom there should be a link to a prereq calculator.  Click on
+that link, and in the Freeware Product box, select \verb|fw_gtk2+| (make
+sure you don't select \verb|fw_gtk+|).  Submit the query.  You should see a
+list similar to this:
+\begin{verbatim}
+  fw_atk [relnotes] [prereqs] [install] 
+  fw_expat [relnotes] [prereqs] [install] 
+  fw_freetype2 [relnotes] [prereqs] [install] 
+  fw_gettext [relnotes] [prereqs] [install] 
+  fw_glib2 [relnotes] [prereqs] [install] 
+  fw_libjpeg [relnotes] [prereqs] [install]
+  fw_libpng [relnotes] [prereqs] [install]
+  fw_libz [relnotes] [prereqs] [install]
+  fw_pango [relnotes] [prereqs] [install]
+  fw_tiff [relnotes] [prereqs] [install] 
+\end{verbatim}
+To install them, click on the install link one by one (and follow the 
+instructions in the dialog boxes). 
+
+IMPORTANT - when you install libz - it will mention something about a security
+library being removed.  When you install libz, allow it to do this.  On the 
+subsequent libraries, it will mention that the security package conflicts 
+with libz, on these packages, have it continue without installing the
+security package.
+
+Install them in the order:
+
+\begin{verbatim}
+    gettext
+    expat
+    freetype2
+    atk
+    glib2
+    pango
+    libjpeg
+    libtiff
+    libz
+    libpng
+\end{verbatim}
+
+After you've done all of these, click on the alphabetical link, and click on
+the install buton that corresponds to \verb|libgtk2+-2.0.6|.
+
+If for some reason, the prereq calculator isn't there or isn't working, go
+to the alphabetical index and install the above in the order specified.
+
+
+The next part is to download gtkglext, the library that supports OpenGL for
+GTK widgets.  If your GTK version is 2.0.6 (you can find out by looking at
+\texttt{gtkversion.h} which will be where you installed gtk (normally
+\texttt{/usr/freeware/include/gtk-2.0/gtk/gtkversion.h}), and look for
+\verb|GTK_MAJOR_VERSION|, \verb|GTK_MINOR_VERSION|, and
+\verb|GTK_MICRO_VERSION|.  There will be numbers on the same lines as each
+of these, and if you put them together it will be something like 2.0.6).
+If you are using this version download \texttt{gtkglext-sgi.tar.gz} from
+the \map{} download page
+\htmladdnormallink{\texttt{http://www.sci.utah.edu/software/map3d.html}}
+{http://www.sci.utah.edu/software/map3d.html} and follow these
+instructions:
+
+\begin{verbatim}
+    cd <download directory>
+    gunzip gtkglext-sgi.tar.gz
+    tar xf gtkglext-sgi.tar
+    cp libgtkglext-x11-1.0.so.0 /usr/local/lib
+    cp libgdkglext-x11-1.0.so.0 /usr/local/lib
+\end{verbatim}
+
+You can copy them to some directory other than \texttt{/usr/local/lib} if
+you wish.
+
+If this doesn't work, you will need to download the gtkglext source and
+compile it yourself (don't worry---if your gtk is properly set up, this
+will be very easy).  Download the sources from Source Forge
+\htmladdnormallink{\texttt{http://sourceforge.net/projects/gtkglext}}
+  {http://sourceforge.net/projects/gtkglext} and follow these
+  instructions:
+
+\begin{verbatim}
+    cd <download directory>
+    gunzip gtkglext-1.0.6.tar.gz
+    tar xf gtkglext-1.0.6.tar
+    cd gtkglext-1.0.6
+    configure
+    make
+    make install
+\end{verbatim}
+
+
+If you don't want these to end up in /usr/local/lib, you need to
+
+\begin{verbatim}
+configure --prefix=<dir>
+\end{verbatim}
+
+where \texttt{dir} is where you want to put the libraries (The libraries
+will be in \texttt{dir/lib}).
+
+\subsubsection{SGI Executable}
+
+Download the \texttt{map3d-6.2-irix.tar.gz} file from the \map{} download
+page and unzip it to a directory of your choice.  We will call that
+\texttt{RUN-DIR}. This is the directory from which you will run \map{}.
+
+To run \map{}, you will need to make sure that all the libraries are in
+your \texttt{LD\_LIBRARY\_PATH} environment variable.  For this we will
+assume that your gtk libraries are in \texttt{/usr/freeware/lib32} and your
+gtkglext libraries are in \texttt{/usr/local/lib}.  Do the following:
+
+\begin{verbatim}
+    tcsh users:
+    setenv LD_LIBRARY_PATH /usr/freeware/lib32:/usr/local/lib:$LD_LIBRARY_PATH
+\end{verbatim}
+%
+or
+%
+bash users:
+\begin{verbatim}
+    export LD_LIBRARY_PATH=/usr/freeware/lib32:/usr/local/lib:$LD_LIBRARY_PATH
+\end{verbatim}
+%
+you might want to put this line in your \texttt{.cshrc} or
+\texttt{.profile} file to avoid having to run this multiple times.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End: 

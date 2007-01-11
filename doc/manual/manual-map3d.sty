@@ -1,0 +1,110 @@
+% File: manual-map3d.sty
+%
+% A file with some style features for writing a manual in \LaTeX{} format
+%
+% Things included in the file are:
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Page format stuff
+%%  Change the name (MacLeod) to whatever your mother calls you.
+%  This makes standard NIH headers and footers and presupposes.
+%  that you are using the 11pt font, the smallest NIH permits.
+%%%%
+\textheight 9.5in
+\textwidth 7in
+\topmargin -.50in
+%\topmargin .25in
+\oddsidemargin -.25in
+\evensidemargin 0in
+\sloppy
+\pagestyle{fancy}
+\headsep .08in
+\footskip 25pt
+\headheight 15pt
+\renewcommand{\footrulewidth}{.8pt}
+\renewcommand{\headrulewidth}{.8pt}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\ #1}{\thesection\ #1}}
+\rhead{{\sf CVRTI/SCI Manual: \emph{map3d}}}
+\lhead{\rightmark}
+\lfoot{}
+\cfoot{{Page \thepage}}
+\rfoot{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Setting to control figure placement
+% These determine the rules used to place floating objects like figures 
+% They are only guides, but read the manual to see the effect of each.
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\renewcommand{\textfraction}{0}
+\setcounter{topnumber}{100}
+\setcounter{bottomnumber}{100}
+\setcounter{totalnumber}{100}
+
+%%%%%%%%%%%%%%%%%%%%%%% Spacing and section commands
+% This is just some space saving stuff to reduce the huge spaces that are
+% added between setions and items in a list.
+%%%%
+%% Now the space around subsubsection.
+
+\renewcommand{\subsubsection}{\@startsection
+  {subsubsection}%
+  {3}%
+  {\z@}%
+  {-1ex}%
+  {1ex}%
+  {\normalsize\bf}}%
+
+%% And while we ae at it,  around subsections.
+
+\renewcommand{\subsection}{\@startsection
+  {subsection}%
+  {2}%
+  {\z@}%
+  {-2ex}%
+  {1.5ex}%
+  {\large\bf}}%
+
+%%%%%%%%%%%%%%%%%%%%%%%% Line spacing
+% Use this command for ``double'' spacing
+%\setlength{\baselineskip}{1.2\baselineskip}
+% and this one for an acceptable NIH spacing of 6lpi based on 11pt
+%\setlength{\baselineskip}{.9\baselineskip}
+% The baselineskip does not appear to work when we include a maketitle
+% command in the main file.  Something there must set the line spacing
+% If we use this next command, then things seem to work.
+\renewcommand{\baselinestretch}{.9}
+
+%%%%%%%%%%%%%%%%%%%%%%% Paragraph spacing
+% This sets the spacing between paragraphs
+\setlength{\parskip}{\smallskipamount} 
+
+%%%%%%%%%%%%%%%%%%%%%%% Redefine the standard chapter formatting
+\def\@makechapterhead#1{ \vspace*{50pt} { \parindent 0pt \raggedright 
+ \ifnum \c@secnumdepth >\m@ne 
+ \huge\bf \thechapter \hskip 1ex \fi #1\par 
+ \nobreak \vskip 40pt } }
+% \huge\bf \@chapapp{} \thechapter \par 
+% \vskip 20pt \fi \Huge \bf #1\par 
+% \nobreak \vskip 40pt } }
+
+\def\@makeschapterhead#1{ \vspace*{50pt} { \parindent 0pt \raggedright 
+ \Huge \bf #1\par 
+ \nobreak \vskip 40pt } }
+
+\def\chapter{\clearpage \thispagestyle{plain} \global\@topnum\z@
+\@afterindentfalse \secdef\@chapter\@schapter} 
+\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+ \refstepcounter{chapter}
+ \typeout{\@chapapp\space\thechapter.}
+ \addcontentsline{toc}{chapter}{\protect
+ \numberline{\thechapter}#1}\else
+ \addcontentsline{toc}{chapter}{#1}\fi
+ \chaptermark{#1}
+ \addtocontents{lof}{\protect\addvspace{10pt}}
+\addtocontents{lot}{\protect\addvspace{10pt}} \if@twocolumn
+\@topnewpage[\@makechapterhead{#2}] 
+ \else \@makechapterhead{#2}
+ \@afterheading \fi} 
+\def\@schapter#1{\if@twocolumn \@topnewpage[\@makeschapterhead{#1}]
+ \else \@makeschapterhead{#1} 
+ \@afterheading\fi}

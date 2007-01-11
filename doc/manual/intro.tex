@@ -1,0 +1,201 @@
+% -*-latex-*-
+% Document name: intro.tex
+% Creator: Rob MacLeod [macleod@vissgi.cvrti.utah.edu]
+% Last update: September 2, 2000 by Rob MacLeod
+%    - created
+% Last update: Sun Sep 24 16:41:08 2000 by Rob MacLeod
+%    - Version 5.0Beta release edition
+% Last update: Mon Jul 23 13:28:30 2001 by Rob MacLeod
+%    - release 5.2
+% Last update: Fri Mar 1 20:00:00 2002 by Bryan Worthen
+%    - release 5.3
+% Last update: Sun Feb  2 01:54:43 2003 by Rob MacLeod
+%    - Release 5.4
+% Last update: Thu May 19 12:35:15 2005 by Rob Macleod
+%    - for version 6.3
+g%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+This document describes the function and usage of version\~version{} of the
+program \map{}, a scientific visualization application originally developed
+at the Nora Eccles Harrison Cardiovascular Research and Training
+\htmladdnormallink{(CVRTI)}{http://www.cvrti.utah.edu} and now under
+continued development and maintenance at the Scientific Computing and
+Imaging Institute \htmladdnormallink{(SCI)}{http://www.sci.utah.edu} at the
+University of Utah.  The original purpose of the program was to
+interactively view scalar fields of electric potentials from measurements
+and simulations in cardiac electrophysiology.  Its present utility is much
+broader but continues to focus on viewing three-dimensional distributions
+of scalar values associated with an underlying geometry consisting of node
+points joined into surface or volume meshes.
+
+\map{} has been the topic of some papers
+\cite{RSM:Mac92c,RSM:Mac92d,RSM:Mac93,RSM:Mac93a} and a technical report
+\cite{RSM:Mac94d} and we'd love it if you would reference at least one of
+them (perhaps \cite{RSM:Mac93} or \cite{RSM:Mac93a} are the easiest ones to
+get copies of) as well as this manual when you publish results using it.
+There have been many many more papers that use \map{} and the list keeps
+growing.\cite{RSM:Mac93,RSM:Mac93a,RSM:Mac94d,RSM:Mac94c,RSM:Mac94f,RSM:Mac95d,RSM:Mac97,RSM:Mac98,RSM:Mac2000a,RSM:Mac2001,RSM:Pun98,RSM:Pun99,RSM:Tac92,RSM:Tac92b,RSM:Tac94,RSM:Tac96,RSM:Tac96b,RSM:Tac97b,RSM:Ni98,RSM:Ni99,RSM:Ni2000b,RSM:Lux96,RSM:Lux2001,RSM:Joh93b,RSM:Joh94,RSM:Joh94b,RSM:Pun2003,RSM:Ser2002}
+
+One of the big changes in version~\version{} is that we are now completely
+open source.  People can download not only the executable but also the
+complete source code for the program.  Please note that we do not have a
+good way yet to incorporate changes people outside our little group make
+to the program.  If you do wish to change and then contribute back, please
+let us know as soon as possible and we can try and coordinate as best we
+can.  Of obvious interest is when someone ports \map{} to another
+platform---please let us know about this and we can add it to the list and
+release it with the rest.
+
+\subsection{Acknowledgments}
+
+The history of \map{} goes back to 1990 and the first few hundred lines of
+code were the product of a few hours work by Mike Matheson, an inspired
+visualization specialist, now with SGI in Salt Lake City.  This was my
+introduction to GL and C and this program became my personal sand box to
+play in.  Along the way, Phil Ershler made valuable contributions in
+figuring out the magic of Formslib for some user interface controls and
+developing with me \emph{graphicsio}, the geometry and data file library
+that supports \map{}.  Ted Dustman has recently taken up maintenance and
+extensions of \emph{graphicsio} and remains my main man when I need
+programming lessons.
+
+This is one in a series of ``new'' versions of \map{}, the series (labeled
+5.x or above) that marks the move from GL to OpenGL library and thus to
+becoming truly portable.  In fact, we call the old one \mapgl{} now to
+indicate its links to SGI's original GL library.  We seem permanently stuck
+in the middle of this big conversion project, moving support to OpenGL and
+adding lots of power as we convert functionality.  The reason for the
+version 6.x, was the move to gtk as the GUI library with which we create
+all the dialog and display elements of the program.  This move has allowed
+us to extend dramatically the set of dialog boxes \map{} offers and this
+newest version~\version{} contains many examples.
+
+There are some people who have been instrumental in the process and deserve
+special mention.  Chris Moulding is a graphics programmer and general
+software whiz who surveyed my sand box architecture, pulled together the
+essential walls, created new ways to make rooms, and still left lots of the
+sand box around so we could continue to play.  From version 5.2 onward,
+Bryan Worthen replaced Chris and really has found the spirit of \map{}.
+Bryan has become the main driving force behind the actual work of coding
+and fixing.  He strayed off to some other project for a while, but never
+lost his love for \map{}; we are really pleased that he has returned to
+pick up the torch again.  Most recently, J.R. Blackham has joined the team
+while still an undergraduate in Computer Science at Utah.  Jeroen Stinstra
+is my super-postdoc, helpful in more ways than I knew I even needed and
+full of inventive ideas.  He has created the support for MATLAB that we use
+in \map{} (and the SCIRun project) and is best bug-catcher I know.
+
+The largest thanks must go to the users of \map{}, who provided the real
+inspiration and identified the needs and opportunities of such a program.
+Among the most supportive and helpful are Bruno Taccardi, Bonnie Punske,
+and Bob Lux, all colleagues of mine at the CVRTI. Dana Brooks and his
+students from Northeastern University are also regular users who have
+provided many suggestions and great enthusiasm.  Also invaluable in the
+constant improvement of the program are my post docs, Jeroen Stinstra, and
+graduate student Quan Ni, Rich Kuenzler, Bulent Yilmaz, Bruce Hopenfeld,
+Shibaji Shome, Lucas Lorenzo, Andrew Shafer, and Zoar Englemann.  They give
+me new energy every day and remind me why I am a professor.  Notable new
+additions to the family are Randy Thomas from Universite d'Evry Val
+d'Essonne in Evry, France.  The great thing about Randy is that he used
+\map{} to visualize concentrations of ions in his simulation of the
+nephron!  Also, Ed Ciaccio from Columbia University has become a big user
+and even takes it to his classes.
+
+The first user and long-time collaborator and friend was Chris Johnson and
+this new version of \map{} is possible because of the success he and I have
+had in creating the SCI Institute and specifically the NIH/NCRR Center for
+Geometric Modeling, Simulation, and Visualization in Bioelectric Field
+Problems (\htmladdnormallink{www.sci.utah.edu/ncrr}
+{www.sci.utah.edu/ncrr}).
+
+We gratefully acknowledge the financial support that has come from the NIH,
+National Center for Research Resources
+\htmladdnormallink{(NCRR)}{http://www.ncrr.nih.gov} the Nora Eccles
+Treadwell Foundation, and the University of Utah, which provides us with
+space and materials to create this sand box.  The Nora Eccles Treadwell
+Foundation has also provided support for the development of \map{} and the
+huge pile of data we have used it to analyze.
+
+\bigskip
+\noindent
+Rob MacLeod, May 19, 2005.
+
+
+\subsubsection{Open Source License}
+\label{sec:source_license}
+
+The terms of the license agreement under which we release \map{} are simple
+and as follows:
+
+\begin{quotation}
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+``Software''), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the
+following conditions:
+\begin{enumerate}
+  \item The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+  \item Use of this software in preparing any publication material must be
+    cited as follows:
+    
+    \vspace{0.1in}
+    
+    R.S. MacLeod and C.R. Johnson. Map3d: Interactive scientific
+    visualization for bioengineering data. In IEEE Engineering in
+    Medicine and Biology Society 15th Annual International Conference,
+    pages 30-31, IEEE Press, 1993.
+\end{enumerate}
+\vspace{0.1in}
+
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+\end{quotation}
+
+
+\subsubsection{Libraries used by \map{}}
+
+\map{} incorporates the functionality of several external libraries.  They
+are:
+\begin{itemize}
+  \item \htmladdnormallink{GTK}{http://www.gtk.org} - The GIMP Toolkit -
+    Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh
+    MacDonald 
+  \item \htmladdnormallink{GtkGLExt}{http://gtkglext.sourceforge.net/} -
+    GtkGLExt - OpenGL Extension to GTK+ Copyright (C) 2002-2004  Naofumi
+    Yasufuku 
+  \item \htmladdnormallink{PNG}{http://www.libpng.org} - Copyright (c)
+    1998-2002 Glenn Randers-Pehrson 
+  \item \htmladdnormallink{Jpeglib}{http://www.ijg.org} - Copyright (C)
+    1991-1998, Thomas G. Lane.
+\end{itemize}
+
+We use GTK and GtkGLExt to interface with the window manager to give us
+windows with OpenGL capability, as well as giving us widgets we need for
+interactive control.  We use PNG and JpegLib to be able to save
+\texttt{.png} and \texttt{.jpg} images of \map{}.
+All four of these libraries are covered by the \htmladdnormallink{GNU
+LGPL}{http://www.gnu.org/licenses/lgpl.html}, which is included in the
+distribution of \map{}.
+
+As of version~\version{}, we also release internal libraries under the
+same license as above for the rest of \map{}.  
+
+
+
+%%% Local Variables: 
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% TeX-master: "manual"
+%%% TeX-master: "manual"
+%%% End: 

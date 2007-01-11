@@ -1,0 +1,201 @@
+% -*-latex-*-
+% Document name: install.tex
+% Creator: Rob MacLeod [macleod@vissgi.cvrti.utah.edu]
+% Last update: Fri Sep 15 00:33:54 2000 by Rob MacLeod
+%    - created
+% Last update: Wed Sep 27 14:54:43 2000 by Rob MacLeod
+%    - some fixes for bug reporting and spell checking
+% Last update: Sun Sep 24 16:41:08 2000 by Rob MacLeod
+%    - Version 5.0Beta release edition
+% Last update: Mon Jul 23 13:28:30 2001 by Rob MacLeod
+%    - release 5.2
+% Last update: Fri Jun 21 13:32:48 2002 by Rob Macleod
+%    - release 5.3
+% Last update: Fri Jan 24 20:00:00 2004 by Bryan Worthen
+%    - release 5.4
+% Last update: Thu May 19 12:35:15 2005 by Rob Macleod
+%    - for version 6.3
+% Last update: Fri Aug 26 12:34:14 2005 by Bryan Worthen
+%    - for version 6.4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Installation}
+
+\subsection{System requirements}
+
+\map{} is written in standard C/C++ and uses the OpenGL and GTK+ libraries, 
+both choices made to ensure broad portability of the program.
+
+Note: As of \map{} 6.4 or greater, GTK+ version 2.4 or greater is required
+to run \map{}.  Please update your dependencies according the the 
+Windows, Linux, or Mac webpage.
+
+  \begin{description}
+    \item [All platforms: ]  OpenGL now comes standard on most systems.  
+          Instructions on how to install GTK+ are described in detail below
+          based on which platform you are installing.
+          described below\mbox{}\\
+          \begin{center}
+          \begin{tabular}{|l|l|} \hline
+            \multicolumn{2}{|c|}{Requirements for all systems.  } \\ \hline
+          OpenGL libraries (GL and GLU) & version 1.1 +
+     \footnote{A plus sign, ``+'', indicates ``or better''}\\
+            OpenGL/window interface library (GLX)& \\
+            \htmladdnormallink{GTK+}
+            {http://www.gtk.org} 
+            libraries and dependencies & version 2.4+ \\ \hline
+          \end{tabular}
+          \end{center}
+
+            
+    \item [Linux (i386): ] \map{} requires the OpenGL library, which is
+              available 
+          as the mesa library at \htmladdnormallink{www.mesa3d.org}
+          {http://www.mesa3d.org} for any Linux platform.  For better
+          performance, graphics cards from companies such as nVidia 
+          \htmladdnormallink{(www.nvidia.com)}
+          {http://www.nvidia.com/} usually provide OpenGL libraries.  \\
+          \begin{center}
+          \begin{tabular}{|l|l|} \hline
+            \multicolumn{2}{|c|}{Requirements} \\ \hline
+              Operating System & kernel 2.2.x\\
+              Architecture & i386 (+ maybe PPC)\\
+              Applications Binary Interface  &  libc2.1 \\
+              \hline
+            \multicolumn{2}{|c|}{Recommendations} \\ \hline
+            Window system & XFree86 version 4.0 +\\
+            Hardware & 3D graphics card (nVidia, 3dfx, ati)\\
+            & 128 MB main memory \\ \hline
+          \end{tabular}
+          \end{center}
+          
+    \item [Windows: ] \mbox{}\\
+          \begin{center}
+          \begin{tabular}{|l|l|} \hline
+            \multicolumn{2}{|c|}{Requirements} \\ \hline
+              Operating System & W2K/NT4.0/9x\\
+              Architecture & i386\\
+              Applications Binary Interface  &  win32 \\
+              \hline
+            \multicolumn{2}{|c|}{Recommendations} \\ \hline
+            Hardware & 3D graphics card (nVidia, 3dfx, ati)\\
+            & 128 MB main memory \\ \hline
+          \end{tabular}
+          \end{center}
+
+    \item [Mac OS X: ] \mbox{}\\
+          \begin{center}
+          \begin{tabular}{|l|l|} \hline
+            \multicolumn{2}{|c|}{Requirements} \\ \hline
+              Operating System & Mac OS 10.3(Panther)\\
+              Architecture & PPC\\
+              \hline
+            \multicolumn{2}{|c|}{Recommendations} \\ \hline
+            Hardware & 3D graphics card (nVidia, 3dfx, ati)\\
+            & 256 MB main memory \\ \hline
+          \end{tabular}
+          \end{center}
+          
+   \item [SGI: ] \map{} runs on virtually any SGI that will support Irix
+          version 6.5+.  We have tested it on Indigo2, O2, Octane, and
+          Origin workstations running various flavors of Irix 6.5.  If
+          you need a version for a different SGI configuration, please let
+          us know
+          \htmladdnormallink{(map3d@sci.utah.edu)}{mailto:map3d@sci.utah.edu}\\
+          \begin{center}
+          \begin{tabular}{|l|l|} \hline
+            \multicolumn{2}{|c|}{Requirements} \\ \hline
+              Operating System & Irix 6.5+\\
+              Architecture & mips3 or mips4 (maybe mips2)\\
+              Applications Binary Interface  &  n32 or 64\\
+              \hline
+            \multicolumn{2}{|c|}{Recommendations} \\ \hline
+            Hardware & Texture mapping hardware\\
+            & 128 MB main memory \\ \hline
+          \end{tabular}
+          \end{center}
+
+  \end{description}
+  
+\subsection{General Installation}
+
+Unfortunately, with our move to GTK+ for window support, it is not as easy
+as past versions, which required just the download of an executable.  We
+hope (in vain, perhaps) to be able to do that again in the future, but for
+now we will attempt to make installation as easy as we can.  Simplified
+instructions will be in a README file which comes with each package, and
+are also listed below:
+
+To download the software, use this URL
+\htmladdnormallink{\texttt{www.sci.utah.edu/software/map3d.html}}
+{http://www.sci.utah.edu/software/map3d.html}, and click on the
+``Download'' button.  You'll need to sign into the SCI archive.  For
+each of the installation instructions below, you can grab those file
+from this page.
+
+
+To test the installation, use the test files that accompany this
+distribution.  Each has some script files included that show how to call
+and execute \map{}.
+
+\input{linux_install}
+\input{windows_install}
+\input{mac_install}
+\input{sgi_install}
+\input{source_install}
+
+\subsection{Documentation}
+
+This document should have reached you either as a pdf file or via the
+\htmladdnormallink{\map{} web site}
+{http://www.sci.utah.edu/software/map3d.html}.  If you would like more
+copies or the latest version, go to the
+same web site and look for the links under Documentation:\\
+
+\htmladdnormallink{\texttt{www.sci.utah.edu/software/map3d.html}}
+{http://www.sci.utah.edu/software/map3d.html}
+
+\subsection{Bug reporting}
+
+We want to hear your response to using \map{} and especially to learn about
+any bugs you may find.  They may be features, rather than bugs, but if so,
+we will be happy to hear your impressions.
+
+To submit a bug report please send email to map3d@sci.utah.edu or point your
+browser at
+\htmladdnormallink{\texttt{software.sci.utah.edu/bugzilla}}
+{http://software.sci.utah.edu/bugzilla/} (you will need to register your e-mail
+address) with the following information:
+
+\begin{enumerate}
+  \item Type and version of the operating system and hardware you are using.
+  \item Version of \map{}.
+  \item Description of the bug/feature you encountered.
+  \item Suggestions for fixing the bug or altering the program behavior.
+\end{enumerate}
+
+
+\subsection{How to reach us}
+
+We have established an email address for \map{},
+\htmladdnormallink{map3d@sci.utah.edu}{mailto:map3d@sci.utah.edu}, and
+web pages within the website \htmladdnormallink{www.sci.utah.edu/ncrr}
+{http://www.sci.utah.edu/ncrr} dedicated to \map{}.  There is also a
+majordomo mailing list for \map{} users called
+\texttt{map3d-users@sci.utah.edu}.  To subscribe to this list, send email to
+\texttt{majordomo@sci.utah.edu} with the following in the message body\\
+%
+\begin{verbatim}
+      subscribe map3d-users
+\end{verbatim}
+
+Please let us know how you use \map{} and how we can make it better for
+your purposes.  We can only develop this program with continued
+support and the best way to achieve this is to show that others use the
+program and find it helpful.
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End: 

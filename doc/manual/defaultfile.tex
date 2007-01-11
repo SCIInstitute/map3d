@@ -1,0 +1,108 @@
+% -*-latex-*-
+% Document name: defaultfile.tex
+% Creator: Rob MacLeod [macleod@cvrti.utah.edu]
+% Last update: September 4, 2000 by Rob MacLeod
+%    - created but not included in version 1.0 of the manual
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Default settings files}
+\label{sec:defaults} 
+
+\map{} looks for files containing default settings for
+many parameters that are relevant to the control of the program.
+The order of precedence is as follows:
+%
+\begin{enumerate}
+  \item The {\tt-df filename} option defines the file with highest
+        precedence default settings.
+  \item A file named {\tt .map3drc} in the current directory (the one from
+        which the application was launched) is used next.
+  \item If no {\tt .map3drc} files is found in the current directory, it is
+        searched for in the user's home directory (see the HOME
+        environmental variable).  This file has the lowest precedence and
+        is only used of the other two options are not found.
+  \item The program \map{} has a set of internal defaults which are used
+        if there are no external default files found.
+\end{enumerate}
+
+\newpage
+The format of the default file is as follows:
+%
+\begin{verbatim}
+           # comment line (ignored by map3d)
+           parameter = value
+\end{verbatim}
+
+\noindent
+where the parameters and values are taken from the following list:
+
+\begin{center}
+\begin{tabular}{|l|l|p{3.2in}|} \hline
+\multicolumn{1}{|c|}{Parameter} &
+\multicolumn{1}{|c|}{Values} &
+\multicolumn{1}{|c|}{Meaning} \\ \hline
+shadingmodel & GOURAUD & Use Gouraud shading of triangles \\ 
+             & FLAT    & Use flat shading of triangles \\ \hline
+scale\_scope  & GLOBAL\_SURFACE & Scaling global over each surface \\ 
+             & GLOBAL\_FRAME   & Scaling global over each frame of data \\
+             & GLOBAL\_GLOBAL  & Scaling global over all data \\
+             & LOCAL          & Scaling local to each frame and surface\\
+             & USER           & Scaling by user-supplied values (-pl -ph)
+             \\
+\hline
+scale\_model  & LINEAR & Use linear scaling of contours \\
+             & LOG    & Use logarithmic scaling \\
+             & EXP    & Use exponential scaling \\
+             & LAB7   & Use logarithmic in 7 levels scaling \\
+             & LAB13  & Use logarithmic in 13 levels scaling \\ 
+\hline
+scale\_mapping & SYMMETRIC & scale symmetrically around both side of zero\\
+              & SEPARATE  & scale separately for + and - data values\\
+              & TRUE\_MAP  & scale from most - to most + values\\
+\hline
+color\_map     & RG       & Use full red-to-green colour map \\
+              & RG2      & Use red-and-green (2-colour) colour map \\
+              & FULL     & Use blue-to-red (full) colour map \\
+              & BTW      & Use black-to-white colour map \\
+              & WTB      & Use white-to-black colour map \\
+\hline
+lead\_marking\footnotemark 
+              & LEADS          & mark nodes with lead (channel)
+                                                             numbers\\ 
+              & NODES          & mark nodes with node numbers\\
+              & VALUES         & mark leads with potential values\\
+              & CUBES          & mark leads with spheres/cubes \\
+              & MINMAX\_LABELS & mark extrema with lead numbers \\
+              & MINMAX\_CUBES  & mark extrema with cubes \\
+              & SCALAR         & mark the selected scalar node \\
+\hline
+num\_cols      & value    & number of colours to use in shade display\\ \hline
+num\_conts     & value    & number of contour levels in display\\ \hline
+draw\_bbox     & TRUE/FALSE & set bounding box on or off \\ \hline
+datafile\_path & pathame  & alternate path to the .pak/.raw files 
+in .tsdf file. \\ \hline
+geomfile\_path & pathame  & alternate path to the .geom files 
+in .tsdf file. \\ \hline
+report\_level  & value    & level of error reporting ( 0--3 ) \\ \hline
+\end{tabular}
+\end{center}
+
+\footnotetext{options are cumulative} 
+
+Note that these parameters and values are not case sensitive and that they
+can all be overridden during execution of the program, typically via the
+mouse menu (right mouse button).  See section~\ref{sec:scaling} for details
+on the different scaling options.  The list of parameters possible will
+also certainly grow with the program.
+
+To save the current settings in a file, there is an option in the main menu
+of \map{} which dumps all the settings to the file {\tt ./.map3drc}, that
+is, the file {\tt .map3drc} in the current directory.  That way, when you
+start the program again from that directory, the same settings will be loaded.
+The {\tt .map3drc} file is just a normal text file, but like all
+``rc''-files, it is hidden from the {\tt ls} command unless you add the
+{\tt -a} option (the alias {\tt la} is set up by default to do a long
+listing of all files, including hidden files).  Dumping a copy of the
+settings is also the easiest way to see what settings are currently being
+maintained by \map{} and also forms the best starting point to setting up
+your own customized default settings files.
+

@@ -1,0 +1,95 @@
+% Filename map3d.tex
+% Author: Rob MacLeod
+%
+% Last update: Sun Sep 24 16:41:08 2000 by Rob MacLeod
+%    - Version 5.0Beta release edition
+% Last update: Mon Jul 23 13:28:30 2001 by Rob MacLeod
+%    - release 5.2
+% Last update: Fri Mar 1 20:00:00 2002 by Bryan Worthen
+%    - release 5.3
+% Last update: Sun Feb  2 01:26:43 2003 by Rob MacLeod
+%    - release 5.4
+% Last update: Tue Mar 29 01:26:43 2004 by Bryan Worthen
+%    - release 6.0
+% Last update: Wed Jun 30 13:28:30 2004 by Bryan Worthen
+%    - release 6.1
+% Last update: Thu May 19 11:27:04 2005 by Rob Macleod
+%    - release 6.3
+% Last update: Fri Aug 26 11:27:04 2005 by Bryan Worthen
+%    - release 6.4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt]{article}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{html}
+\usepackage{manual-map3d}
+\usepackage{citexp}
+
+\pagestyle{fancy}
+\setlength{\parskip}{\smallskipamount} 
+\setcounter{tocdepth}{2}
+\newcommand{\pscont}{{\em pscont\/}}
+\newcommand{\map}{{\em map3d\/}}
+\newcommand{\mapgl}{{\em map3dGL\/}}
+\newcommand{\graphicsio}{\emph{graphicsio}}
+\newcommand{\eg}{{\em e.g.,}}
+\newcommand{\ie}{{\em i.e.,}}
+\newcommand{\etc}{{\em etc,}}
+\newcommand{\splitline}{\begin{center}\rule{13cm}{.7mm}\end{center}}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\renewcommand{\textfraction}{.0}
+\newcommand{\rob}{Rob MacLeod (macleod@cvrti.utah.edu)}
+\newcommand{\file}[1]{\texttt{#1}}
+\newcommand{\var}[1]{\texttt{#1}}
+% Make sure to change this command with each new version!!
+\newcommand{\version}{6.4}
+\sloppy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\thispagestyle{empty}
+\input{title}
+\newpage
+
+\tableofcontents
+\splitline
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{newfeatures}
+\newpage
+\input{intro}
+\newpage
+\input{install} 
+\newpage
+\input{usage}
+\newpage
+\input{input}
+\newpage
+\input{display}
+\newpage
+\input{controls}
+\newpage
+\input{output2}
+
+\clearpage
+
+\newpage
+
+%\input{examples}
+%\newpage
+\input{bugs}
+
+\newpage
+\bibliography{biglit}
+\bibliographystyle{unsrt}
+
+\end{document}
+
+
+
+
+

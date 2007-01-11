@@ -1,0 +1,636 @@
+% -*-latex-*-
+% Document name: examples.tex
+% Creator: Rob MacLeod [macleod@vissgi.cvrti.utah.edu]
+% Last update: September 4, 2000 by Rob MacLeod
+%    - created from old version of the manual
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Examples}
+
+\subsection{Demos}
+
+The easiest way to use \map{} for complicated sets of surfaces and/or
+potentials files is to set up a script file.  The composition of script
+files is described in Section~\ref{sec:controlscripts} in more detail.
+Examples of such files are given in the subdirectory demos.  Any of these
+can be executed simply by typing the filename in a window.  You may want to
+start from these files and alter them to experiment with other features of
+\map{}.  Examples of data files, both geometry and potential data, are to
+be found in the demos subdirectories.
+
+
+\subsection{Examples}
+
+\subsubsection{Data and geometry filepaths}
+
+Here is a set of command line examples that all run the same data, and show
+some of the variability that is possible with \map{}.  All three examples
+access the geometry in the file {\tt ~mapdata/bt25mar92.geom} and the data
+in the file {\tt bt25mar92-1.tsdf}, which we assume are stored in ~mapdata
+(home directory for the data account for Bruno Taccardi's group).
+
+\noindent
+Version 1: 
+
+\begin{verbatim}
+map3d  -f ~mapdata/bt25mar92.geom \
+       -dp /vax/odisk0/bt25mar92pack/ \
+       -p ~mapdata/bt25mar92-1.tsdf
+\end{verbatim}
+
+Note the use of \verb=~mapdata= to specify the home directory of
+the user (mapdata in this case), a good way to achieve some independence of
+which computer is actually running the script.  
+
+The data file for this example is assumed to be on the optical disk \#0 an
+is set by the {\tt -dp} option. 
+
+In this example, the geometry file is explicitly specified, which requires
+that we know the name of the geometry file for the particular .tsdf file.
+It turns out that the .tsdf file knows this already for us.  But the
+geometry filename specified in the .tsdf file has no directory and if the
+script is not run from mapdata's directory, \map{} will not find the geometry
+file.  We need a way to tell \map{} that the geometry file is to be found
+elsewhere.  We can state this explicitly, using the method above, or more
+generally, as shown in the next version.
+
+\noindent
+Version 2:
+
+\begin{verbatim}
+map3d  -dp /vax/odisk0/bt25mar92pack/ \
+	-gp ~mapdata/ \
+	-f ~mapdata/bt25mar92-1.tsdf
+\end{verbatim}
+
+Here we use the {\tt -gp ~mapdata} line to tell \map{} that any geometry
+file(s) listed in a .tsdf file are to be found in mapdata's home directory.
+
+The other thing to note in both these examples is that the directory in
+which the data files are to be found has been redirected to {\tt
+vax/odisk0/bt25mar92pack}.  This does not mean that the .tsdf file is
+located here (the -p line in version 1 and the -p line in version 2
+indicate where the .tsdf file is located) but tells \map{} that the
+directory where the .pak files that contain the actual numerical data is
+not the same as the one specified for the .tsdf file.  Instead, the .pak
+files can be found in {\tt /vax/odisk0/bt26mar92pack/}, an optical disk on
+the Vax.  The purpose of this is to gain flexibility in where the
+individual .pak (or .raw) files are located.  You do not have to move files
+from the optical disk to the disk, for example, in order to read them with
+\map{}.
+
+A third version of the script does the same as version 2.
+
+\noindent
+Version 3:
+
+\begin{verbatim}
+map3d  -f ~mapdata/bt25mar92-1.tsdf \
+	-dp /vax/odisk0/bt25mar92pack/ \
+	-gp ~mapdata/
+\end{verbatim}
+
+The difference here is that the {\tt -dp} and {\tt -gp} arguments can be
+located either before the first {\tt -f filename}, in which case they apply
+globally to all subsequent surfaces, or after the {\tt -f filename} to
+which they should apply.
+
+Another, even simpler form of the script could be used if we first specify
+an environmental variable to direct the search for .geom and .pak files.
+
+\noindent
+Version 4:
+
+To have this one work, you must have environmental variables specified as
+
+\begin{verbatim}
+eli:macleod> echo $MAP3D_DATAPATH
+/vax/odisk0/bt25mar92pack/
+eli:macleod> echo $MAP3D_GEOMPATH
+/vis/u/mapdata/
+\end{verbatim}
+
+With these both set, then the \map{} command becomes even simpler.
+
+\begin{verbatim}
+${HOME}/gl/cj/map3d -f ~mapdata/bt25mar92-1.tsdf 
+\end{verbatim}
+
+These environmental variables can be set from within a script, or manually,
+and the method used depends on the shell you are using for Unix.  The most
+common shell for the CVRTI is the Korn shell (ksh) and the method used here
+would be
+
+\begin{verbatim}
+     MAP3D_DATAPATH=/vax/odisk0/bt25mar92pack/
+     export MAP3D_DATAPATH
+     MAP3D_GEOMPATH=/vis/u/mapdata/
+     export MAP3D_GEOMPATH
+\end{verbatim}
+%
+or for the C-shell (if you insist)
+%
+\begin{verbatim}
+         setenv MAP3D_DATAPATH /vax/odisk0/bt25mar92pack
+\end{verbatim}
+
+A further way to achieve the same end would be to define a defaults file
+(see .map3drc file in section~\ref{sec:defaults}) with the lines
+
+\begin{verbatim}
+geomfile_path = /vis/u/mapdata/
+datafile_path = /vax/odisk0/bt25mar93pack/
+\end{verbatim}
+
+And still another would be to use Phil's odisk program to interactively
+select the location of the .pak/.raw files.  Just enter ``odisk'' from the
+console of either SGI workstation and select the optical disk, directory,
+and a single file from the list.
+
+So, as always, there is more than one way to skin the cat, and you need
+only select the one that seems simplest to you.
+
+\subsection{Data Directories}
+
+The following directories contain data files (geometries and potentials)
+which can be used to play with \map{}.  They are all subdirectores of
+~macleod/gl/map3d and are read-accessible by anyone, and may even contain some
+bits of documentation as to what they are (but don't count on it).
+
+\begin{description}
+  \item[cube/] = simulations using a dipole source and cubic volume
+        conductor with anisotropic inhomogeneities
+  \item[dal/] = data from the Dalhousie torso model with some
+        potentials
+  \item[spheres/] = artificial data of potential distributions
+        over multiple, triangulated spherical sections
+        
+\end{description}
+
+\subsection{Important files}
+
+\begin{description}
+  \item[/usr/local/bin/map3d] a symbolic link to a script, which in turn
+        calls the appropriate executable of \map{}
+  \item [/usr/local/bin/map3d-elan] executable version of \map{} for elan
+        level graphics 
+  \item [/usr/local/bin/map3d-vgx] executable version of \map{} for vgx
+        level graphics 
+  \item [/usr/local/doc/map3d-manual.dvips] postscript file of the map3d
+        documentation 
+  \item [www/cvrti/utah.edu/\~{}macleod/docs/map3d] HTML version of the map3d
+        documentation 
+\end{description}
+
+
+\subsection{Script file examples}
+\label{sec:examplescripts} 
+
+Below are some sample scripts, from simple, to fairly complex:
+
+\paragraph{Set the geometry, data, and window size and location}
+
+\begin{verbatim}
+         map3d -f ${HOME}/torso/geom/dal/daltorso.fac \
+               -as 100 500 300 700 \
+               -p ${HOME}/maprodxn/andy3/10feb95/data/cooling.tsdf \
+               -s 1 1000
+\end{verbatim}
+
+\paragraph{Set some environment variables, then layout the whole display}
+
+\begin{verbatim}
+#!/bin/sh
+# A script for the spmag 1996 article
+#
+######################################################################
+map3d=/usr/local/bin/map3d
+map3d=${ROBHOME}/gl/map3d/map3d.sh
+MAP3D_DATAPATH=/vax/odisk0/bt26mar91pack/
+export MAP3D_DATAPATH
+echo "MAP3D_DATAPATH = $MAP3D_DATAPATH"
+basedir=/u/macleod/maprodxn/plaque/26mar91
+$map3d -b -nw \
+	-f $basedir/geom/525sock.geom \
+	-as 150 475 611 935 \
+	-at 150 475 485 610 -t 237 \
+	-p $basedir/data/pace-center.tsdf@1 \
+	-s 65 380 \
+	-f $basedir/geom/525sock.geom \
+	-as 476 800 611 935 \
+	-at 476 800 485 610 -t 237 \
+	-p $basedir/data/pace-center.tsdf@1 \
+	-s 65 380 \
+	-f $basedir/geom/525sock.geom \
+	-as 150 475 176 500 \
+	-at 150 475 50 175 -t 237 \
+	-p $basedir/data/pace-center.tsdf@1 \
+	-s 65 380 \
+	-f $basedir/geom/525sock.geom \
+	-as  476 800 176 500 \
+	-at  476 800 50 175 -t 237 \
+	-p $basedir/data/pace-center.tsdf@1 \
+	-s 65 380 
+\end{verbatim}
+
+\paragraph{A script with command arguments and built in logic}
+
+If you can figure this one out, you are a shell script guru!  Running it is
+child's play and it displays epicardial and tank surface potentials for two
+different runs from any Andy2 tank experiment.  The beats are time aligned
+based on the values in a separate parameter file that must exist for the
+particular experiment.
+
+\begin{verbatim}
+#!/bin/sh
+# Filename: map3d-comp2.sh
+# Display epicardial and torso potentials from two runs of the same file
+# using a standard layout and a file or parameters to feed the script
+# with all it needs to know.
+# The minimum argument of this script is the name of the parameter script
+# as without it, we have no idea what to do.
+# The parameters are stored in a file, that when executed, sets them
+# Format is therefore very flexible.
+#
+# Assumptions:
+#    That geometry is in ${date}_sock.pts and .fac
+#    That landmarks are in ${data}_cor.lmarks
+#    That we have 64 lead socks with the standard channels (193--256)
+#    That the 192 lead torso geometry is used.
+#    
+#
+# Last update: Sun Jun  2 18:12:42 1996
+#    - fixed a few things in the run number entry
+# Last update: Wed Dec 13 12:28:46 1995
+#    - still trying to expand and generalize
+# Last update: Tue Oct 24 10:22:10 1995
+#    - created
+######################################################################
+#### Set up parameters ####
+
+MAP3D=${HOME}/gl/cj/map3d
+MAP3D=/usr/local/bin/map3d
+MAPRODXN=${HOME}/maprodxn
+USAGE="\nYou can run this script with arguments as follows:\n\
+     $0 paramfile.m3dp [-ocsd0145etc] n1 n2, where\n\n\
+     paramfile.m3dp is a script that sets the local parameters\n\
+     -o = optical disk\n\
+         0=odisk0; 1-odisk1; 4-odisk4; 5-odisk5\n\
+     -b = backup disk\n\
+     -s = scratch disk\n\
+     -d = data disk\n\
+     -e = show epi only \n\
+     -t = show torso only \n\
+     -c = show coronaries\n\n\
+     -v = show V1-V6 on tank\n\n\
+     -i = show integral maps\n\
+     n1 and n2 are the first and second run numbers\n\n\
+     Make sure to GROUP ALL ARGUMENTS into one block!!! \n\n\
+        e.g.,  $0 -co1 2 5\n\
+     to get data from odisk1 and use runs 2 and 5 and show coronaries\n"
+
+##### Check arguments #####
+if [ $# -lt 1 ]
+  then
+  echo "\n *** Error in entry "
+  echo " *** We need at least the name of the .m3dp (parameter) file ***"
+  echo "$USAGE"
+  exit
+else
+  paramfile=$1
+  shift
+fi
+
+##### Execute script to set local params #####
+. $paramfile
+
+##### Check other input #####
+run1=""
+run2=""
+#echo "Arguments are  $*"
+doshift=0
+showcor=""
+showvleads=""
+epionly=""
+torsoonly=""
+showint=""
+
+if [ $# -gt 0 ]
+  then
+  odisknum=""
+  dataloc=""
+  while getopts bceiostvd0145 optval
+    do 
+    case $optval in
+      o | d | s | b) dataloc=$optval
+                 doshift=1;;
+      c)         showcor=1
+                 doshift=1;;
+      e)         epionly=1
+                 doshift=1;;
+      i)         showint=1
+                 doshift=1;;
+      v)         showvleads=1
+                 doshift=1;;
+      t)         torsoonly=1
+                 doshift=1;;
+      0 | 1 | 4 | 5)  odisknum=$optval
+		 doshift=1;;
+      \?)        echo $USAGE
+                exit 2;;
+    esac
+  done
+#  echo "Arguments after getopts are $*"
+  if [ $doshift ]
+    then
+    shift
+#    echo "Do the shift"
+  fi
+  # Read in the run numbers for first and second runs
+  if [ -n "$1" ]
+    then
+    run1=$1
+    shift
+  fi
+  if [ -n "$1" ]
+    then
+    run2=$1
+    shift
+  fi
+  
+#  echo "Arguments are $*"
+#  echo "dataloc = $dataloc"
+#  echo "odisknum = $odisknum"
+  if [ "$dataloc" = o ]
+    then
+#    echo "Check odisk value = $odisknum"
+    if [ "$odisknum" != 0 -a "$odisknum" != 1 -a "$odisknum" != 4\
+      -a "$odisknum" != 5 ]
+      then
+      echo "+++ Odisk number was $odisknum so we set it to 0"
+      odisknum=0
+    fi
+  fi
+else
+  echo "$USAGE"
+  echo "\n We need some more input information"
+  echo "\n If we need to know where to look for Vax data files"
+  echo " where should we go?"
+  echo " Enter the location of the Vax data files"
+  echo " Optical disk drive 0 ................. 0"
+  echo " Optical disk drive 1 ................. 1"
+  echo " Optical disk drive 4 ................. 4"
+  echo " Optical disk drive 5 ................. 5"
+  echo " Datadisk ............................. d"
+  echo " Scratchdisk .......................... s"
+  echo " Backupdisk ........................... b"
+  echo " $MAP3D_DATAPATH ............... return"
+  echo "   Your entry? \c"
+  read inchar
+  case "$inchar"
+    in
+    0) dataloc=o
+    odisknum=0;;
+    1) dataloc=o
+    odisknum=1;;
+    d) dataloc=d;;
+    s) dataloc=s;;
+    b) dataloc=b;;
+  esac
+fi
+
+###### Check fore silly combos #####
+
+if [ "$epionly" -a "$torsoonly" ]
+  then
+  echo "*** Entry error: You cannot use -e and -t or there is nothing to see"
+  exit 1
+fi
+
+###### Get the run numbers manually #####
+
+needruns=""
+
+if [ -z "$run1" -o -z "$run2" ]
+  then
+  needruns="t"
+elif [ "$numruns" -gt 0 ]
+  then
+  if [ "$run1" -gt "$numruns" -o "$run2" -gt "$numruns" ]
+    then
+    needrun="t"
+  fi
+fi
+if [ -n "$needruns" ]
+  then
+  echo " Now enter the first and second run numbers"
+  echo " ? \c"
+  read run1 run2
+fi
+if [ "$run1" -le 0 ]
+  then
+  run1=1
+fi
+if [ "$run2" -le 0 -o "$run2" -le "$run1" ]
+  then
+  run2=`expr $run1 + 1`
+fi
+if [ -n "$numruns" -a "$run2" -gt "$numruns" ]
+  then
+  run2="$numruns"
+fi
+#echo "run1 = $run1 and run2 = $run2"
+
+###### Now see about the optical disk drive and set up some variables. #####
+
+if [ $dataloc = o ]
+  then
+  echo " Make sure the optical disk called RMSPACK-1A is in drive $odisknum"
+  MAP3D_DATAPATH=/vax/odisk${odisknum}/${thename}${thedate}pack/
+elif [ $dataloc = s ]
+  then
+  MAP3D_DATAPATH=/vax/scratch/${datadir}/${thename}${thedate}/
+elif [ $dataloc = b ]
+  then
+  MAP3D_DATAPATH=/vax/backup/${datadir}/${thename}${thedate}/
+elif [ $dataloc = d ]
+  then
+  MAP3D_DATAPATH=/vax/data/mapping/
+fi
+export MAP3D_DATAPATH
+echo "\n MAP3D_DATAPATH exported as $MAP3D_DATAPATH\n"
+
+if [ ! -n "$ROBHOME" ]
+then
+   ROBHOME=/u/macleod
+   export ROBHOME
+fi
+
+###### DO we have cor file? #####
+
+if [ "$showcor" -a -z "$torsoonly" ]
+  then
+  corfile="       -lm ${MAPRODXN}/andy3/${thedate}/geom/${thedate}_sock.lmarks"
+else
+  corfile=""
+fi
+
+###### DO we have vleads leadlinks file? #####
+
+if [ "$showvleads" -a -z "$epionly" ]
+  then
+  vleadsfile="       -ll ${ROBHOME}/torso/geom/andy3/leadset1_v1-6.leadlinks"
+else
+  vleadsfile=""
+fi
+
+###### Set up the parameters fore running the program #####
+
+# PArse datafilename four .tsdf extension, and strip it
+if echo $datafile | grep .tsdf > /dev/null
+  then
+  datafile=`echo $datafile | sed 's/.tsdf//'`
+  echo "Value of datafile updated to $datafile\n"
+fi
+
+if [ -n "$showint" ]
+  then
+  datafile=${datafile}_int
+  echo "Value of datafile updated to $datafile\n"
+fi
+
+cd ${MAPRODXN}/andy3/${thedate}
+#if [ -z "$numruns" ]
+#  then
+#  numruns=7
+#fi
+#runnum=1
+# while [ $runnum  -le $numruns ]
+#   do
+#   if [ $run1 = $runnum ]
+#     then
+#     echo "Match fore run1 = $run1"
+#     start1=${onset}${runnum}
+#     echo "Start1 = $start1"
+#     end1=`expr $start1 + $duration`
+#   fi
+#   if [ $run2 = $runnum ]
+#     then
+#     start2=${onset}${runnum}
+#     end2=`expr $start2 + $duration`
+#   fi
+#   runnum=`expr $runnum + 1`
+# done
+
+########### Set up the start and end of the frames numbers
+# This is no elegant, and must be expanded when numframes climbs
+# but is appears to work
+
+case "$run1"
+  in 
+  1) start1=$onset1;;
+  2) start1=$onset2;;
+  3) start1=$onset3;;
+  4) start1=$onset4;;
+  5) start1=$onset5;;
+  6) start1=$onset6;;
+  7) start1=$onset7;;
+  8) start1=$onset8;;
+  9) start1=$onset9;;
+ 10) start1=$onset10;;
+ 11) start1=$onset11;;
+ 12) start1=$onset12;;
+ 13) start1=$onset13;;
+ 14) start1=$onset14;;
+ 15) start1=$onset15;;
+ 16) start1=$onset16;;
+esac
+end1=`expr $start1 + $duration`
+case "$run2"
+  in 
+  1) start2=$onset1;;
+  2) start2=$onset2;;
+  3) start2=$onset3;;
+  4) start2=$onset4;;
+  5) start2=$onset5;;
+  6) start2=$onset6;;
+  7) start2=$onset7;;
+  8) start2=$onset8;;
+  9) start2=$onset9;;
+ 10) start2=$onset10;;
+ 11) start2=$onset11;;
+ 12) start2=$onset12;;
+ 13) start2=$onset13;;
+ 14) start2=$onset14;;
+ 15) start2=$onset15;;
+ 16) start2=$onset16;;
+esac
+end2=`expr $start2 + $duration`
+
+if [ -n "$showint" ]
+  then
+  start1=1
+  end1=4
+  start2=1
+  end2=4
+fi
+
+if [ -z "$start1" ]
+  then
+  echo "Start1 never set so exit"
+  exit 1
+elif [ -z "$start2" ]
+  then
+  echo "Start2 never set so exit"
+  exit 2
+fi
+
+##### Now, set up the run string for the progr #####
+  
+epicommand="\n\
+        -f ${MAPRODXN}/andy3/${thedate}/geom/${sockgeom}.fac \n\
+	-as 40 440 551 950 \n\
+	-t ${epilead} \n\
+	-at 840 1240 825 950 \n $corfile \n\
+	-p data/${datafile}.tsdf@${run1} -s $start1 $end1 \n\
+	-cl ${ROBHOME}/torso/geom/socks/sock64/sock64.channels \n\
+	-sl 2 \n\
+	-f ${MAPRODXN}/andy3/${thedate}/geom/${sockgeom}.fac \n\
+	-as 441 840 551 950 \n\
+	-t ${epilead} \n\
+	-at 840 1240 700 825 \n $corfile \n\
+	-p data/${datafile}.tsdf@${run2} -s $start2 $end2 \n\
+	-cl ${ROBHOME}/torso/geom/socks/sock64/sock64.channels \n\
+	-sl 2"
+
+torsocommand="\n\
+	-f ${ROBHOME}/torso/geom/andy3/leadset1.fac \n\
+	-as 40 440 150 550 \n\
+	-t ${torsolead} \n\
+	-at 840 1240 400 525 \n $vleadsfile \n\
+	-p data/${datafile}.tsdf@${run1} -s $start1 $end1 \n\
+	-cl ${ROBHOME}/torso/geom/andy3/leadset1.channels \n\
+	-sl 4 \n\
+	-f ${ROBHOME}/torso/geom/andy3/leadset1.fac \n\
+	-as 441 840 150 550 \n\
+	-t ${torsolead} \n\
+	-at 840 1240 275 400 \n $vleadsfile \n\
+	-p data/${datafile}.tsdf@${run2} -s $start2 $end2 \n\
+	-cl ${ROBHOME}/torso/geom/andy3/leadset1.channels \n\
+	-sl 4 "
+
+if [ "$epionly" ]
+  then
+  command="${MAP3D} -nw -b $epicommand"
+elif [ "$torsoonly" ]
+  then
+  command="${MAP3D} -nw -b $torsocommand"
+else
+  command="${MAP3D} -nw -b $epicommand $torsocommand"
+fi
+
+##### And, finally, run the program #####
+echo "Run program as $command"
+$command
+\end{verbatim}
+
+

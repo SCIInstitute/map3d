@@ -1,0 +1,108 @@
+% -*-latex-*-
+% Document name: linux_install.tex
+% Creator: Bryan Worthen [worthen@sci.utah.edu]
+% Last update: Wed Oct 20 20:00:00 2004 by J.R. Blackham
+%    - release 6.2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Linux Installation Instructions}
+\label{sec:linux-install}
+
+The Linux installation is relatively straightforward.  You'll need to 
+download \map{}'s dependencies, then download \map{} itself.
+
+\subsubsection{Linux Dependencies}
+
+There are two phases to this part.  First we need to get GTK+ and its
+dependencies.  The easiest way to do this is from your distribution's 
+installation CDs, or you can download the RPMs at www.rpmfind.net.  
+
+To get the dependencies from your distribution, run the Package Manager
+(Add/Remove Applications, configure-packages or something of that sort).
+Search for gtk, and install gtk2 (if you can't find that directly, then 
+installing the gnome environment will take care of it).
+
+To get the dependencies from the internet, navigate your favorite browser
+to \htmladdnormallink{\texttt{http://www.rpmfind.net}} {http://www.rpmfind.net}, and
+search for \texttt{gtk-2.0}.  Try to find one that matches your
+distribution (redhat, mandrake, etc.). We directly support development for
+\texttt{gtk2-2.2.1} and \texttt{gtk2-2.0.6,} so if you can find one of
+these that would be encouraged.
+
+The next part is to download gtkglext, the library that supports OpenGL for
+GTK widgets.  As of this release, this is not standard in most
+distributions.  If your GTK version is 2.0.6 or 2.2.1 (you can find out by
+looking at \texttt{gtkversion.h} which will be where you installed gtk
+(normally \texttt{/usr/include/gtk-2.0/gtk/gtkversion.h}), and look for
+\verb|GTK_MAJOR_VERSION|, \verb|GTK_MINOR_VERSION|, and
+\verb|GTK_MICRO_VERSION|.  There will be numbers on the same lines as each
+of these, and if you put them together it will be something like 2.2.1).
+If you are using one of these versions download
+\texttt{gtkglext-linux-2.2.1.tar.gz} or \texttt{gtkglext-linux-2.0.6.tar.gz} from
+the \map{} \htmladdnormallink{\texttt{download page}}
+{http://www.sci.utah.edu/software/map3d.html} and follow these
+instructions:
+%
+\begin{verbatim}
+    cd <download directory>
+    gunzip gtkglext-linux-<version>.tar.gz
+    tar xf gtkglext-linux-<version>.tar
+    cp libgtkglext-x11-1.0.so.0 /usr/local/lib
+    cp libgdkglext-x11-1.0.so.0 /usr/local/lib
+\end{verbatim}
+
+You can copy them to some directory other than \texttt{/usr/local/lib} if
+you wish.
+
+If this doesn't work, you will need to download the gtkglext source and
+compile it yourself (don't worry---if your gtk is properly set up, this
+will be very easy).  Download the sources from Source Forge
+\htmladdnormallink{\texttt{http://sourceforge.net/projects/gtkglext}}
+{http://sourceforge.net/projects/gtkglext/} and follow these instructions:
+%
+\begin{verbatim}
+    cd <download directory>
+    gunzip gtkglext-1.0.6.tar.gz
+    tar xf gtkglext-1.0.6.tar
+    cd gtkglext-1.0.6
+    configure
+    make
+    make install
+\end{verbatim}
+
+If you don't want these to end up in \texttt{/usr/local/lib,} you need to
+%
+\begin{verbatim}
+    configure --prefix=<dir>
+\end{verbatim}
+%
+where \texttt{dir} is where to put the libraries. 
+
+\subsubsection{Linux Executable}
+
+Download the \texttt{map3d-6.4-linux.tar.gz} file from the \map() download page
+and unzip it to a directory of your choice.  We will call that
+\texttt{RUN-DIR}. This is the directory from which you will run \map{}.
+
+To run \map{}, you will need to make sure that all the libraries are in
+your \verb|LD_LIBRARY_PATH| environment variable.  For this we will assume
+that your gtk libraries are in \texttt{/usr/lib} and your gtkglext
+libraries are in \texttt{/usr/local/lib}.  Do the following:
+%
+tcsh users:
+\begin{verbatim}
+   setenv LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+\end{verbatim}
+or\\
+%
+bash users:
+\begin{verbatim} 
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+\end{verbatim}
+
+you might want to put this line in your \texttt{.cshrc} or
+\texttt{.profile} file to avoid having to run this multiple times.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End: 

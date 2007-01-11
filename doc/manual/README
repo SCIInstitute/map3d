@@ -1,0 +1,44 @@
+Readme file for map3d
+=====================
+
+Installation
+------------
+
+The map3d file in this directory is fairly complete so that all you need to
+do is put it in a directory in your path and start playing.
+
+
+Documentation
+-------------
+
+For any questions about installation and use of map3d, please consult the
+map3d manual, which should have come with this download but is always
+available at
+
+    http://www.sci.utah.edu/software/map3d.html
+
+
+Test Datasets
+-------------
+
+To test map3d on some realistic datasets, go to 
+   
+    http://www.sci.utah.edu/software/map3d.html
+
+
+Bug reports
+-----------
+
+All bug reports should go to 
+
+    http://software.sci.utah.edu/research/software/bugzilla/
+
+where there is a section for map3d.
+
+
+The map3d team,
+
+map3d@cs.utah.edu
+
+
+

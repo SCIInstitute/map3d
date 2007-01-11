@@ -1,0 +1,135 @@
+% -*-latex-*-
+% Document name: source_install.tex
+% Creator: Bryan Worthen [worthen@sci.utah.edu]
+% Last update: Thu May 19 12:35:15 2005 by Rob Macleod
+%    - for version 6.3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Installing from source}
+\label{sec:source-install}
+
+We have tried to make installing \map{} from source as simple as possible.  
+There are four steps:
+
+
+\begin{enumerate}
+  \item Download the source
+  \item Download and install map3d's external dependencies
+  \item Setup the make configuration
+  \item Compile
+\end{enumerate}
+
+\subsubsection{Download Source Code}
+You can get the \map{} source code from the \map{} download page at 
+\htmladdnormallink{\texttt{http://www.sci.utah.edu/software/map3d.html}}
+{http://www.sci.utah.edu/software/map3d.html}.  Login and work your way
+to the \map{} version \version{} download page, and download 
+map3d-source.tar.gz.
+
+\subsubsection{Install Dependencies}
+You will need to install \map{}'s dependencies: gtk+, gtkglext, etc. 
+To do this, please refer to Section~\ref{sec:windows-install},
+Section~\ref{sec:sgi-install}, Section~\ref{sec:linux-install},
+or Section~\ref{sec:mac-install}.  
+
+If you are running on a different
+system, you will probably need to download and install these on 
+your own; please refer to \htmladdnormallink{GTK website}{http://www.gtk.org}
+and \htmladdnormallink{GtkGLExt website}{http://gtkglext.sourceforge.net/}.
+
+\subsubsection{Configuring \map{}}
+\map{} in addition to GTK+, \map{} has other dependencies that have been
+developed in conjunction with \map{}, which were designed to be used 
+with and independently of \map{}.  The make system shipped with \map{}
+was designed to allow users to compile these libraries independently
+of \map{} if they so choose.  However, most users will not use
+these libraries for any other purpose except for running \map{}.
+
+You should not have to change much in order to get \map{} to compile.
+MatlabIO (one of \map{}'s dependents) needs to know where ZLIB is
+(required, and should be installed after completing the previous section),
+and \map{} needs to know where gtk is.  The included files show samples of
+how this is to be done, and following are specific details.
+
+\paragraph{MS Visual Studio users}
+To configure MatlabIO, open Visual Studio, load \file{map3dtop/map3d.sln},
+right-click on the MatlabIO project, and select properties.  Under
+Configuration properties, click C/C++, select General, and add the
+directory where \file{zlib.h} is.
+
+To configure \map{}, right-click on the \map{} project, and select
+properties.  Under Configuration properties, click C/C++, select General,
+and add the directory where all the gtk-based header files are (if you
+installed the map3d-environment from the website, they should all be in the
+same place).  I.e., \verb|\local\map3d-environment\include|.  Each directory
+should be semi-colon delimited.
+
+While still under map3d property pages, select Linker, and under General,
+add the directory where the libraries are; i.e.,
+\verb|\local\map3d-environment\lib|.
+
+
+\paragraph{Mac, Linux, and SGI users}
+To configure both MatlabIO and \map{}, it is only necessary to
+modify \file{map3dtop/Makefile.incl}.
+
+To configure MatlabIO, change
+\var{ZLIB\_INC} to the directory that contains \file{zlib.h}  Also change
+\var{ZLIB\_LIB} to the directory that contains the zlib library.
+
+To configure \map{}, edit \file{map3dtop/map3d/Makefile} and change
+\var{GTKTOP}, \var{GTKLIB}, \var{GTKGL\_INC}, and \var{GTKGL\_LIB} to
+appropriate values.  If \file{gtk.h} is in
+\file{/usr/local/include/gtk-2.0/gtk}, and \file{libgtk-x11-2.0.so} (or
+\file{.dylib} for mac users) is in \file{/usr/local/lib}, then
+%
+\begin{verbatim}
+GTK_INC=/usr/local/include
+GTK_LIB=/usr/local/lib
+\end{verbatim}
+%
+Similarly, \var{GTKGL\_INC} and \var{GTKGL\_LIB} need to be set.
+to include the dir that contains \file{gtkgl.h} and
+\file{libgtkgl-x11-1.0.so} (or \file{.dylib}) respectively.  (-I goes in
+front of the include directory, and -L goes in front of the lib directory,
+respectively.)
+    
+\subsubsection{Compiling \map{}}
+Compiling \map{} now should be as simple as entering the map3dtop directory
+and running
+%
+\begin{verbatim}
+make
+\end{verbatim}
+
+Remember for \map{} to run, you should probably add \map{} to your path.
+If, when you run \map{} see errors like ``Cannot load library gtk-2.0.dll''
+or ``Cannot map so libgtk-2.0.so'', then you need to add the gtk libraries
+to your runtime path.  To do this on windows, follow the directions on the
+windows install page, otherwise, set the \var{LD\_LIBRARY\_PATH}.
+To do this, do the following:
+%
+tcsh users:
+\begin{verbatim}
+   setenv LD_LIBRARY_PATH GTK_LIB:$LD_LIBRARY_PATH
+\end{verbatim}
+%
+or bash users:
+%
+\begin{verbatim} 
+    export LD_LIBRARY_PATH=GTK_LIB:$LD_LIBRARY_PATH
+\end{verbatim}
+%
+
+Substitute the values that \var{GTK\_LIB} is set to in the
+\file{Makefile.incl}.  You might want to put this line in your \texttt{.cshrc}
+or \texttt{.profile} file to avoid having to run this multiple times.
+
+
+\paragraph{Contact}
+If there are problems, feel free to contact
+\htmladdnormallink{map3d@sci.utah.edu}{mailto:map3d@sci.utah.edu}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End: 
