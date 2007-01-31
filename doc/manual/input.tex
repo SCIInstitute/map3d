@@ -17,7 +17,7 @@
 %    - release 5.4
 % Last update: Wed Oct 20 07:26:37 2004 by Rob Macleod
 %    - release 6.2
-% Last update: Fri Aug 26 07:26:37 2005 by Bryan Worthen
+% Last update: Wed Jan 31 07:26:37 2007 by Bryan Worthen
 %    - release 6.4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Input files}
@@ -636,21 +636,21 @@ Sections~\ref{sec:displayleads} and~\ref{sec:control}.
   \multicolumn{1}{|c|}{Contents} &
   \multicolumn{1}{|c|}{Comments} \\ \hline
   1 & nsegs   & number of landmark segments in the file \\ \hline
-  2 & 1 type nsegpts seglabel & segment number (1), type, number of
-  points, label\_number \\ 
-  3 & X, Y, Z, radius & point location and radius of point 1 \\
-  4 & X, Y, Z, radius & point location and radius of point 2 \\
+  2 & 1 type nsegpts [segindex] [segcolor] & segment number (1), type, number of
+  points, with optional index number and color (color is a RGB triple, 0-255 each) \\ 
+  3 & X, Y, Z, radius [label] & point location and radius of point 1, with optional label to be drawn at the point \\
+  4 & X, Y, Z, radius [label] & point location and radius of point 2 \\
   . & . & . \\
   . & . & . \\
   nsegpts + 2 & X, Y, Z, radius & point location and radius of last point in
                               segment 1 \\ \hline
-  . & 2 type nsegpts seglabel & segment number (2), segment type, number
-  of points, and label\\ 
-  . & X, Y, Z, radius & point location and radius of point 1 \\
-  . & X, Y, Z, radius & point location and radius of point 2 \\
+  . & 2 type nsegpts [segindex] [segcolor] & segment number (2), type, number of
+  points, with optional index number and color \\ 
+  . & X, Y, Z, radius [label] & point location and radius of point 1 \\
+  . & X, Y, Z, radius [label] & point location and radius of point 2 \\
   . & . & . \\
   . & . & . \\
-  . & X, Y, Z, radius & point location and radius of last point in
+  . & X, Y, Z, radius [label] & point location and radius of last point in
                               segment 2 \\ \hline
   . & . & . \\
   . & . & . \\
@@ -701,7 +701,8 @@ Sections~\ref{sec:displayleads} and~\ref{sec:control}.
   \end{center}
 
   %
-  and they are not (yet) adjustable by the user.
+  and they are adjustable by the user, either via the Landmark menu, or by
+  specifying a color for the segment
 
   To specify a plane landmark requires three ``points''
   %

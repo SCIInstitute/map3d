@@ -21,6 +21,8 @@
 %    - release 6.2
 % Last update: Mon May 16 13:28:30 2005 by Bryan Worthen
 %    - release 6.3
+% Last update: Tue Jan 30 13:28:30 2007 by Bryan Worthen
+%    - release 6.4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Usage} 
 \label{sec:usage}
@@ -254,6 +256,11 @@ The following general parameters affect the entire display:
 %        first {\tt -f filename} in the command line, or separately for each
 %        surface. 
 
+  \item[{\tt -bgi image\_filename}] = An image file (in jpg or png) to
+        display in the background.  Used in conjunction with -bgp.
+  \item[{\tt -bgi x1 y1 z1 x2 y2 z2}] = Coordinates in world space to display
+        the image specified with -bgp.  If unspecified, the image will fill the
+        geometry window.
 %  \item [{\tt -rl report\_level}] = set the report level for this execution
 %        of \map{}.  The legal values are 0 (no reporting) to 4 (full
 %        debug-level reporting).  
@@ -578,6 +585,132 @@ following options:
         
 \end{description}
 
+\subsection{Other usage parameters}
+\map{} accepts many other command-line parameters to customize the display.
+These are optimally used in a script, but here is a reference of options
+not described above.
+
+\subsubsection{Additional global parameters}
+These parameters affect all surfaces or windows in \map{}.
+
+\begin{description}
+  \item[{\tt-bw borderWidth titleHeight}] Specifies the border width and the 
+    height of the title bar in pixels used in window placement calculations.
+    
+  \item[{-l general transformation frame}] Specifies whether the general, 
+    transformation, and frame locks should be turned on.  Specify a 1 or
+    a 0 for each, where 1 signifies to enable the lock, and 0 to disable.
+
+  \item[{-pm mode}] Specifies the pick mode, where mode is an integer.
+    \begin{verbatim}
+    0  New Window Mode
+    1  Refresh Window Mode
+    2  Node Info Mode
+    3  Triangle Info Mode
+    4  Triangulate Mode
+    5  Flip Triangle Mode
+    6  Edit Node Mode
+    7  Edit Landmark Mode
+    8  Delete Node Mode
+    \end{verbatim}
+    
+  \item[{-sc range function mapping}]  Describes the scaling model, with the specified 
+    scaling range, function, and mapping, each being an integer.
+    \begin{verbatim}
+    Range (data min and max is relative to):
+    0  Local
+    1  All frames in current surface
+    2  All surfaces in current frame
+    3  All surfaces and frames
+    4  All surfaces in current group in current frame
+    5  All surfaces and frames in current group
+    6  Slave scaling in current frame
+    7  Scave scaling in all frames
+    
+    Function
+    0  Linear
+    1  Exponential
+    2  Logarithmic
+    3  Lab7
+    4  Lab13
+    
+    Mapping
+    0  Symmetric
+    1  Separate
+    2  True
+    3  About Midpoint
+    \end{verbatim}
+  \end{description}
+  
+\subsubsection{Additional surface parameters}
+These options affect the current surface, if placed after the first [{-f}] on the command
+line, or all surfaces if placed before.
+\begin{description}
+  \item [{-sf size}]  Size of the small font, from 0-9
+  \item [{-mf size}]  Size of the medium font, from 0-9
+  \item [{-lf size}]  Size of the large font, from 0-9
+  \item [{-cm map}]   Which colormap the data will use, where map is an integer:
+  \begin{verbatim}
+  0  Rainbow
+  1  Green to Red
+  2  Grayscale
+  3  Jet
+  \end{verbatim}
+  \item [{-sm mode}] Selects the shading mode of surface data, where mode is an integer:
+  \begin{verbatim}
+  0  No shading
+  1  Flat
+  2  Gouraud
+  3  Banded
+  4  Textured Gouraud
+  \end{verbatim}
+  \item [{-rm mode}] Selects the mesh rendering mode, mode being an integer:
+  \begin{verbatim}
+  0  No rendering (mesh is not displayed)
+  1  Points Only
+  2  Mesh Elements
+  3  Mesh Connectivity
+  4  Elements and Connectivity
+  5  Points and Connectivity
+  6  Render only the mesh elements with no surface data
+  \end{verbatim}
+  \item[{-ic num}] Whether or not to invert the colormap, 1 meaning yes, 0 meaning no
+  \item[{-nco num}] Sets the number of contours to num
+  \item[{-rq w x y z}] Sets the rotation of the surface to the quaternion formed by (w,x,y,z)
+  \item[{-tc x y z}] Sets the translation of the surface to (x,y,z)
+  \item[{-zf vfov}] Sets the ``zoom factor'' or field of view to vfov
+  \item[{-el num}] Whether or not to light the surface, 1 meaning yes, 0 meaning no
+  \item[{-ef num}] Whether or not to display the surface with fog, 1 meaning yes, 0 meaning no
+  \item[{-gn num}] Assigns the group number to num for group scaling
+  \item[{-sco num}] Whether or not to show contours, 1 meaning yes, 0 meaning no
+  \item[{-nc num}] Whether or not to show the negative contours as dashes, 1 meaning yes, 0 meaning no
+  \item[{-x num}] Whether or not to show axes, 1 meaning yes, 0 meaning no
+  \item[{-xc r g b}] Specifies the axes' color, with RGB numbers from 0-255
+  \item[{-sit num}] Whether or not to show informational text, 1 meaning yes, 0 meaning no
+  \item[{-sli num}] Whether or not to show the lock icons, 1 meaning yes, 0 meaning no
+  \item[{-nma sphere mark value}] Settings for Node Marking: all.  
+    Sphere indicates whether to draw spheres for all nodes, 1 meaning yes, 0 meaning no.
+    Value indicates whether to color the spheres based on their data value, 1 meaning yes, 0 meaning no.
+    Mark indicates what to display at the nodes, mark being an integer:
+    \begin{verbatim}
+    0  nothing
+    1  Node number
+    2  Channel number
+    3  Data value
+    \end{verbatim}
+  \item[{-nme sphere mark}] Settings for Node Marking: extrema, where sphere and mark 
+  have the same meanings as [{-nma}], except the affect the extrema nodes
+  \item[{-nmp sphere mark}] Settings for Node Marking: pick, where sphere and mark 
+  have the same meanings as [{-nma}], except the affect only the nodes that have an active ``Time Series''
+  Window open.
+  \item[{-nml sphere mark}] Settings for Node Marking: leadlinks, where sphere and mark 
+  have the same meanings as [{-nma}], except the affect only the nodes that are
+  represented in the active leadlinks file, except that a mark of 3 will display the lead label
+  instead of the data value.
+  
+  
+  
+\end{description}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Script Files}
@@ -610,7 +743,14 @@ of commands as you might enter them at the Unix prompt.  Even more simply,
 a script file can consist of nothing more than the list of commands you
 would need to type to execute the same task from the system prompt.
 
-\subsection{How to make script files}
+\subsection{Automatically generating script files}
+The easiest way to make a script file is to have \map{} do it for you.  Open a set
+of surface, and arrange things how like them, and select ``Save...'' from the main menu.
+In the script section of the dialog, select a filename and the type of script file, and 
+push ``save''.  This will generate a script file that, when run, will open \map{} very closely
+(if not identical) to how you had it before.
+
+\subsection{How to make script files manually}
 
 Script files are simple text files and so are usually created with an
 editor such as emacs.  You can, however, also generate a script file from a
