@@ -63,6 +63,11 @@ void DrawLandMarks(Land_Mark * onelandmark, Landmark_Draw * onelandmarkdraw, Geo
       fprintf(stderr, " Drawsurflmarks: drawing segment %ld"
               " of type %ld\n", segnum + 1, onelandmark->segs[segnum].type);
 
+    // turn on color of segment from lmark file
+    if (onelandmark->segs[segnum].color[0] != -1) {
+      glColor3ub(onelandmark->segs[segnum].color[0],onelandmark->segs[segnum].color[1],onelandmark->segs[segnum].color[2]);
+    }
+
     //  Draw coronary or catheter
     if ((onelandmark->segs[segnum].type ==
          LM_COR || onelandmark->segs[segnum].type == LM_CATH) && onelandmarkdraw->qshowcor) {
@@ -113,7 +118,7 @@ void DrawLandMarks(Land_Mark * onelandmark, Landmark_Draw * onelandmarkdraw, Geo
 void DrawCorSeg(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type, GeomWindow* geom)
 {
   long i;
-  int slices = 3;
+  int slices = 8;
   GLUquadricObj *cylinder = gluNewQuadric();
   GLUquadricObj *sphere = gluNewQuadric();
   gluQuadricTexture(cylinder, GL_TRUE);
@@ -121,16 +126,13 @@ void DrawCorSeg(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type, G
   if (map3d_info.pickmode == EDIT_LANDMARK_PICK_MODE || !draw->drawtype) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glColor3f(1, 1, 1);
+    slices = 3;
   }
-  else if (type == LM_COR) {
+  else if (type == LM_COR && onelandmarkseg->color[0] == -1) {
     glColor3fv(draw->coronarycolor);
-    slices = 8;
   }
-  else if (type == LM_CATH) {
-    //glEnable(GL_LIGHTING);
-    //glEnable(GL_FOG);
+  else if (type == LM_CATH && onelandmarkseg->color[0] == -1) {
     glColor3fv(draw->cathcolor);
-    slices = 8;
   }
   for (i = 0; i < onelandmarkseg->numpts - 1; i++) {
     float newvector[] = { onelandmarkseg->pts[i + 1][0] - onelandmarkseg->pts[i][0],
@@ -213,13 +215,17 @@ void DrawLMarkPoint(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long typ
   GLUquadricObj *sphere = gluNewQuadric();
 
   if (type == LM_OCCLUS && draw->qshowocclus)
-    glColor3fv(draw->occluscolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->occluscolor);
   else if (type == LM_STIM && draw->qshowstim)
-    glColor3fv(draw->stimcolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->stimcolor);
   else if (type == LM_STITCH && draw->qshowstitch)
-    glColor3fv(draw->occluscolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->occluscolor);
   else if (type == LM_LEAD && draw->qshowlead)
-    glColor3fv(draw->leadcolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->leadcolor);
   else
     return;
 
@@ -332,7 +338,10 @@ void DrawLMarkPlane(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, GeomWind
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
-  glColor4fv(draw->planecolor);
+  if (onelandmarkseg->color[0] == -1)
+    glColor4fv(draw->planecolor);
+  else
+    glColor4ub(onelandmarkseg->color[0], onelandmarkseg->color[1],onelandmarkseg->color[2], draw->planecolor[3]*255);
   glPushMatrix();
   //normalize(rotvector);
   glTranslatef(centroid[0], centroid[1], centroid[2]);
@@ -380,15 +389,20 @@ void DrawLMarkRod(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type,
   GLUquadricObj *cylinder = gluNewQuadric();
 
   if (type == LM_ROD && draw->qshowrod)
-    glColor3fv(draw->rodcolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->rodcolor);
   else if (type == LM_RECNEEDLE && draw->qshowrecneedle)
-    glColor3fv(draw->recneedlecolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->recneedlecolor);
   else if (type == LM_PACENEEDLE && draw->qshowpaceneedle)
-    glColor3fv(draw->paceneedlecolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->paceneedlecolor);
   else if (type == LM_FIBER && draw->qshowfiber)
-    glColor3fv(draw->fibercolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->fibercolor);
   else if (type == LM_CANNULA && draw->qshowcannula)
-    glColor3fv(draw->cannulacolor);
+    if (onelandmarkseg->color[0] == -1)
+      glColor3fv(draw->cannulacolor);
   else
     return;
 

@@ -118,6 +118,7 @@ void Init_Surf_Input(Surf_Input * s)
   s->med_font = -1;
   s->small_font = -1;
   s->contourstep = 0;
+  s->colormap = -1;
   s->shadingmodel = -1;
   s->drawmesh = -1;
   s->invert = -1;

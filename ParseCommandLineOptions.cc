@@ -112,6 +112,7 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_1("-mf", globalInput.SurfList[GEOM_INDEX]->med_font)
       OPTION_1("-sf", globalInput.SurfList[GEOM_INDEX]->small_font)
 
+      OPTION_1("-cm", globalInput.SurfList[GEOM_INDEX]->colormap)
       OPTION_1("-sm", globalInput.SurfList[GEOM_INDEX]->shadingmodel)
       OPTION_1("-rm", globalInput.SurfList[GEOM_INDEX]->drawmesh)
       OPTION_1("-ic", globalInput.SurfList[GEOM_INDEX]->invert)

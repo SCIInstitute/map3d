@@ -979,9 +979,12 @@ void SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
           LandMarkSeg *origseg = &origlandmark.segs[loop];
           seg->numpts = numpts;
           seg->type = origseg->type;
-          for (loop2 = 0; loop2 < 80; loop2++)  // this is the size of a segstring
-            seg->segstring[loop2] = origseg->segstring[loop2];
           seg->pts = Alloc_fmatrix(numpts, 3);
+          seg->color[0] = origseg->color[0];
+          seg->color[1] = origseg->color[1];
+          seg->color[2] = origseg->color[2];
+          seg->labels = origseg->labels;
+          seg->segnumval = origseg->segnumval;
           seg->rad = new float[numpts];
           for (loop2 = 0; loop2 < numpts; loop2++) {
             float temp[4];        // assign temp point, as points don't have the 4th value

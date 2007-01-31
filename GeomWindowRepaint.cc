@@ -1409,7 +1409,6 @@ void DrawNodes(Mesh_Info * curmesh)
         //   if it is a leadlink, and its value is 4, then print the lead label.
         //   if it is a fid, and its value is 4, then print the fid label
         if (curmesh->mark_lead_number == 4 && lead_labels[loop]) {
-          printf("Node: %d\n", loop);
           renderString3f(pos[0], pos[1], pos[2], (int)priv->small_font, "%s", lead_labels[loop]);
           break;
         }

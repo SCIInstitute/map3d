@@ -85,6 +85,7 @@ struct Surf_Input
   // options that can be global or for each surface
   float contourstep; /*** User Step size between contours ***/
   long colour_mesh[3]; /*** Colour for drawing mesh ***/
+  long colormap;
   long shadingmodel;
   long drawmesh;
   long invert;

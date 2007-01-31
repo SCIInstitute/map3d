@@ -6,6 +6,7 @@
 #include "WindowManager.h"
 #include "Map3d_Geom.h"
 #include "Transforms.h"
+#include "colormaps.h"
 #include "pickinfo.h"
 #include "LegendWindow.h"
 #include "PickWindow.h"
@@ -119,6 +120,13 @@ void outputMeshInfo(FILE* f, char* cont, SaveDialog* sd, Mesh_Info* mesh)
   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(sd->settings_meshoptions))) {
     // color
     fprintf(f, "-c %d %d %d%s", (int)(mesh->meshcolor[0]*255), (int)(mesh->meshcolor[1]*255), (int)(mesh->meshcolor[2]*255),cont);
+    // colormap
+    int cm = -1;
+    if (mesh->cmap == &Rainbow) cm = 0;
+    else if (mesh->cmap == &Green2Red) cm = 1;
+    else if (mesh->cmap == &Grayscale) cm = 2;
+    else if (mesh->cmap == &Jet) cm = 3;
+    fprintf(f, "-cm %d%s", cm,cont);
     // shading mode
     fprintf(f, "-sm %d%s", mesh->shadingmodel,cont);
     // mesh render mode

@@ -26,6 +26,7 @@
 #include "PickWindow.h"
 #include "WindowManager.h"
 #include "Contour_Info.h"
+#include "colormaps.h"
 #include "eventdata.h"
 #include "geomlib.h"
 #include "landmarks.h"
@@ -1190,6 +1191,30 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   INITIALIZE_VALUE(contourstep, contourspacing, 0, DEF_CONTOURSPACING);
   // Shading mode
   INITIALIZE_VALUE(shadingmodel, shadingmodel, -1, DEF_SHADINGMODEL);
+
+  // colormap - cannot use the shorcut, since we are assigning colormaps and not values
+  int val = -1;
+  if (s->colormap != -1)
+    val = s->colormap;
+  else if (globalSurf->colormap != -1)
+    val = globalSurf->colormap;
+  switch (val) {
+    case 0:
+      m->cmap = &Rainbow;
+      break;
+    case 1:
+      m->cmap = &Green2Red;
+      break;
+    case 2:
+      m->cmap = &Grayscale;
+      break;
+    case 3:
+      m->cmap = &Jet;
+      break;
+    default:
+      m->cmap = &Jet;
+      break;
+  }
 
   // Rendering mode
   INITIALIZE_VALUE_WITH_ACTION(drawmesh, drawmesh, -1, 
