@@ -17,14 +17,15 @@
 %    - release 6.3
 % Last update: Fri Aug 26 11:27:04 2005 by Bryan Worthen
 %    - release 6.4
+% Last update: Fri Feb 16 08:15:11 2007 by Rob Macleod
+%    - release 6.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[11pt]{article}
-\usepackage{epsfig}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{html}
 \usepackage{manual-map3d}
-\usepackage{citexp}
+\usepackage[compress,super]{cite}
 
 \pagestyle{fancy}
 \setlength{\parskip}{\smallskipamount} 
@@ -44,7 +45,7 @@
 \newcommand{\file}[1]{\texttt{#1}}
 \newcommand{\var}[1]{\texttt{#1}}
 % Make sure to change this command with each new version!!
-\newcommand{\version}{6.4}
+\newcommand{\version}{6.5}
 \sloppy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -84,7 +85,7 @@
 \input{bugs}
 
 \newpage
-\bibliography{biglit}
+\bibliography{strings,biglit,crj}
 \bibliographystyle{unsrt}
 
 \end{document}

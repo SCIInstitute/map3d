@@ -15,15 +15,16 @@ R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
 \bibitem{RSM:Mac93}
 R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
 \newblock Visualizing bioelectric fields.
-\newblock {\em IEEE Comp. Graph. \& Applic.}, 13(4):10--12, 1993.
+\newblock {\em {IEEE} Comp. Graph. \& Applic.}, 13(4):10--12, 1993.
 
 \bibitem{RSM:Mac93a}
 R.S. MacLeod and C.R. Johnson.
 \newblock Map3d: {I}nteractive scientific visualization for bioengineering
   data.
-\newblock In {\em Proceedings of the IEEE Engineering in Medicine and Biology
+\newblock In {\em Proceedings of the {IEEE} Engineering in Medicine and Biology
   Society 15th Annual International Conference}, pages 30--31. IEEE Press,
   1993.
+\newblock http://software.sci.utah.edu/map3d.html.
 
 \bibitem{RSM:Mac94d}
 R.S. MacLeod, P.R. Ershler, C.R. Johnson, and M.A. Matheson.
@@ -41,13 +42,13 @@ R.S. MacLeod, D.H. Brooks, H.~On, H.~Krim, R.L. Lux, and F.~Kornreich.
 \bibitem{RSM:Mac94f}
 R.S. MacLeod, B.~Taccardi, and R.L. Lux.
 \newblock The influence of torso inhomogeneities on epicardial potentials.
-\newblock In {\em IEEE Computers in Cardiology}, pages 793--796. IEEE Computer
-  Society, 1994.
+\newblock In {\em {IEEE} Computers in Cardiology}, pages 793--796. {IEEE}
+  Computer Society, 1994.
 
 \bibitem{RSM:Mac95d}
 R.S. MacLeod, B.~Taccardi, and R.L. Lux.
 \newblock Electrocardiographic mapping in a realistic torso tank preparation.
-\newblock In {\em Proceedings of the IEEE Engineering in Medicine and Biology
+\newblock In {\em Proceedings of the {IEEE} Engineering in Medicine and Biology
   Society 17th Annual International Conference}, pages 245--246. IEEE Press,
   1995.
 
@@ -77,7 +78,7 @@ R.S. MacLeod, B.~Punske, S.~Shome, B.~Yilmaz, and B.~Taccardi.
 B.B. Punske, W.E. Cascio, C.~Engle, H.T. Nagle, L.S. Gettes, and T.A. Johnson.
 \newblock Quantitative characterization of epicardial wave fronts during
   regional ischemia and elevated extracellular potassium ion concentration.
-\newblock {\em Ann Biomed Eng}, 26(6):1010--1021, Nov-Dec 1998.
+\newblock {\em Ann Biomed Eng}, 26(6):1010--1021, November-December 1998.
 
 \bibitem{RSM:Pun99}
 B.B. Punske, R.L. Lux, R.S. MacLeod, M.S. FUller, P.E. Ershler, T.J. Dustman,
@@ -91,7 +92,8 @@ B.~Taccardi, R.L. Lux, P.R. Ershler, R.S. MacLeod, C.~Zabawa, and
   Y.~Vyhmeister.
 \newblock Potential distributions and excitation time maps recorded with high
   spatial resolution from the entire ventricular surface of exposed dog hearts.
-\newblock In {\em IEEE Computers in Cardiology}, pages 1--4. IEEE Press, 1992.
+\newblock In {\em {IEEE} Computers in Cardiology}, pages 1--4. IEEE Press,
+  1992.
 
 \bibitem{RSM:Tac92b}
 B.~Taccardi, R.L. Lux, P.R. Ershler, R.S. MacLeod, and Y.~Vyhmeister.
@@ -155,29 +157,37 @@ R.L. Lux, M.~Akhtar, and R.S. MacLeod.
   Arrhythmias: Basic Concepts and Clinical Approaches}, chapter~15, pages
   393--424. Marcel Dekker, 2001.
 
-\bibitem{RSM:Joh93b}
+\bibitem{CRJ:Joh93b}
 C.R. Johnson, R.S. MacLeod, and M.A. Matheson.
-\newblock Computational medicine: Bioelectric field problems.
-\newblock {\em IEEE Computer}, 26(10):59--67, October 1993.
+\newblock Computational medicine: {B}ioelectric field problems.
+\newblock {\em IEEE COMPUTER}, pages 59--67, October 1993.
 
-\bibitem{RSM:Joh94}
-C.R. Johnson and R.S. MacLeod.
-\newblock Nonuniform spatial mesh adaption using a posteriori error estimates:
-  applications to forward and inverse problems.
-\newblock {\em Appl. Num. Anal.}, 14:311--326, 1994.
+\bibitem{CRJ:Joh93d}
+C.R. Johnson and R.~S. MacLeod.
+\newblock High performance computing in medicine: {D}irect and inverse problems
+  in cardiology.
+\newblock In {\em Proceedings of the {IEEE} Engineering in Medicine and Biology
+  Society 15th Annual International Conference}, pages 582--583. IEEE Press,
+  1993.
 
-\bibitem{RSM:Joh94b}
-C.R. Johnson and R.S. MacLeod.
+\bibitem{CRJ:Joh94}
+C.R. Johnson and R.~S. MacLeod.
+\newblock Nonuniform spatial mesh adaptation using a posteriori error
+  estimates: applications to forward and inverse problems.
+\newblock {\em Applied Numerical Mathematics}, 14:311--326, 1994.
+
+\bibitem{CRJ:Joh94b}
+C.R. Johnson and R.~S. MacLeod.
 \newblock Local regularization and adaptive methods for the inverse {L}aplace
   problem.
-\newblock In D.N. Ghista, editor, {\em Biomedical and Life Physics}, pages
+\newblock In D.~N. Ghista, editor, {\em Biomedical and Life Physics}, pages
   224--234. Vieweg-Verlag, Braunschweig, 1996.
 
 \bibitem{RSM:Pun2003}
-B.B. Punske, Q.~Ni, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J.~Dustman Ph.D.,
-  M.J. Allison, and B.~Taccardi.
+B.B. Punske, Q.~Ni, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, M.J.
+  Allison, and B.~Taccardi.
 \newblock Spatial methods of epicardial activation time determination.
-\newblock {\em Annal. Biomed. Eng.}, 2003.
+\newblock {\em Annal. Biomed. Eng.}, 31:781--792, 2003.
 
 \bibitem{RSM:Ser2002}
 Y.~Serina{\~{g}}ao{\~{g}}lu, R.S. MacLeod, B.~Yilmaz, and D.H. Brooks.

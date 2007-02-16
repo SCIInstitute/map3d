@@ -17,35 +17,37 @@
 %    - release 6.1
 % Last update: Fri Aug 26 13:28:30 2005 by Bryan Worthen
 %    - release 6.4
+% Last update: Fri Feb 16 09:17:08 2007 by Rob Macleod
+%    - version 6.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%  Figures used in this file %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %begin{latexonly}
   \newcommand{\mouseaction}%
-  {\centerline{\includegraphics[height=2in]{figures/mouse.epsf}}}
+  {\centerline{\includegraphics[height=2in]{figures/mouse.pdf}}}
   \newcommand{\filesdialogone}%
   {\centerline{\includegraphics[width=\columnwidth]
-      {figures/filesdialog1.epsf}}}
+      {figures/filesdialog1.pdf}}}
   \newcommand{\filesdialogthree}%
   {\centerline{\includegraphics[width=\columnwidth]
-      {figures/filesdialog3.epsf}}}
+      {figures/filesdialog3.pdf}}}
   \newcommand{\savedialog}%
-  {\centerline{\includegraphics[height=4in]{figures/savedialog.epsf}}}
+  {\centerline{\includegraphics[height=4in]{figures/savedialog.pdf}}}
   \newcommand{\fiducialswindow}%
   {\centerline{\includegraphics[width=5in]
-  {figures/fiducialswindow.epsf}}} 
+  {figures/fiducialswindow.pdf}}} 
   \newcommand{\scaledialog}%
-  {\centerline{\includegraphics[height=2.5in]{figures/scaledialog.epsf}}}
+  {\centerline{\includegraphics[height=2.5in]{figures/scaledialog.pdf}}}
   \newcommand{\contourdialog}%
-  {\centerline{\includegraphics[height=2.5in]{figures/contourdialog.epsf}}}
+  {\centerline{\includegraphics[height=2.5in]{figures/contourdialog.pdf}}}
   \newcommand{\colorpicker}%
-  {\centerline{\includegraphics[height=1in]{figures/colorpicker.epsf}}}
+  {\centerline{\includegraphics[height=1in]{figures/colorpicker.pdf}}}
   \newcommand{\sizepicker}%
-  {\centerline{\includegraphics[height=1in]{figures/sizepicker.epsf}}}
+  {\centerline{\includegraphics[height=1in]{figures/sizepicker.pdf}}}
 %end{latexonly}
 \begin{htmlonly}
   \newcommand{\mouseaction}{%
   \htmladdimg[align=top,width=371,alt="mouse action"]
-  {../figures/mouse.gif}}
+  {../figures/mouse.jpg}}
   \newcommand{\filesdialogone}{%
   \htmladdimg[align=top,width=600,alt="Files Dialog"]
   {../figures/filesdialog1.gif}}
@@ -223,19 +225,19 @@ following additional actions:
     \multicolumn{1}{|c|}{Control Key} & 
     \multicolumn{1}{|c|}{Button} & 
     \multicolumn{1}{|c|}{Action}\\ \hline
-    Alt(CTRL+SHIFT)   & Left & Move a single surface subwindow \\ 
+    Alt(Ctrl+Shift)   & Left & Move a single surface subwindow \\ 
       & Middle & Resize single surface subwindow (no indication of change
     until release of mouse button).\\ 
       & Right & no action \\ \hline
   \end{tabular}
 \end{center}
 
-Note: if \map{}  does not respond as described in these tables, it could be
+Note: if \map{} does not respond as described in these tables, it may be
 that your window manager is grabbing the mouse/key combinations for its own
-purpose or maps the keys a little differently.  This will require some setting changes for the window manager.
-To make such changes under IRIX, examine the .4Dwmrc file; in Linux there
-is usually a control panel or utility application to manage all window
-system interactions.
+purpose or maps the keys a little differently.  This will require some
+setting changes for the window manager.  In Linux there is usually a
+control panel or utility application to manage all window system
+interactions.
 
 %\newpage
 
@@ -246,17 +248,18 @@ Each key of the regular keyboard, the function keys, and the keypad may be
 mapped to some function of the \map{}.  Some keyboard keys serve as toggles
 to change between a mode being on or off, \eg{} ``n'' toggles the display
 of node markings.  Others cycle through a set of choices, \eg{} ``m'' runs
-through a series of display options for the mesh.  A list of the keyboard
-keys and their functions is shown in table~\ref{table:keys} and
-table~\ref{table:arrowkeys} describes the action for each of the function
-and arrow keys, and table~\ref{table:keypad} the actions of the keypad
-keys.  The keys affect action only in the Geometry Window unless otherwise
-specified.
+through a series of display options for the mesh.  Several lists of the
+keyboard keys and their functions are shown in
+Tables~\ref{table:keys}--\ref{table:keypad}.
 
 \begin{table}[htbp]
 %\nopagebreak[4]
-\begin{center}
-\begin{tabular}{|l|p{6in}|} \hline
+        \caption{\label{table:keys} Keyboard controls for Geometry Window
+          in map{}.  When control contains both lower and upper cases of a
+          letter, one cycles through a parameter in one direction and the
+          other in the reverse direction.}
+    \begin{center}
+        \begin{tabular}{|l|p{6in}|} \hline
         \multicolumn{2}{|c|}{\textbf{Regular keyboard}} \\ \hline
         a/A-key   &       Switch colour tables \\ \hline
 %        B-key  &       Toggle clipping plane \\ \hline
@@ -301,33 +304,40 @@ specified.
             or Destroys a Time Signal Window if pressed there. \\ \hline
         +/- key   &    Increases/Decreases size of of currently-selected object
        (see Section~\ref{sec:interactive-size})\\ \hline
-      (/) key   &       Changes which susrface inside a window will be affected
-          when the general lock is on but the transform or frame lock is off
-           (see Section~\ref{sec:locks})\\ \hline
-        \multicolumn{2}{|c|}{Clipping Controls} \\ \hline
-        \verb|<|-key    &       Toggle front clipping plane \\ \hline
-        \verb|>|-key   &       Toggle rear clipping plane \\ \hline
-        [/]-key   &     Move front clipping plane in (initially) +z/-z
-        direction respectively \\ \hline
-        \{/\}-key   &   Move rear clipping plane in (initially) +z/-z
-        direction respectively \\ \hline
-        ,-key   &       Lock/Unlock clipping plane rotation with object
-        rotation (when unlocked, shift-Middle-click rotates clipping
-        planes) \\ \hline
-        .-key   &       Lock/Unlock clipping planes from each other.
-        When active, clipping planes move together \\ \hline
+       ( \& ) keys   &  Change which susrface inside a window will be affected
+            when the general lock is on but the transform or frame lock is off
+            (see Section~\ref{sec:locks})\\ \hline
 \end{tabular}
 \end{center}
-\caption{\label{table:keys} Keyboard controls for Geometry Window in map{}.
-  When control 
-  contains both lower and upper cases of a letter, one cycles through a
-  parameter in one direction and the other in the reverse direction.}
 
 \end{table} 
 
 \begin{table}[htbp]
+%\nopagebreak[4]
+        \caption{\label{table:clipping} Clipping plane controls}
+    \begin{center}
+        \begin{tabular}{|l|p{6in}|} \hline
+        \multicolumn{2}{|c|}{Clipping Controls} \\ \hline
+        \verb|<|-key    &       Toggle front clipping plane \\ \hline
+        \verb|>|-key   &       Toggle rear clipping plane \\ \hline
+        [ \& ] keys   &     Move front clipping plane in (initially) +z/-z
+             direction respectively \\ \hline
+        \{ \& \} keys   &   Move rear clipping plane in (initially) +z/-z
+                  direction respectively \\ \hline
+        ,-key   &  Lock/Unlock clipping plane rotation with object
+                   rotation (when unlocked, shift-Middle-click rotates clipping
+                   planes) \\ \hline
+        .-key   &  Lock/Unlock clipping planes from each other.
+                   When active, clipping planes move together \\ \hline
+\end{tabular}
+\end{center}
+
+\end{table} 
+
+\begin{table}[htbp]
+    \caption{\label{table:arrowkeys} Control of \map{} via the arrow keys}
 \begin{center}
-\begin{tabular}{|l|l|} \hline
+    \begin{tabular}{|l|l|} \hline
         \multicolumn{2}{|c||}{\textbf{Arrow Keys}} \\ \hline
         Left Arrow Key  &       Retreat by current frame step (Also in Time
         Signal Window) \\ 
@@ -335,16 +345,21 @@ specified.
         Signal Window)\\ 
         Up Arrow key    &       Select next surface \\
         Down Arrow Key  &       Select previous surface \\ \hline
-\end{tabular}
+    \end{tabular}
 \end{center}
-\caption{\label{table:arrowkeys} Control of \map{} via the arrow keys}
 
 \end{table}
 
 
   %\medskip
 \begin{table}[htbp]
+    \caption{\label{table:keypad}
+      Keypad controls in \map{} - have NUM-Lock off for these to work
+      properly.  Again, based on how you have your keys mapped, you might
+      have to use the non-keypad keys, but something should work for you
+      for each key.}
 \begin{center}
+
 \begin{tabular}{|l|p{3in}|} \hline
         \multicolumn{2}{|c||}{\textbf{Keypad Keys}} \\ \hline
    Ctrl-Keypad Left-arrow  &  Y-axis rotate, CW (left)  \\ \hline
@@ -368,77 +383,9 @@ specified.
 \hline
 \end{tabular}
 \end{center}
-\caption{Keypad controls in \map{} - have NUM-Lock off for these to work
-    properly.   Again, based on how you have your keys mapped, you might
-    have to use the non-keypad keys, but  something should work for you for
-    each key.} 
-\label{table:keypad}
 \end{table}
+\clearpage
 
-
-%  \subsubsection{Dial box}
-%  \label{sec:control-dials} 
-
-%  Perhaps the most intuitive control of \map{} occurs via the dial box.  This
-%  device allows ``analog'' control over any GL application that makes use of
-%  dial input by allowing the user infinite control over any control parameter
-%  linked to the dials.  In \map{}, the primary continuous interaction with
-%  the program is in placing the object in the display, choosing the viewing
-%  angle and the scale factor, and adjusting the clipping planes.  Hence these
-%  functions are mapped to the dials, as described in table~\ref{table:dials}
-%  and figure~\ref{fig:dials} below.
-
-%  Note that all rotations via the dial box are relative to the screen
-%  coordinate system.  This system has the x-y plane aligned with the screen,
-%  the x-axis pointing from left to right, the y-axis from bottom to top, and
-%  the z-axis pointing away from the viewer, perpendicular to the screen.  One
-%  can picture the rotation dials as being attached to the positive ends of
-%  the three axis.  See figure~\ref{fig:dials} for a description of this.
-
-%  \begin{table}[htbp]
-%  %\vspace{0.5cm}
-%  \begin{center}
-%  \begin{tabular}{|l|l||l|l|} \hline
-%          \multicolumn{2}{|c||}{Dial Box} & 
-%          \multicolumn{2}{|c|}{Mouse Control} \\ \hline
-%   Dial 0 (Bottom left)    & Scale display &
-%       Left Button     &       Rotation/picking\\ \hline
-%   Dial 1 (Bottom right)   & Clipping/z-buffer &
-%       Middle Button     &       Image scaling\\ \hline
-%   Dial 2 (2nd row left)   & Z-rotate &
-%       Right Button      &       Menu selection \\ \hline
-%   Dial 3 (2nd row right)  & Z-translate \\ \cline{1-2}
-%   Dial 4 (3rd row left)   & Y-rotate \\ \cline{1-2}
-%   Dial 5 (3rd row right)  & Y-translate \\ \cline{1-2}
-%   Dial 6 (top left)       & X-rotate \\ \cline{1-2}
-%   Dial 7 (top right)      & X-translate \\ \cline{1-2}
-%  \end{tabular}
-%  \end{center}
-%  \caption{Dial controls for \map{}}
-%  \label{table:dials} 
-%  \end{table}
-
-%  \begin{figure}[htb]
-%  %\begin{Figure}{htb}
-%  %  \NormalPicture{\columnwidth}
-%  %        {3.2in}
-%  %        {figures/dials.epsf}
-%    \centerline{\psfig{figure=figures/dials.epsf,width=4in}}
-%    \caption{Dial layout for \map{}.  Rotation dials act as if they were
-%    attached to the ends of the main x, y, and z-axes, as indicated in the
-%    right hand panel of the figure.}
-%    \label{fig:dials}
-%  %\end{Figure}
-%  \end{figure}
-
-%  %\vspace{0.5cm}
-
-%  When more than one surface window are used, certain manipulations apply to
-%  the window which currently has focus (the one in which the mouse cursor
-%  sits), while others may apply to all windows synchronously.  Rotation and
-%  translation can apply to one or all windows (select which via the menu or
-%  F11 key), while scaling modes, colour maps, and frame numbers are applied
-%  to all windows concomitantly.
 
 \subsubsection{Menu layout}
 \label{sec:control-menus}
@@ -448,6 +395,8 @@ OpenGL convention.  Below is a series of tables of the menu layout for
 \map{}'s Geometry Window.
 
 \begin{table}[ht]
+\caption{\label{table:menu-geom}
+  The overall menu structure in the Geometry Window}.
   \begin{center}
     \begin{tabular}{|l|p{4in}|} \hline
       \multicolumn{2}{|c|}{\textbf{Overview of Geometry Window menus}} \\
@@ -474,20 +423,17 @@ OpenGL convention.  Below is a series of tables of the menu layout for
       labels \\ \hline
     \end{tabular}
   \end{center}
-\caption{The overall menu structure of the Geometry Window}.
 \end{table}
 
 
 \begin{table}[ht]
+\caption{\label{table:contours}Menus for contour spacing/number.}
   \begin{center}
     \begin{tabular}{|l|l|p{3 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Contour Menus}} \\ \hline
     Set Contour Num/Spacing & & Opens a dialog to change user-specified 
     spacing or number of contours. See Section~\ref{sec:contourwindow}.
     \\ 
-#    Number of Contours & & \\
-#    &  User-specified spacing & use the value of contour spacing from the 
-#    \texttt{-cs} option of the command line, or value in the Contour Spacing dialog.  \\
     Draw style & & \\
     & Dashed line for negative values & draw positive contours in solid,
     negative in broken lines\\
@@ -497,11 +443,10 @@ OpenGL convention.  Below is a series of tables of the menu layout for
     without changing settings \\ \hline
     \end{tabular}
   \end{center}
-\caption{Menus for contour spacing/number.}
-\label{table:contours}
 \end{table}
 
 \begin{table}[ht]
+\caption{Frame Controls.}
   \begin{center}
     \begin{tabular}{|l|l|p{2.8 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Frame Control Menus}} \\ \hline
@@ -524,10 +469,10 @@ OpenGL convention.  Below is a series of tables of the menu layout for
         \\ \hline
     \end{tabular}
   \end{center}
-\caption{Frame Controls.}
 \end{table}
 
 \begin{table}[ht]
+\caption{Graphics menus.  These control general graphic rendering options.}
   \begin{center}
     \begin{tabular}{|l|l|p{3 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Graphics Menus}} \\ \hline
@@ -551,10 +496,10 @@ OpenGL convention.  Below is a series of tables of the menu layout for
     \hline
     \end{tabular}
   \end{center}
-\caption{Graphics menus.  These control general graphic rendering options.}
 \end{table}
 
 \begin{table}[ht]
+\caption{Submenus for the Mesh Display menu}
   \begin{center}
     \begin{tabular}{|p{1in}|p{2in}|p{2.5in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Mesh render menu}} \\ \hline
@@ -591,10 +536,14 @@ OpenGL convention.  Below is a series of tables of the menu layout for
 
     \end{tabular}
   \end{center}
-\caption{Submenus for the Mesh Display menu}
 \end{table}
 
 \begin{table}[ht]
+    \caption{\label{table:nodemarking} Menus for marking nodes in the display.
+      If all surfaces are currently displayed, any of these settings will affect
+      all surfaces based on the rules in locks section (see
+      Section~\ref{sec:interactive-size}).  If we have a single  
+      or current) surface only, then change only that surface.}
   \begin{center}
     \begin{tabular}{|l|l|p{4 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Node Marking Menus}} \\ \hline
@@ -649,13 +598,13 @@ OpenGL convention.  Below is a series of tables of the menu layout for
     \hline
     \end{tabular}
   \end{center}
-\caption{\label{table:nodemarking} Menus for marking nodes in the display.
-If all surfaces are currently displayed, any of these settings will affect
-all surfaces based on the rules in locks section (see Section~\ref{sec:interactive-size}).  If we have a single 
-or current) surface only, then change only that surface.}
 \end{table}
 
 \begin{table}[ht]
+    \caption{\label{table:pickingone} Pick mode menus, part 1.  Picking is
+      based on a 
+      mode (selectable in this menu), and is done with CTRL-left mouse button
+      unless otherwise specified.}
   \begin{center}
     \begin{tabular}{|l|p{4 in}|} \hline
       \multicolumn{2}{|c|}{\textbf{Picking Menus I}} \\ \hline
@@ -689,13 +638,13 @@ or current) surface only, then change only that surface.}
       \hline
   \end{tabular}
 \end{center}
-\caption{\label{table:pickingone} Pick mode menus, part 1.  Picking is
-  based on a 
-  mode (selectable in this menu), and is done with CTRL-left mouse button
-  unless otherwise specified.}
 \end{table}
 
 \begin{table}[ht]
+  \caption{\label{table:pickingtwo} Pick mode menus, part 2.  Picking is
+    based on a 
+    mode (selectable in this menu), and is done with CTRL-left mouse button
+    unless otherwise specified.}
   \begin{center}
     \begin{tabular}{|l|p{4 in}|} \hline
       \multicolumn{2}{|c|}{\textbf{Picking Menus II}} \\ \hline
@@ -720,16 +669,16 @@ or current) surface only, then change only that surface.}
     make it easier to pick an object but also easier to hit multiple
     objects. \\ 
     Size of triangulation node mark & when triangulating, a node
-    mark will appear on the node(s) selected.  Adjust that mark's size. \\ \hline
+    mark will appear on the node(s) selected.  Adjust that mark's size. 
+    \\ \hline
     \end{tabular} 
   \end{center}
-  \caption{\label{table:pickingtwo} Pick mode menus, part 2.  Picking is
-    based on a 
-    mode (selectable in this menu), and is done with CTRL-left mouse button
-    unless otherwise specified.}
 \end{table}
 
 \begin{table}[ht]
+    \caption{Menu for scaling, the mapping from data value to color for
+      rendering. }
+\label{table:scaling}
   \begin{center}
     \begin{tabular}{|l|l|p{3 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Scaling Menus}} \\ \hline
@@ -739,7 +688,7 @@ or current) surface only, then change only that surface.}
     &  Local  & scale based on the local extrema for each surface and time
        instant \\
     &  Global over all frames in one surface  & scale based on the extrema 
-        over the full times series \\ \hline
+        over the full times series \\ 
     &  Global over all surfaces in one frame & scale based on the extrema over 
         each surface for the local time instant\\
     &  Global over all surfaces and frames & scale based on the extrema
@@ -757,12 +706,12 @@ or current) surface only, then change only that surface.}
         for all time instants\\ \hline
 
     Function & & \\
-    &  Linear & linear mapping between value and color \\ \hline
-    &  Logarithmic & color changes as  $\log({\rm value})$ \\ \hline
+    &  Linear & linear mapping between value and color \\ 
+    &  Logarithmic & color changes as  $\log({\rm value})$ \\ 
     &  Exponential & color changes as  $\exp({\rm value})$ \\ 
-    &  Lab standard & color reflects lab standard \\ \hline
+    &  Lab standard & color reflects lab standard \\ 
     &  Lab 13 standard & color reflects lab 13 standard \\ \hline
-    Mapping & & \\
+    Mapping & & \\ 
     &  True & use true extrema \\ 
     &  Symmetric about zero & take largest of absolute values of extrema to
     determine scaling \\
@@ -776,12 +725,10 @@ or current) surface only, then change only that surface.}
     will be placed in that group) \\ \hline
     \end{tabular}
   \end{center}
-\caption{Menu for scaling, the mapping from data value to color for
-rendering. }
-\label{table:scaling}
 \end{table}
 
 \begin{table}[ht]
+    \caption{Submenus to control the display of scalar data on the mesh.}
   \begin{center}
     \begin{tabular}{|l|l|p{2.5 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Surface Display Menus}} \\ \hline \hline
@@ -800,10 +747,10 @@ rendering. }
        color\\  \hline
     \end{tabular}
   \end{center}
-\caption{Submenus to control the display of scalar data on the mesh.}
 \end{table}
 
 \begin{table}[ht]
+    \caption{The Use +/- to interactively change sizes menu}
   \begin{center}
     \begin{tabular}{|l|p{4in}|} \hline
       \multicolumn{2}{|c|}{\textbf{+/-  Adjust Menu.}} \\ \hline \hline
@@ -827,16 +774,17 @@ rendering. }
       \\ \hline 
     \end{tabular}
   \end{center}
-\caption{The Use +/- to interactively change sizes menu}
 \end{table}
 
 
 
 \begin{table}[ht]
+  \caption{Controls for the attributes of the \map{} windows.}
   \begin{center}
     \begin{tabular}{|l|l|p{3 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Window Attributes Menus}} \\ \hline
-    Screen info & & select the text written to the screen.  Note that screen info 
+    Screen info & & select the text written to the screen.  
+    Note that screen info 
        disappears when clipping is on.\\
       & Turn screen info on & \\
       & Turn screen info off & \\ 
@@ -861,14 +809,11 @@ rendering. }
         together or independently \\ \hline
     \end{tabular}
   \end{center}
-\caption{Controls for the attributes of the \map{} windows.}
 \end{table}
 
 
-Following are the controls for the menus of the Time Signal Window, Legend
-Window, and Main Window, respectively.
-
 \begin{table}[ht]
+\caption{Controls for the attributes of the Time Signal Window.}
   \begin{center}
     \begin{tabular}{|l|p{4in}|} \hline
       \multicolumn{2}{|c|}{\textbf{Time Signal Window Controls}}
@@ -880,11 +825,11 @@ Window, and Main Window, respectively.
       graph\\ \hline
     \end{tabular}
   \end{center}
-\caption{Controls for the attributes of the Time Signal Window.}
 \end{table}
 
 
 \begin{table}[ht]
+\caption{Controls for the attributes of the Legend window.}
   \begin{center}
     \begin{tabular}{|l|l|p{3 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Legend Window Controls}} \\ \hline
@@ -898,10 +843,10 @@ Window, and Main Window, respectively.
     \\ \hline 
     \end{tabular}
   \end{center}
-\caption{Controls for the attributes of the Legend window.}
 \end{table}
 
 \begin{table}[ht]
+\caption{Controls for the Legend Window Menu}.
   \begin{center}
     \begin{tabular}{|l|p{4in}|} \hline
       \multicolumn{2}{|c|}{\textbf{Main Window Controls}} \\ \hline \hline
@@ -909,8 +854,9 @@ Window, and Main Window, respectively.
       Quit Map3D & Quit Map3D \\ \hline
     \end{tabular}
   \end{center}
-\caption{Controls for the Legend Window Menu}.
 \end{table}
+
+\clearpage
 
 
 %  Report level & & \\
@@ -946,127 +892,15 @@ Window, and Main Window, respectively.
 %  \end{center}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Controlling the time signal window}
-\label{sec:control-scalar} 
-
-
-There are two ways to create a time signal window:
-%
-\begin{enumerate}
-  \item Specify a \texttt{-at xmin xmin ymin ymax} on the command line
-        (optionally with a \texttt{-t trace-lead-number} to specify the
-        channel to use).
-  \item Using picking to select a lead to show in the time signal window,
-        when the current pick mode is time signal new-window mode or
-        time signal refresh mode.
-        Note that subsequent time signal picking can be set to either a)
-        update the last time signal window to the new data channel or b)
-        add yet another time signal window.
-\end{enumerate}
-%
-
-The format of the scalar display is fairly simple 
-%(see Section~\ref{sec:displayscalar})
-, with a vertical bar moving along the time axis as the frame number is
-advanced.  \map{} derives the time axis label from the frame numbers of the
-signal relative to the time series data file, not relative to the subset of
-frame read in, \ie{} if frames (or pot file numbers) 10--20 are read in
-with an increment of 2, then frame number will begin at 10, and go through
-12, 14, 16, 18 and end at 20 rather then beginning at 0 or 1 and going to 10
-(the number of frames of data actually read).
-
-%There is also a menu item for adjusting the time base of the signal,
-%manually aligning time across multiple windows, and setting the time
-%increment between frames of data.
-
-\subsubsection{Adjusting the frame marker}
-\label{sec:control-frames} 
-
-In order to facilitate rapid movement through large datasets, the user can
-control the frame number being displayed by interacting with the scalar
-window itself.  If the user moves the cursor to the scalar window and
-pushes the left mouse button, the vertical time bar will jump to the
-nearest sample to the cursor location.  The user can then hold the left
-button down and slide the time marker left and right and set a desired
-frame.  Once the mouse button is released,\map{} updates the map display.
-The left and right arrow keys also shift the frame marker back and forth.
-The only other command allowed when the cursor is within the scalar window
-is the ``q''-key, to shut down just the scalar window, the ``f'' key,
-to toggle the frame lock, or the ``p'' key, to toggle the display mode.
-Any other attempt at input will not be accepted.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Color/Size Selection}
-\label{sec:control-color} 
-
-It is frequently necessary to control color and size of elements of the
-\map{} display and this, we have selection subwindows that appear as
-necessary and disappear upon selection.  While the Color and Size Picker
-leave much to be desired aesthetically, they improve on past versions, and
-have slightly more functionality.
-
-
-\subsubsection{Color Picker}
-
-\begin{figure}[htb]
-  \begin{makeimage}
-  \end{makeimage}
-  \colorpicker
-  \caption{\label{fig:colorpicker1} Color Picker.}
-\end{figure}
-
-
-The Color Picker shows a number of colors to select from.  There are only a
-limited number of colors so that the color selection can be easily
-reproduced on subsequent runs.  When you open up the Color Picker, the
-current (original) color will be in a small box on the bottom left, whereas
-the box next to it will show the color that was most recently selected.
-There is a new ``Preview'' button which will change the color and let you
-see what it would do, but will also allow you to push the ``Cancel'' button
-and return to the original color, shown in the bottom left.
-
-\subsubsection{Size Picker}
-
-\begin{figure}[htb]
-  \begin{makeimage}
-  \end{makeimage}
-  \sizepicker
-  \caption{\label{fig:sizepicker1} Size Picker.}
-\end{figure}
-
-
-The Size Picker shows 10 sizes to select from, currently (to change later)
-represented by the size of boxes, where the width of the box represents the
-selectable size.  When you open up the Size Picker, the current (original)
-size will be represented in a box on the bottom left, whereas the box next
-to it will show the size that was most recently selected.  There is a new
-``Preview'' button which will change the size and let you see what it would
-do, but will also allow you to push the ``Cancel'' button and return to the
-original size, shown in the bottom left.
-
-\subsubsection{Interactive Size Control}
-\label{sec:interactive-size}
-
-Rather than having to open the Size Picker over and over, \map{} provides a
-few options that can be changed by a single keystroke.  To do this, open
-the menu in the Geometry Window and select ``Mesh->Use +/- to select'' and
-then select a feature you wish to dynamically adjust.  Then press + or - to
-adjust the size.  However, most of these only have 10 possible sizes.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Interactive GUIs - File Selection, File Saving, and Scaling
   Options, \etc{}} 
 \label{sec:interactive}
 
-This version of \map{} adds new GUI support.  The most noticeable new
-addition is the ``\map{} Files'' window, allows you to interactively select
-filenames, data windows, etc.  The others are for saving files, and for
-quick scaling changes.
+With the move to a deidcated GUI system (in our case, gtk), we make use of
+a number of different windows to select parameters and control \map{}.
+This section covers the functionality of all of them.
 
 \subsubsection{Files Window}
 \label{sec:fileswindow}
@@ -1078,91 +912,79 @@ quick scaling changes.
   \caption{\label{fig:file1} Files Dialog for \map{}.}
 \end{figure}
 
-The ``\map{} Files'' window can be accessed by the ``Files'' menu option of
-the main menu.  This window displays one row for each surface, where each
-row shows the surface number, the window the surface appears in, the
-geometry filename, the geometry number, the data filename, the start frame
-number, the end frame number, a graph of the RMS curve, and a button to
-show other files.  Most of these columns can be modified at any time.
-% If you load a Time Series Container File, there will be some new columns that
-% appear - one for the container file, one for the number of time series within
-% the container file, and then the name of the time series file that gets loaded
-% will appear in the the Time Series File column.
-If you click on the ``New Surface'' button, an empty row will pop up,
-allowing you to add a surface from scratch.
+The most frequently used GUI window is the ``\map{} Files'' window, allows
+you to interactively select filenames, data windows, etc.  The others are
+for saving files, and for quick scaling changes.  Figure~\ref{fig:file1}
+shows an example of such a file window, and access to this window is by
+means of the ``Files'' menu option of the main menu.  This window displays
+one row for each surface, where each row shows the surface number, the
+window the surface appears in, the geometry filename, the geometry number,
+the data filename, the start frame number, the end frame number, a graph of
+the RMS curve, and a button to show other files.  Most of these columns can
+be modified at any time.  If you click on the ``New Surface'' button, an
+empty row will pop up, allowing you to add a surface from scratch.
  
-None of the changes you make will take effect until you click on the
-``Apply'' button.  If you click on the ``Close'' button, the window will
-close, but if you open it again, it will look exactly as when you closed
-it.
+None of the changes made to this window will take effect until you click on
+the ``Apply'' button.  The  ``Close'' button will cause  the window
+will close, but opening it again will reveal the same content.
 
 \begin{table}[htbp]
+\caption{\label{table:filewindow} Options for the file window}    
 \begin{center}
 \begin{tabular}{|l|p{4in}|} \hline
     \multicolumn{2}{|c|}{\textbf{File Window Options}} \\ \hline\hline
     Surf      &      Number of the surface \\ \hline
     Win\#      &      Number of the window that contains this surface.
-    You can change this number to move the surface to any
-    open window, or to a new window (by selecting the last
-    number from the drop-down menu. \\ \hline
-    Geom File &      Name of the geometry file of this surface.  You
-    may change the geom file by clicking on the
-    ... button and finding the file you  
-    want in the file picking window that will
-    appear. You may reload the current geometry by
-    selecting the ``Mesh->Reload Geometry'' 
-    menu entry. \\ \hline
+          You can change this number to move the surface to any
+          open window, or to a new window (by selecting the last
+          number from the drop-down menu). \\ \hline
+    Geom File &      Name of the geometry file of this surface.  To change
+        the geom file click on the
+        ... button and then browsing for the desired file. You may reload the
+        current geometry by  
+        selecting the ``Mesh$\Rightarrow$Reload Geometry'' 
+        menu entry. \\ \hline
     Geom\#     &      Number of surface within the geometry file (see
-    Section~\ref{sec:geomfile}). 
-    If there is more than one surface in the geometry
-    file, you may select which one you want from the
-    drop-down menu.  If you change the geometry file, 
-    this menu will be updated. \\ \hline
+         Section~\ref{sec:geomfile}). 
+         If there is more than one surface in the geometry
+         file, an associated drop-down  menu selects which one to 
+         insert.   \\ \hline
     Time Series File      &   Name of the data file of this surface.
-    You may change the  
-    data file by clicking on the ... button and
-    finding the file you  
-    want in the file picking window that will
-    appear. You may reload 
-    the current geometry by selecting the
-    ``Mesh->Reload Data'' 
-    menu entry. \\ \hline
-    Start Frame           &   Start reading data at this frame.  You
-    can also left-click 
-    in the graph section and drag to select the
-    correct frame and this  
-    number will be updated. \\ \hline
+         As with geometry  clicking on the ... button launches 
+         a file browser to select a time-series data file.
+         Selecting the ``Mesh$\Rightarrow$Reload Data'' reloads
+         the data. \\ \hline
+    Start Frame           &   Start reading data at this frame. 
+         Left-clicking 
+         in the graph section and dragging will also  select the
+         correct frame. \\ \hline
     End Frame             &       Finish reading data at this frame.
-    You can also middle-click 
-    in the graph section and drag to select the
-    correct frame and this number will be updated. \\
-    \hline 
-    Graph     &       Graph of the root-mean-square deviation of each
-    node for each time instance. You can left- or
-    middle-click in this graph to select your data window, (and the
-    number in start frame or end frame will update). \\ \hline 
+         Middle-clicking in the graph section and draging 
+         will  select the correct frame. \\ \hline 
+    Graph     &       Graph of the root-mean-square signal calculated
+         from all signals in the time series.    Left- or
+         middle-clicking in this graph selects the data window that
+         \map{} will read and display. \\ \hline 
     Other Files           &       This button will pop open another
-    window in which you can view/modify the channels, leadlinks, 
-    landmarks, or fiducial file to use with this surface. \\ \hline 
+         window in which to view/modify the channels, leadlinks, 
+         landmarks, or fiducial file to use with this surface. \\ \hline 
 \end{tabular}
 \end{center}
-\caption{\label{table:filewindow} Options for the file window}    
 \end{table}
 
-Also note that this window allows you to run \map{} without any arguments.
-If you do so, or if \map3d{} determines that none of the geometry files
-were valid, the files window will pop up with an empty row waiting for
-input.  If you try to close this window without any input, \map{} will
-treat is as though you were exiting the program.
 
 \begin{figure}[htb]
   \begin{makeimage}
   \end{makeimage}
   \filesdialogthree
   \caption{\label{fig:file3} Empty Files Dialog. \map{} will start up this way
-            if you run without arguments.}
+            if launched without arguments.}
 \end{figure}
 
+Note that the File window allows launching of \map{} without any arguments.
+In this case an empty file window appears, as in Figure~\ref{fig:file3} so
+that the user can select all the files for display and set up the display
+interactively.
 
 
 \subsubsection{Saving Files}
@@ -1176,29 +998,30 @@ treat is as though you were exiting the program.
 \end{figure}
 
 
-The ``Save...'' Window will display if you select ``Window
-Attributes->Save...''  from the menu.  The first section is to save
-geometry files, the second is for images, and the third for settings.
+The ``Save...'' Window will appear if after selecting ``Window
+Attributes$\Rightarrow$Save...''  from the main \map{} menu.  The first
+section is for saving geometry files, the second is for images, and the third
+for settings.
 
 \paragraph{Saving Geometry}
 \label{sec:savegeom}
 
-In the Geometry section it displays each surface number with its current
-geometry filename.  Next to each there is a check box.  If that check box
-is checked when you click one of the save buttons, then that surface will
-be one of the ones that is saved.  If the second check box (labelled
-Transform?) is checked, then \map{} will save the geometry will be saved
-with the current transformations (translations and rotations) applied.
+The Geometry section displays each surface number with its current geometry
+filename and next to each is a check box.  If that check box is checked
+when the user clicks one of the save buttons, then that surface will be one
+of a set that is saved.  If the second check box (labelled Transform?)
+is checked, then \map{} will save the geometry will be saved with the
+current transformations (translations and rotations) applied.
 
-Make sure to modify the filename or the current filename will be replaced
-(if you click on ... you can browse for a filename).  If the filename ends
+Make sure to modify the filename or the current filename will be replaced (
+clicking on ... launches a browser for a filename).  If the filename ends
 in the extension .fac, it will save filename.fac and filename.pts.  If the
 filename ends in .geom, it will save the file in the CVRTI binary file
 format (see Section~\ref{sec:geomfile}). If Transforms is selected and
 there is a landmarks file, then a filename.lmark.
 
 Clicking on the ``Save in 1 geom file'' button will save all of the
-geometry into 1 CVRTI binary file (see Section~\ref{sec:geomfile}),
+geometry into one CVRTI binary file (see Section~\ref{sec:geomfile}),
 choosing the filename of the first entry, which must have a .geom
 extension.  Clicking ``Save individually'' will save each in its own
 filename.  There is currently a known bug with saving .geom files under
@@ -1209,18 +1032,19 @@ Windows and reading them back in again.
 
 In the image section, select a filename (you can click on ... to browse for
 a filename) and click save. The filename may have the extension .ppm, ,png,
-or .jpg to save in one of those formats.  The final filename also appends
-a 4-digit number before the extension, representing a number in a sequence
-of images.  I.e., if the filename selected is map3d.png, the image will
-actually save in map3d0000.png, and subsequent images will be map3d0001.png,
-map3d0002.png, etc.  The image that will save is
-approximately the space that all open map3d windows cover.  
+or .jpg to save in one of those formats.  The final filename also appends a
+4-digit number before the extension, representing a number in a sequence of
+images.  I.e., if the filename selected is map3d.png, the image will
+actually save in map3d0000.png, and subsequent images will be
+map3d0001.png, map3d0002.png, etc.  The image that will saved is
+approximately the smallest rectangle that contains all open map3d windows.
 
-NOTE: If you have
-windows that overlap, the one on top might not be the one \map{} thinks is on top.
-So if you move windows around, click inside the window (not the title bar),
-to tell \map{} it is on the top.  Otherwise, data you want might be overriden
-by the data in the window underneath.
+NOTE: If there are windows that overlap, the one on top might not be the one
+\map{} thinks is on top.  So if after moving windows around, it is
+necessary to click inside the
+window (not the title bar), to tell \map{} it is on the top.  Otherwise,
+data that appears on the computer screen may end up obscurred by other
+windows that appear to lie beneath. 
 
 If the Save... window is in the way, close it, and pressing the 'w'
 key will have the same effect as clicking the ``Save Image'' button. 
@@ -1355,6 +1179,116 @@ Section~\ref{sec:display} for more information on these features.
 \caption{\label{table:settingsoptions} Settings options}
 
 \end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Controlling the time signal window}
+\label{sec:control-scalar} 
+
+
+There are two ways to create a time signal window:
+%
+\begin{enumerate}
+  \item Specify a \texttt{-at xmin xmin ymin ymax} on the command line
+        (optionally with a \texttt{-t trace-lead-number} to specify the
+        channel to use).
+      \item Using picking (Cntrl-left mouse) to select a lead to show in
+        the time signal window, when the current pick mode is time signal
+        new-window mode or time signal refresh mode.  Note that subsequent
+        time signal picking can be set to either a) update the last time
+        signal window to the new data channel or b) add yet another time
+        signal window.
+\end{enumerate}
+%
+
+The format of the scalar display is fairly simple 
+%(see Section~\ref{sec:displayscalar})
+, with a vertical bar moving along the time axis as the frame number is
+advanced.  \map{} derives the time axis label from the frame numbers of the
+signal relative to the time series data file, not relative to the subset of
+frame read in, \ie{} if frames (or pot file numbers) 10--20 are read in
+with an increment of 2, then frame number will begin at 10, and go through
+12, 14, 16, 18 and end at 20 rather then beginning at 0 or 1 and going to 10
+(the number of frames of data actually read).
+
+%There is also a menu item for adjusting the time base of the signal,
+%manually aligning time across multiple windows, and setting the time
+%increment between frames of data.
+
+\subsubsection{Adjusting the frame selector}
+\label{sec:control-frames} 
+
+In order to facilitate rapid movement through large datasets, the user can
+control the frame number being displayed by interacting with the scalar
+window itself.  If the user moves the cursor to the scalar window and
+pushes the left mouse button, the vertical time bar will jump to the
+nearest sample to the cursor location.  The user can then hold the left
+button down and slide the time marker left and right and set a desired
+frame.  Once the mouse button is released,\map{} updates the map display.
+The left and right arrow keys also shift the frame marker back and forth.
+The only other command allowed when the cursor is within the scalar window
+is the ``q''-key, to shut down just the scalar window, the ``f'' key,
+to toggle the frame lock, or the ``p'' key, to toggle the display mode.
+Any other attempt at input will not be accepted.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Color/Size Selection}
+\label{sec:control-color} 
+
+It is frequently necessary to control color and size of elements of the
+\map{} display and this, we have selection subwindows that appear as
+necessary and disappear upon selection.
+
+
+\subsubsection{Color Picker}
+
+\begin{figure}[htb]
+  \begin{makeimage}
+  \end{makeimage}
+  \colorpicker
+  \caption{\label{fig:colorpicker1} Color Picker.}
+\end{figure}
+
+
+The Color Picker shows a number of colors to select from.  There are only a
+limited number of colors so that the color selection can be easily
+reproduced on subsequent runs.  When you open up the Color Picker, the
+current (original) color will be in a small box on the bottom left, whereas
+the box next to it will show the color that was most recently selected.
+There is a new ``Preview'' button which will change the color and let you
+see what it would do, but will also allow you to push the ``Cancel'' button
+and return to the original color, shown in the bottom left.
+
+\subsubsection{Size Picker}
+
+\begin{figure}[htb]
+  \begin{makeimage}
+  \end{makeimage}
+  \sizepicker
+  \caption{\label{fig:sizepicker1} Size Picker.}
+\end{figure}
+
+
+The Size Picker shows 10 sizes to select from, currently (to change later)
+represented by the size of boxes, where the width of the box represents the
+selectable size.  When you open up the Size Picker, the current (original)
+size will be represented in a box on the bottom left, whereas the box next
+to it will show the size that was most recently selected.  There is a new
+``Preview'' button which will change the size and let you see what it would
+do, but will also allow you to push the ``Cancel'' button and return to the
+original size, shown in the bottom left.
+
+\subsubsection{Interactive Size Control}
+\label{sec:interactive-size}
+
+Rather than having to open the Size Picker over and over, \map{} provides a
+few options that can be changed by a single keystroke.  To do this, open
+the menu in the Geometry Window and select ``Mesh->Use +/- to select'' and
+then select a feature you wish to dynamically adjust.  Then press + or - to
+adjust the size.  However, most of these only have 10 possible sizes.
+
 
 
 \subsubsection{Scaling Options}

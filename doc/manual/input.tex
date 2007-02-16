@@ -19,7 +19,22 @@
 %    - release 6.2
 % Last update: Wed Jan 31 07:26:37 2007 by Bryan Worthen
 %    - release 6.4
+% Last update: Fri Feb 16 08:20:52 2007 by Rob Macleod
+%    - release 6.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%begin{latexonly}
+  \newcommand{\indirec}%
+  {\centerline{\includegraphics[width=4in] 
+      {figures/map3d-indirection.pdf}}}
+%end{latexonly}
+\begin{htmlonly}
+  \newcommand{\ethphoto}{%
+     \htmladdimg[align=top,alt="indirection"]
+                {figures/map3d-indirection.pdf}}
+\end{htmlonly}
+
+
 \section{Input files}
 
 %\input{defaultfile} %?? Uncomment and update once this feature is working
@@ -121,8 +136,9 @@ organized according to the following guidelines:
 %    {http://www.mathworks.com/access/helpdesk/help/techdoc/matlab_prog/ch_da37a.html#67323}
 %    and  
     \htmladdnormallink{structures}
-    {http://www.mathworks.com/access/helpdesk/help/techdoc/matlab_prog/ch02_d27.html#88951}
-    ).  To include multiple surfaces requires an array of structures.
+    {http://www.mathworks.com/access/helpdesk/help/techdoc/matlab\_prog/ch02\_d27.html\#88951}
+     ).  To include multiple surfaces requires an array of
+    structures.
   \item Within a surface structure, the following fields contain the
     geometry:
     \begin{itemize}
@@ -214,10 +230,10 @@ by the geometry file name specified in the argument list of \map{}.
 \subsection{Scalar data files}
 \label{sec:datafiles} 
 
-There are two ways of storing scalar values (typically electric potential
+There are three ways of storing scalar values (typically electric potential
 in our applications) so that \map{} can recognize and read them.  One is a
-simple ASCII file and the other a binary format developed at the
-CVRTI\@. 
+simple ASCII file, one is a binary format developed at the
+CVRTI\@, and the third is MATLAB. 
 
 \subsubsection{.pot files}
 \label{sec:potfiles} 
@@ -333,18 +349,17 @@ as follows:
   \item \emph{.label} the name of the time series.  This is optional, but is
     useful in identifying the time series, particularly from a 
     multi-time-series file.
+  \item \emph{.fids} a structure (or array of structures) containing
+    fiducial time markers for the time series (see below for details of
+    fidicual storage).
 \end{itemize}
 
 Note that only the 'potvals' field is required.  A matlab array may 
 be one instance of these fields, a cell or struct array of them, or 
-simply an $N by $M array of data.  To read a matlab file with many time
+simply an $N \times M$ array of data.  To read a matlab file with many time
 time series, specify the time series on the command line with the '@' symbol
 (See Section~\ref{sec:scalarparams}) or specify the time series in the 
 file browser.  It will be shown by the label specified in the matlab file.
-
-%
-There will be more of these as we develop the format further so stay
-tuned. 
 
 The commands to make a suitable .mat file are very easy in MATLAB, for
 example, to load 128 channels of time signals with unit of millivolt from
@@ -354,15 +369,91 @@ an array \texttt{sockinfo} in MATLAB to a file called
 \begin{verbatim}
     >> sockdata.potvals   = sockinfo(1:128,:);
     >> sockdata.unit = 'mV'
+    >> sockdata.lavel = 'A set of cool sock data'
     >> save mysockdata.mat sockdata
 \end{verbatim}
 
 \subsubsection{Fiducial (ascii) files}
 \label{sec:fidfiles}
 
-A fiducial can be input currently in two ways: via a .tsdfc file, where the
-potential and fiducial values are stored together, or via a .fids file,
-a simple ASCII file containing the values for each node.
+A fiducial can be input currently also in three ways: via a .tsdfc file,
+where the potential and fiducial values are stored together, via a .fids
+file, a simple ASCII file containing the values for each node, or by means
+of the MATLAB file that contains the time series data.
+
+\paragraph{MATLAB file format for fiducials}
+
+
+The fiducial information in a MATLAB time series data file is stored in a
+array of structures called fids, where each element of the array represents
+one set of fiducials.  This way, for example, there can be a set of $N$
+activation times, another set of $N$ recovery times, and a set of $N$
+Q-onset times.  Each element of the array is, in itself, a structure, so
+that the set of fiducials contains enough information for \map{} to do a
+useful display. 
+
+The legal elements of a fids structure are as follows:
+%
+\begin{itemize}
+  \item \emph{.type} the type of fiducial (see table below).
+  \item \emph{.value} the array of fiducial values, one for each 
+    channel of the data file.
+\end{itemize}
+
+
+Here is an example of creating the structures for some fiducials in MATLAB:
+%
+\begin{verbatim}
+   matdata.potvals = potvals;
+   matdata.unit = unit;
+   matdata.label = label;
+   matdata.fids(1).type = 10
+   matdata.fids(1).value = fidvals(:,1);
+   matdata.fids(2).type = 13;
+   matdata.fids(2).value = fidvals(:,2);
+   save (outfilename, 'matdata');
+\end{verbatim}
+
+The first three lines set up the time series data, as we have seen above.
+The lines 4 and 5 create a set of fiducials of type 10 and loads the values
+into that part of the data structure.  Lines 6 and 7 do the same thing for
+a second set of fiducials, which have type 13. The final line saves the
+contents of the structure into a file.
+
+The type value for fiducials is important as \map{} associates colors to
+fiducial types to provide consistent display.  Moreover, each type has an
+associated text label that \map{} uses in the interface.  The list of
+current fiducial types and their numbers is as follows:
+
+\bigskip
+
+\begin{center}
+\begin{tabular}[h]{|c|l|} \hline
+\multicolumn{2}{|c|}{Fiducial Types} \\  \hline \hline
+Number & Type \\ \hline 
+ 0 & pon, pstart \\
+ 1 & poff, pend \\
+ 2 & qon, qrsstart, qrson \\
+ 3 & rpeak, qrspeak \\
+ 4 & soff, qrsend, qrsoff \\
+ 5 & stoff, tstart, ton \\
+ 6 & tpeak \\
+ 7 & toff \\
+ 8 & actplus \\
+ 9 & actminus \\
+ 10 & act \\
+ 11 & recplus \\
+ 12 & recminus \\
+ 13 & rec \\
+ 14 & ref, reference \\
+ 15 & jpt, jpoint \\
+ 16 & baseline \\
+ 30 & pacing \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{ASCII file format for fiducials}
 
 The characteristics of a .fids file are as follows:
 \begin{enumerate}
@@ -379,16 +470,16 @@ The characteristics of a .fids file are as follows:
 \end{enumerate}
 
 \begin{verbatim}
-Example:
-1
-1 -1
-256 activation recovery
-1 8 212
-2 16 225
-3 9 214
-...
-255 39 248
-256 25 237  
+    Example:
+    1
+    1 -1
+    256 activation recovery
+    1 8 212
+    2 16 225
+    3 9 214
+    ...
+    255 39 248
+    256 25 237  
 \end{verbatim}
 
 
@@ -414,6 +505,22 @@ Any other linkage of geometry and data channel requires there to be channel
 information, typically either from a separate .channels file or stored with
 the binary .geom file as an associated scalar value for each node.
 
+\begin{figure}[htb]
+   \begin{makeimage}
+    \end{makeimage}
+    \indirec
+    \caption{\label{fig:indirec}Example of the indirection possible in
+      \map{} through the use of {\em leadlinks\/} {\em channels}, and {\em
+        channellinks}.  Lead number 4 points, via the {\em leadlinks\/}
+      array to node number 22.  This, in turn, points via the {\em
+        channels\/} array to location 92 in the multiplexed data buffer,
+      which causes the values at time signal 92 to be loaded into location
+      22 in the internal data array (and displayed by \map{}).  In a
+      separate, \emph{channellinks} array, shown below the leadlinks array,
+      the entry in lead 4 says that that lead should actually be labeled
+      ``${\rm V_{1}}$''. }
+\end{figure}
+
 Leadlinks are purely for visualization and describe the connection between
 ``leads'', a measurement concept, with ``nodes'', a geometric location in
 space.  In electrocardiography, for example, a lead is the algebraic
@@ -433,26 +540,6 @@ Figure~\ref{fig:indirec} shows an example of lead and channels
 information and their effect on \map{}.  See the figure caption for
 details. 
 
-\begin{figure}[htb]
-%\begin{Figure}{htb}
-%  \NormalPicture{\columnwidth}
-%        {3in}
-%        {figures/map3d-indirection.epsf}
-%  \epsfysize=3in
-%  \centering\epsffile{figures/map3d-indirection.epsf}
-  \centerline{\epsfig{file=figures/map3d-indirection.epsf,height=4in}}
-  \caption{Example of the indirection possible in \map{} through the use of
-  {\em leadlinks\/} {\em channels}, and {\em channellinks}.
-  Lead number 4 points, via the {\em leadlinks\/} array to node number 22.
-  This, in turn, points via the {\em channels\/} array to location 92 in
-  the multiplexed data buffer, which causes the values at time signal 92 to be
-  loaded into location 22 in the internal data array (and displayed by
-  \map{}).  In a separate, \emph{channellinks} array, shown below the leadlinks
-  array, the entry in lead 4 says that that lead should actually be
-  labeled ``${\rm V_{1}}$''. } 
-  \label{fig:indirec}
-\end{figure}
-%\end{Figure}
 
 \map{} handles this information in the following manner:
 %
@@ -541,7 +628,7 @@ in the file).  Each following record contains two integer values:\\
         number in the geometry.  
  \end{enumerate}
 %
-For example, the file for a surface which reads:\\
+For example, the file for a surface which reads:
 %
 \begin{verbatim}
     32 Leads
@@ -583,8 +670,9 @@ two integer values:\\
         that node; a negative number signifies a node to which there is no
         data associated.
 \end{enumerate}
-%
-For example, the file for a surface which reads:\\
+
+\noindent
+For example, the file for a surface which reads:
 %
 \begin{verbatim}
     352 Nodes

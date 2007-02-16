@@ -15,17 +15,18 @@
 %    - release 6.1
 % Last update: Wed May 11 13:28:30 2005 by Bryan Worthen
 %    - release 6.3
+% Last update: Fri Feb 16 09:15:56 2007 by Rob Macleod
+%    - version 6.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%  Figures used in this file %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %begin{latexonly}
   \newcommand{\timesignal}%
-  {\centerline{\includegraphics[height=2in,
-  bbllx=165, bblly=197, bburx=627, bbury=415]{figures/timesignal.eps}}}
+  {\centerline{\includegraphics[height=2in]{figures/timesignal.pdf}}}
 %end{latexonly}
 \begin{htmlonly}
   \newcommand{\timesignal}{%
-  \htmladdimg[align=top,width=714,alt="time signal"]
-  {../figures/timesignal.gif}}
+  \htmladdimg[align=top,alt="time signal"]
+  {../figures/timesignal.jpg}}
 \end{htmlonly}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -183,7 +184,7 @@ and display
     surfaces are currently only set through the command line, by placing a
     -sl num (where num is the surface number of the master) after declaring
     the slave surface.  See Section~\ref{sec:control-menus} and
-    Section~'ref{sec:scalarparams} for details.
+    Section~\ref{sec:scalarparams} for details.
 
     If these options are not suitable, the user can select his own scaling 
     scope for
@@ -241,7 +242,7 @@ and display
     \begin{description}
         
       \item [Jet map] (default) The Jet map is the same as the one 
-        used in Matlab. Colours range from dark
+        used in MATLAB. Colours range from dark
         blue (for negative extrema) through greens (near zero)
         to dark red (positive extrema).  Jet utilizes a minimal set of similar
         color, particularly of greens and yellows, a complaint of the 

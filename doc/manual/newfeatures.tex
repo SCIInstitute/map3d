@@ -21,6 +21,8 @@
 %    - for version 6.3
 % Last update: Web Jan 31 12:35:15 2005 by Bryan Worthen
 %    - for version 6.4
+% Last update: Fri Feb 16 08:16:29 2007 by Rob Macleod
+%    - for version 6.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{What's New?}
@@ -33,11 +35,10 @@ offers.
 
 \subsection{Version~\version{}: Jan, 2007}
 
-This is the fifth version of the ``new'' \map{} with a GTK-based GUI.  We
-are getting much closer to the complete functionality of the old GL
-based version and have gone well beyond it in some features, especially the
-user interface.  This is a ``dot'' release, and this release contains
-a number of bug fixes and GUI enhancements.
+This is the sixth version of the ``new'' \map{} with a GTK-based GUI.  We
+are way beyond the complete functionality of the old GL
+based version in almost all aspects, although it is sobering to notice that
+some things that were easy in GL are still too hard in OpenGL. 
 
 Some of the specific additions that you should notice over previous versions
 include:
@@ -46,10 +47,20 @@ include:
   \item [GUI improvements: ] Some improvements in the GUIs, particularly in the
     fiducial control and contour spacing control.  See 
     Section~\ref{sec:interactive}.
+  \item[Fiducial support:] fiducials are time markers that we often add to
+    the time signals that we record or compute and suppoort for them in the
+    new verison is hugely improved.  The first piece is the support for
+    storing fiducials in the MATLAB files (see
+    Section~\ref{sec:matlabdata}) (and also the CVRTI container files,
+    Section~\ref{sec:tsdfcfile}) and the second part is the display features.
+    It is now possible to visualize fiducials superimposed on potentials or
+    to view them as separate fiducial maps.  This may all sound a little
+    arcane but if you need this support, you will be very happy to see it.
   \item [Saving Matlab Geometry: ] This version allows the user to save matlab 
     geometry files, single or multiple surfaces per file.
-  \item [Displaying an image inline with the Geometry] \map{} allows an image to be
-    drawn in the background of the geometry.  See Section~\ref{sec:bgimage}
+  \item [Displaying an image inline with the Geometry] \map{} allows an
+    image to be drawn in the background of the geometry.  See
+    Section~\ref{sec:bgimage} for more details.
   \item [Bug fixes: ] not that the previous version had any bugs, but we
     found a few(!) more things to fix.
 \end{description}
@@ -60,7 +71,6 @@ include:
 A small sampler of things that are in the works:
 
 \begin{itemize}
-  \item Incorporating fiducials into the matlab format
   \item Saving the frames into actual movies.
   \item Dynamic menus that indicate the current parameter selections
     (a bit more in progress).

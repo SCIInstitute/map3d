@@ -13,21 +13,25 @@
 %    - Release 5.4
 % Last update: Thu May 19 12:35:15 2005 by Rob Macleod
 %    - for version 6.3
-g%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Last update: Fri Feb 16 08:24:13 2007 by Rob Macleod
+%    - verison 6.5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
 This document describes the function and usage of version\~version{} of the
 program \map{}, a scientific visualization application originally developed
 at the Nora Eccles Harrison Cardiovascular Research and Training
 \htmladdnormallink{(CVRTI)}{http://www.cvrti.utah.edu} and now under
-continued development and maintenance at the Scientific Computing and
-Imaging Institute \htmladdnormallink{(SCI)}{http://www.sci.utah.edu} at the
-University of Utah.  The original purpose of the program was to
-interactively view scalar fields of electric potentials from measurements
-and simulations in cardiac electrophysiology.  Its present utility is much
-broader but continues to focus on viewing three-dimensional distributions
-of scalar values associated with an underlying geometry consisting of node
-points joined into surface or volume meshes.
+continued development and maintenance at the Center for Integrative
+Biomedical Computing (CIBC), which is an NIH/NCRR funded center hosted by
+the Scientific Computing and Imaging Institute
+\htmladdnormallink{(SCI)}{http://www.sci.utah.edu} at the University of
+Utah.  The original purpose of the program was to interactively view scalar
+fields of electric potentials from measurements and simulations in cardiac
+electrophysiology.  Its present utility is much broader but continues to
+focus on viewing three-dimensional distributions of scalar values
+associated with an underlying geometry consisting of node points joined
+into surface or volume meshes.
 
 \map{} has been the topic of some papers
 \cite{RSM:Mac92c,RSM:Mac92d,RSM:Mac93,RSM:Mac93a} and a technical report
@@ -35,25 +39,25 @@ points joined into surface or volume meshes.
 them (perhaps \cite{RSM:Mac93} or \cite{RSM:Mac93a} are the easiest ones to
 get copies of) as well as this manual when you publish results using it.
 There have been many many more papers that use \map{} and the list keeps
-growing.\cite{RSM:Mac93,RSM:Mac93a,RSM:Mac94d,RSM:Mac94c,RSM:Mac94f,RSM:Mac95d,RSM:Mac97,RSM:Mac98,RSM:Mac2000a,RSM:Mac2001,RSM:Pun98,RSM:Pun99,RSM:Tac92,RSM:Tac92b,RSM:Tac94,RSM:Tac96,RSM:Tac96b,RSM:Tac97b,RSM:Ni98,RSM:Ni99,RSM:Ni2000b,RSM:Lux96,RSM:Lux2001,RSM:Joh93b,RSM:Joh94,RSM:Joh94b,RSM:Pun2003,RSM:Ser2002}
+growing.\cite{RSM:Mac93,RSM:Mac93a,RSM:Mac94d,RSM:Mac94c,RSM:Mac94f,RSM:Mac95d,RSM:Mac97,RSM:Mac98,RSM:Mac2000a,RSM:Mac2001,RSM:Pun98,RSM:Pun99,RSM:Tac92,RSM:Tac92b,RSM:Tac94,RSM:Tac96,RSM:Tac96b,RSM:Tac97b,RSM:Ni98,RSM:Ni99,RSM:Ni2000b,RSM:Lux96,RSM:Lux2001,CRJ:Joh93b,CRJ:Joh93d,CRJ:Joh94,CRJ:Joh94b,RSM:Pun2003,RSM:Ser2002}
 
-One of the big changes in version~\version{} is that we are now completely
-open source.  People can download not only the executable but also the
-complete source code for the program.  Please note that we do not have a
-good way yet to incorporate changes people outside our little group make
-to the program.  If you do wish to change and then contribute back, please
-let us know as soon as possible and we can try and coordinate as best we
-can.  Of obvious interest is when someone ports \map{} to another
-platform---please let us know about this and we can add it to the list and
-release it with the rest.
+As with our past versions, this edition of \map{} is completely open
+source.  Anyone can download not only the executable for the major
+platforms (OSX, Windoze, and Linux) but also the complete source code for
+the program.  Please note that we do not have a good way yet to incorporate
+changes people outside our little group make to the program.  If you do
+wish to change and then contribute back, please let us know as soon as
+possible and we can try and coordinate as best we can.  Of special interest
+are any ports of \map{} to another platform---please let us know about this
+and we can add it to the list and release it with the rest.
 
 \subsection{Acknowledgments}
 
 The history of \map{} goes back to 1990 and the first few hundred lines of
 code were the product of a few hours work by Mike Matheson, an inspired
 visualization specialist, now with SGI in Salt Lake City.  This was my
-introduction to GL and C and this program became my personal sand box to
-play in.  Along the way, Phil Ershler made valuable contributions in
+(Rob) introduction to GL and C and this program became my personal sand box
+to play in.  Along the way, Phil Ershler made valuable contributions in
 figuring out the magic of Formslib for some user interface controls and
 developing with me \emph{graphicsio}, the geometry and data file library
 that supports \map{}.  Ted Dustman has recently taken up maintenance and
@@ -80,8 +84,9 @@ Bryan Worthen replaced Chris and really has found the spirit of \map{}.
 Bryan has become the main driving force behind the actual work of coding
 and fixing.  He strayed off to some other project for a while, but never
 lost his love for \map{}; we are really pleased that he has returned to
-pick up the torch again.  Most recently, J.R. Blackham has joined the team
-while still an undergraduate in Computer Science at Utah.  Jeroen Stinstra
+pick up the torch again. J.R. Blackham joined the team in about 2003 while
+still an undergraduate in Computer Science at Utah.  He is now a graduate
+student in the department and destined for great things.  Jeroen Stinstra
 is my super-postdoc, helpful in more ways than I knew I even needed and
 full of inventive ideas.  He has created the support for MATLAB that we use
 in \map{} (and the SCIRun project) and is best bug-catcher I know.
@@ -105,21 +110,21 @@ and even takes it to his classes.
 The first user and long-time collaborator and friend was Chris Johnson and
 this new version of \map{} is possible because of the success he and I have
 had in creating the SCI Institute and specifically the NIH/NCRR Center for
-Geometric Modeling, Simulation, and Visualization in Bioelectric Field
-Problems (\htmladdnormallink{www.sci.utah.edu/ncrr}
-{www.sci.utah.edu/ncrr}).
+Integrative Biomedical Computing (\htmladdnormallink{www.sci.utah.edu/cibc}
+{www.sci.utah.edu/cibc}).
 
 We gratefully acknowledge the financial support that has come from the NIH,
 National Center for Research Resources
-\htmladdnormallink{(NCRR)}{http://www.ncrr.nih.gov} the Nora Eccles
+\htmladdnormallink{(NCRR)}{http://www.ncrr.nih.gov}, the Nora Eccles
 Treadwell Foundation, and the University of Utah, which provides us with
 space and materials to create this sand box.  The Nora Eccles Treadwell
-Foundation has also provided support for the development of \map{} and the
-huge pile of data we have used it to analyze.
+Foundation has provided support not only for the development of \map{} but
+also the experiments that provide the huge pile of data we have used \map{}
+to analyze.
 
 \bigskip
 \noindent
-Rob MacLeod, May 19, 2005.
+Rob MacLeod, Feb 16, 2007.
 
 
 \subsubsection{Open Source License}

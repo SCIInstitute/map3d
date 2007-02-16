@@ -17,6 +17,8 @@
 %    - for version 6.3
 % Last update: Fri Aug 26 12:34:14 2005 by Bryan Worthen
 %    - for version 6.4
+% Last update: Fri Feb 16 08:32:27 2007 by Rob Macleod
+%    - version 6.5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Installation}
 
@@ -27,7 +29,7 @@ both choices made to ensure broad portability of the program.
 
 Note: As of \map{} 6.4 or greater, GTK+ version 2.4 or greater is required
 to run \map{}.  Please update your dependencies according the the 
-Windows, Linux, or Mac webpage.
+Windows, Linux, or Mac sections below.
 
   \begin{description}
     \item [All platforms: ]  OpenGL now comes standard on most systems.  
@@ -86,33 +88,19 @@ Windows, Linux, or Mac webpage.
           \begin{center}
           \begin{tabular}{|l|l|} \hline
             \multicolumn{2}{|c|}{Requirements} \\ \hline
-              Operating System & Mac OS 10.3(Panther)\\
-              Architecture & PPC\\
+              Operating System & Mac OS 10.4(Tiger)\\
+              Architecture & PPC or Intel\\
               \hline
             \multicolumn{2}{|c|}{Recommendations} \\ \hline
             Hardware & 3D graphics card (nVidia, 3dfx, ati)\\
-            & 256 MB main memory \\ \hline
+            & Intel processor \\
+            & $ge$512 MB main memory \\ \hline
           \end{tabular}
           \end{center}
           
-   \item [SGI: ] \map{} runs on virtually any SGI that will support Irix
-          version 6.5+.  We have tested it on Indigo2, O2, Octane, and
-          Origin workstations running various flavors of Irix 6.5.  If
-          you need a version for a different SGI configuration, please let
-          us know
-          \htmladdnormallink{(map3d@sci.utah.edu)}{mailto:map3d@sci.utah.edu}\\
-          \begin{center}
-          \begin{tabular}{|l|l|} \hline
-            \multicolumn{2}{|c|}{Requirements} \\ \hline
-              Operating System & Irix 6.5+\\
-              Architecture & mips3 or mips4 (maybe mips2)\\
-              Applications Binary Interface  &  n32 or 64\\
-              \hline
-            \multicolumn{2}{|c|}{Recommendations} \\ \hline
-            Hardware & Texture mapping hardware\\
-            & 128 MB main memory \\ \hline
-          \end{tabular}
-          \end{center}
+   \item [SGI: ] we have dropped our support for SGI.  This platform, while
+     so central to the origins of \map{} and OpenGL, is just not a
+     significant desktop system in this day and age.  
 
   \end{description}
   
@@ -140,7 +128,7 @@ and execute \map{}.
 \input{linux_install}
 \input{windows_install}
 \input{mac_install}
-\input{sgi_install}
+%\input{sgi_install}
 \input{source_install}
 
 \subsection{Documentation}
