@@ -33,8 +33,8 @@
   \newcommand{\savedialog}%
   {\centerline{\includegraphics[height=4in]{figures/savedialog.pdf}}}
   \newcommand{\fiducialswindow}%
-  {\centerline{\includegraphics[width=5in]
-  {figures/fiducialswindow.pdf}}} 
+  {\centerline{\includegraphics[width=\columnwidth]
+  {figures/fidwindows.pdf}}} 
   \newcommand{\scaledialog}%
   {\centerline{\includegraphics[height=2.5in]{figures/scaledialog.pdf}}}
   \newcommand{\contourdialog}%
@@ -58,8 +58,8 @@
   \htmladdimg[align=top,width=576,alt="Save Dialog"]
   {../figures/savedialog.gif}}
   \newcommand{\fiducialswindow}{%
-  \htmladdimg[align=top,width=542,alt="Fiducials Window"]
-  {../figures/fiducialswindow.gif}}
+  \htmladdimg[align=top,alt="Fiducials Window"]
+  {../figures/fiduwindows.jpg}}
   \newcommand{\scaledialog}{%
   \htmladdimg[align=top,width=791,alt="Scaling Dialog"]
   {../figures/scaledialog.gif}}
@@ -1301,40 +1301,15 @@ adjust the size.  However, most of these only have 10 possible sizes.
   \caption{\label{fig:scale1} The three tabs of the Scaling Dialog.}
 \end{figure}
 
-This dialog is pretty much a duplicate of the Scaling Menu in the Geometry
-menu, but in dialog form for convenience sake.  Click on the tab at the top
-of the scaling type you wish to change (Range, Function, or Mapping), and
-click on the check box of the feature you wish to select, and \map{} will
-update.  (see Section~\ref{sec:control-menus}, scaling menu) and 
-Section~\ref{sec:scaling}.
+This three-tabbed dialog contains the same opions as the Scaling Menu in
+the Geometry menu, but in dialog form for convenience.  Click on the tab at
+the top of the scaling type you wish to change (Range, Function, or
+Mapping), and click on the check box of the feature you wish to select, and
+\map{} will update.  (see Section~\ref{sec:control-menus}, scaling menu)
+and Section~\ref{sec:scaling}.
 
-\subsubsection{Contour Spacing Dialog}
+\subsubsection{Contour Setting Dialog}
 \label{sec:contourwindow}
-
-This dialog allows you to select the contour spacing, number of contours and 
-scaling range.  A side-effect of this dialog is that if you change one feature,
-it will change another feature.  I.e., if you change the number of contours,
-then it might also change the spacing.
-
-There are two controls which affect which feature changes when you adjust
-another.  The bar at the top shows two buttons: ``Keep spacing constant''
-and ``Keep num contours constant''.  These will determine which feature will
-be constant when the range changes (the range can change when select a 
-different timestep or change the scaling range).  
-
-The other control is the ``Default Range''
-check box on each row.  If it is checked, then changing the contour spacing
-will affect the number of contours and vice-versa.  If it is unchecked, then
-changing the number of contours or the spacing will affect the range, and
-changing the range will affect the feature that is not held selected in the
-top bar.  Also, unselecting ``Default Range'' will set the scaling range
-for this surface to the range specifed in the contour dialog and will not
-reflect the default range parameter.
-
-Upon pressing ``Preview'' or ``Okay'', the changes will take effect.  Note that
-the exact contour spacing will only take effect if the scaling function is 
-set to Linear and the mapping is set to True.  Otherwise, an approximate 
-contour spacing will result.  
 
 \begin{figure}[htb]
   \begin{makeimage}
@@ -1342,6 +1317,41 @@ contour spacing will result.
   \contourdialog
   \caption{\label{fig:contourdialog} Contour Spacing Dialog.}
 \end{figure}
+
+The contour setting dialog allows selection of the contour spacing, number
+of contours and scaling range.  A side-effect of this dialog is that a
+change of one feature has consequences on other features.  For example,
+changing the number of contours will likely also change the spacing between
+the contours.  ALternatively, it could change the range of the scaling,
+\ie{} the maxiumum and minimum used to map value to color.  This
+interdependence of the control parameters can make this dialog somewhat
+obscure but it does allow broad flexibility of settings.
+
+There are two controls that affect the interplay among features.  The bar
+at the top contain two buttons: ``Keep spacing constant'' and ``Keep num
+contours constant''.  The choice between thee two will determine which
+parameter will remain constant when the range changes (the range can change
+by selecting a different contour or by setting the range explicitly).
+
+A second, related control is the ``Default Range'' check box on each row.
+If it is checked, then changing the contour spacing will affect the number
+of contours and vice-versa.  If it is unchecked, then changing the number
+of contours or the spacing will affect the range, and changing the range
+will affect the feature that is not held selected in the top bar.  Also,
+unselecting ``Default Range'' will set the scaling range for this surface
+to the range specifed in the contour dialog and will not reflect the
+default range parameter.
+
+Upon pressing ``Preview'' or ``Okay'', the changes will take effect.  Note that
+the exact contour spacing will only take effect if the scaling function is 
+set to Linear and the mapping is set to True.  Otherwise, an approximate 
+contour spacing will result. 
+
+This description may sound confusing but some trial and error should
+hopefully provide complete control over the display of scaling features.
+Complexity is the cost of flexibility and when in doubt, we have always
+tended toward flexibility. 
+
 
 
 \subsubsection{Fiducial Control}
@@ -1351,47 +1361,64 @@ contour spacing will result.
   \begin{makeimage}
   \end{makeimage}
   \fiducialswindow
-  \caption{\label{fig:fid1} The Fiducials Control Window.}
+  \caption{\label{fig:fid1} The Fiducials Control Windows.}
 \end{figure}
-This dialog allows the user to select which Fiducial Contour and/or
-Fiducial Contour Map he wants to visualize.  The Fiducial
-Contour tab allows the user to select to visualize the Activation Time
-contour and/or Recovery Time contour or No Fiducials.  The Fiducial
-Map tab allows the user to visualize the Activation Time contour
-map or Recovery Time contour map or No Fiducial maps.  The user can
-also change the contour spacing of the selected contour map by adjusting 
-the Mantissa and Exponent fields.  Once a fiducial map has been selected
-the user can toggle the shading of the fiducial map in the in the geometry window.
-By pressing the "p"-key, while focus is in the geometry window, the fiducial map toggles from 
-1. Fiducial contour lines, 2. Gouraud shaded fiducial map with potential
-contour lines, and 3. Band shaded fiducial map with potential contour lines.
-\subsubsection{Other dialogs}
 
-\subsubsection{Other dialogs}
+There are two windows that allow control of the display of temporal
+fiducials in \map{}.  Fiducials are time markers in the signals, for
+example, indicating the time of activation or the start and end of the QRS
+complex in an ECG.  Because the main application domain of \map{} is
+cardiac electrophysiology, the selection of support fiducials is related to
+signals from the heart.  However, there is not reason one could not add new
+fiducials (contact \rob{}) 
 
-We are getting many interactive windows in \map{}.  There are too many to
-document for each individual feature they control and to show a picture,
-so instead we will document them in the menu section that opens that 
-particular dialog.  Don't worry, if a particular GUI does more than change
-one or two very simple parameters, we will detail how it works in this section.
+There are two dialogs because there are two ways of viewing fiducials.
+%
+\begin{description}
+  \item [1) Single fiducial contour: ] in this mode, \map{} draws an
+    isochrone line over top of the potential map that corresponds to the
+    time value of the current potential map.  This sounds complicated but
+    it means that, for example, if the potential map has a time value
+    within the range of activation times for the time series, then
+    somewhere on the map will be an isochrone corresponding to that
+    activation time.  In practice, one sees the activation contour 
+    expand with each step in time and can also perform quality control of
+    any fiducial detection algorithm
+    
+    The lower window in Figure~\ref{fig:fid1} allows control of the display
+    of the contour, setting the contour thickness and the color associated
+    with each time of fiducial.
+    
+  \item [2) Multiple fiducial contours or maps:] This is the more
+    traditional model of fiducial map display in which the entire set of
+    isochrone values maps up a map.  To enable simultaneous viewing of
+    potential and fiducials in this mode, \map{} provides a number of
+    options controlled by the upper interface window in
+    Figure~\ref{fig:fid1}, the ``p''-key, and the ``s''-key.  With various
+    combinations, it is possible to display a) potentials as shaded maps
+    with black isochrones, b) no potentials with colored isochrones, and c)
+    potentials as black contours drawn over shaded color isochrone map.
+    The window allows selection of the particular fiducial to display.
+\end{description}
+
 
 \subsection{Picking mode}
 \label{sec:control-picking} 
 
 By ``picking'' we mean selecting some piece of the display in the current
-window using the mouse (with buttons).  \map{} currently supports selection
-of nodes or triangles with different actions, all of which either return
-some information, affect the display, or even alter the geometry of the
-display.  In version 5.4, the choices are limited to node information,
-triangle information, time signal displays, triangulation, triangle
-deletion, and triangle flipping.  Note that picking is successful and the
-desired results occur only when there is one (no more, no less) hit.  To
-aid in getting the one hit, you may adjust the picking aperture or activate
-the clipping planes.  In any picking mode where your geometry is modified,
-you might want to save your geometry (see Section~\ref{sec:saving}).  To
-control picking, use the top-level ``Picking'' menu. See
-Tables~\ref{table:pickingone} and \ref{table:pickingtwo} for the available
-options.
+window using the mouse.  \map{} currently supports selection of nodes or
+triangles with different actions, all of which either return some
+information, affect the display, or even alter the geometry of the display.
+The current choices include node information, triangle information, time
+signal displays, triangulation, triangle deletion, triangle flipping, node
+editing/deletion, landmark editing.  Note that picking is successful and
+the desired results occur only when there is one (no more, no less) hit.
+To aid in getting the one hit, you may adjust the picking aperture or
+activate the clipping planes.  In any picking mode where your geometry is
+modified, you might want to save your geometry (see
+Section~\ref{sec:saving}).  To control picking, use the top-level
+``Picking'' menu. See Tables~\ref{table:pickingone} and
+\ref{table:pickingtwo} for the available options.
 
 
 % and then one of the choices in the
@@ -1490,70 +1517,14 @@ options.
     measured.
 \end{description}
 
-%  To check a model for correct triangle orientation and flip the offending
-%  triangles, select ``Flip triangle'' from the ``Toggle Pick Action''
-%  submenu.  The cursor will change shape (to a cross-hairs with triangle
-%  around it) and \map{} will go into ``hide backfacing triangles'' mode.
-%  This means that only the front-facing triangles are drawn and the holes
-%  indicate which triangles need flipping.  Then the cursor in each triangle you
-%  want to flip and hit the left mouse button.  If you were successful, the
-%  triangle will fill in.
 
-%  This option, like triangulating, produces a new connectivity file, which is
-%  saved temporarily in a random filename each time you leave triangle-flip
-%  mode.  When the program finishes, you will be prompted for the base
-%  filename of a new set of points and fac files, thus preserving the original
-%  files for later use.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  \subsection{Editing Geometry}
-
-%  \map{} provides a number of tools for editing the geometry at the heart of
-%  the display and also saving those changes in new versions of the geometry
-%  files.  An example of this is described in the previous
-%  section~\ref{sec:triangulate} for altering the node connectivity.  Other
-%  examples include the ability to apply the current viewing transformation to
-%  the geometry and save the result, typically for use in another graphics
-%  program (see section~\ref{sec:geom-transform}). 
-
-%  \subsubsection{Applying transformations to data}
-%  \label{sec:geom-transform}
-
-%  \paragraph{Background: }The idea of this feature is to be able to apply the
-%  same translations and rotations that are possible within \map{} to the
-%  geometry data itself, and save the result for use elsewhere.  The
-%  application was to produce 2D projections from 3D meshes and save the
-%  results in a projection that made it useful for 2D plotting programs like
-%  the infamous {\em Z\/} and less famous {\em pscont}.
-
-%  \paragraph{Usage: } Access to this command is from the menu, and requires
-%  the following steps:
-%  %
-%  \begin{enumerate}
-%    \item Bring up the geometry and select the surface(s) to be transformed.
-%    \item Rotate and translate until the desired project (view) of the
-%          geometry is fixed.
-%    \item Select from the main menu, the ``Rotation/Translation'' submenu,
-%          then the ``Apply Current Rotation to Geometry'' choice.
-%    \item This will cause only subtle visible changes on the screen, but if
-%          the axis are turned on (X-key), they will flip back to the default
-%          position, while the image of the geometry remains fixed, a sign
-%          that translations have been applied to the geometrical data and not
-%          just the transformation matrices maintained within \map{}.
-%    \item When leaving \map{}, make sure you check the window from which it
-%          was launched for the dialog that directs the saving of the
-%          transformed data in a new file.  Choices include the geometry file
-%          form (.pts/.fac or .geom) (see section~\ref{sec:geomfiles} for
-%          detail) and the basefilename, to which appropriate suffix(es) are
-%          applied to make the final filename(s). 
-%  \end{enumerate}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Control of landmark display}
 \label{sec:control-landmarks} 
 
 
 \begin{table}[ht]
+\caption{\label{table:landmarks} Landmark menus.  These control landmark
+    display options.} 
   \begin{center}
     \begin{tabular}{|l|p{1.5in}|p{3 in}|} \hline
       \multicolumn{3}{|c|}{\textbf{Landmarks Menus}} \\ \hline
@@ -1593,8 +1564,6 @@ options.
     \hline
     \end{tabular}
   \end{center}
-\caption{Landmark menus.  These control landmark display options.}
-\label{table:landmarks} 
 \end{table}
 
 There are some lighting and colour controls for the display of landmarks
@@ -1621,33 +1590,6 @@ the specific menus mentioned here.
 
 \end{description}
 
-%  \begin{description}
-%    \item [Draw default shaded landmarks:] this is the same mode as was used
-%          previously. 
-%    \item [Draw eye-point shaded landmarks: ] this is the simplest of light
-%          models in which the colour shading varies with angles away from a
-%          line between an imaginary eye location and the center of the
-%          object.  Use this,together with the ``Select eye-point location''
-%          item to give a different look to the landmarks.
-%    \item [Landmark shading colour: ] This selects the colour used to draw
-%          the landmarks.  There are only a few basic colours implements at
-%          the moment, but this can be expanded at any time.  Note that by
-%          interactively altering the colour map, different colours can be
-%          tested, but only with major limitations since the colour intensity
-%          varies with the lighting model.
-%    \item [Draw mesh landmarks: ]  This mode is primarily for debugging the
-%          definition files for the landmark files and shows each landmark in
-%          its elemental segments, with labeling of each segment.
-%    \item [No landmarks: ] As before, this option turns off display of the
-%          landmarks.
-%    \item [Draw plane: ] switches the display of any landmark planes in
-%          the landmark files on and off.
-%    \item [Plane colour: ] selects the colour to be used to draw the landmark
-%          plane. 
-%  \end{description}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% Local Variables: 
 %%% mode: latex
