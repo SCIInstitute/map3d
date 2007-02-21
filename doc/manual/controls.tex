@@ -33,8 +33,9 @@
   \newcommand{\savedialog}%
   {\centerline{\includegraphics[height=4in]{figures/savedialog.pdf}}}
   \newcommand{\fiducialswindow}%
-  {\centerline{\includegraphics[width=\columnwidth]
-  {figures/fidwindows.pdf}}} 
+  {\centerline{\includegraphics[width=\columnwidth]{figures/fidwindows.pdf}}} 
+  \newcommand{\fidexamples}%
+  {\centerline{\includegraphics[width=\columnwidth]{figures/fidexamples.pdf}}} 
   \newcommand{\scaledialog}%
   {\centerline{\includegraphics[height=2.5in]{figures/scaledialog.pdf}}}
   \newcommand{\contourdialog}%
@@ -59,7 +60,10 @@
   {../figures/savedialog.gif}}
   \newcommand{\fiducialswindow}{%
   \htmladdimg[align=top,alt="Fiducials Window"]
-  {../figures/fiduwindows.jpg}}
+  {../figures/fidwindows.jpg}}
+  \newcommand{\fidexamples}{%
+  \htmladdimg[align=top,alt="Fiducial Display Examples"]
+  {../figures/fidexamples.jpg}}
   \newcommand{\scaledialog}{%
   \htmladdimg[align=top,width=791,alt="Scaling Dialog"]
   {../figures/scaledialog.gif}}
@@ -264,11 +268,11 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
         a/A-key   &       Switch colour tables \\ \hline
 %        B-key  &       Toggle clipping plane \\ \hline
         c-key   &       Toggle contour draw \\ \hline
-        d-key   &       Toggle depth cueing\\ \hline
-%        E-key   &       Toggle backfacing visibility\\ \hline
+        d-key   &       Toggle depth cuing\\ \hline
+%        E-key   &       Toggle back-facing visibility\\ \hline
         f-key   &       Toggle frame lock (also in Time signal window)\\ \hline
 %        F-key   &       Shift focus to next window \\ \hline
-       g-key   &       Toggle style of gouraud shading (between
+       g-key   &       Toggle style of Gouraud shading (between
        texture-mapped and non-texture-mapped) \\ \hline 
 %       H-key   &       Set the location of the video box \\ \hline
         i-key   &       Toggle ``direction'' (invert) of color table\\ \hline
@@ -304,7 +308,7 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
             or Destroys a Time Signal Window if pressed there. \\ \hline
         +/- key   &    Increases/Decreases size of of currently-selected object
        (see Section~\ref{sec:interactive-size})\\ \hline
-       ( \& ) keys   &  Change which susrface inside a window will be affected
+       ( \& ) keys   &  Change which surface inside a window will be affected
             when the general lock is on but the transform or frame lock is off
             (see Section~\ref{sec:locks})\\ \hline
 \end{tabular}
@@ -363,7 +367,7 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
 \begin{tabular}{|l|p{3in}|} \hline
         \multicolumn{2}{|c||}{\textbf{Keypad Keys}} \\ \hline
    Ctrl-Keypad Left-arrow  &  Y-axis rotate, CW (left)  \\ \hline
-   Ctrl-Keypad Right-arraow  &  Y-axis rotate, CCW (right)\\ \hline
+   Ctrl-Keypad Right-arrow  &  Y-axis rotate, CCW (right)\\ \hline
    Ctrl-Keypad Up-arrow  &  X-axis rotate, CCW (down) \\ \hline
    Ctrl-Keypad Down-arrow  &  X-axis rotate, CW (up) \\ \hline
    Ctrl-Keypad Home  &  Z-axis rotate, CCW  \\ \hline
@@ -408,7 +412,7 @@ OpenGL convention.  Below is a series of tables of the menu layout for
         dialog.  (See Section~\ref{sec:fiducialswindow})\\
       Frame Controls & modifying frame controls\\
       Graphics & general display features such as lighting, clipping,
-        and depth cueing \\
+        and depth cuing \\
       Landmarks & features for toggling and displaying landmarks \\ 
       Mesh & display features of the mesh \\
       Node marking & marking of the nodes \\
@@ -490,9 +494,9 @@ OpenGL convention.  Below is a series of tables of the menu layout for
     & Locking planes together & makes planes translate together\\
     & Locking planes with object & rotate surface with the planes or
         rotate surface through the planes \\
-    Toggle Depth cue & & apply/disable depth cueing (fog) \\
+    Toggle Depth cue & & apply/disable depth cuing (fog) \\
     Adjust Depth cue & & Opens a dialog to adjust the front and rear planes
-    to where the depth cueing occurs. \\
+    to where the depth cuing occurs. \\
     \hline
     \end{tabular}
   \end{center}
@@ -898,7 +902,7 @@ OpenGL convention.  Below is a series of tables of the menu layout for
   Options, \etc{}} 
 \label{sec:interactive}
 
-With the move to a deidcated GUI system (in our case, gtk), we make use of
+With the move to a dedicated GUI system (in our case, gtk), we make use of
 a number of different windows to select parameters and control \map{}.
 This section covers the functionality of all of them.
 
@@ -959,7 +963,7 @@ will close, but opening it again will reveal the same content.
          in the graph section and dragging will also  select the
          correct frame. \\ \hline
     End Frame             &       Finish reading data at this frame.
-         Middle-clicking in the graph section and draging 
+         Middle-clicking in the graph section and dragging 
          will  select the correct frame. \\ \hline 
     Graph     &       Graph of the root-mean-square signal calculated
          from all signals in the time series.    Left- or
@@ -1009,7 +1013,7 @@ for settings.
 The Geometry section displays each surface number with its current geometry
 filename and next to each is a check box.  If that check box is checked
 when the user clicks one of the save buttons, then that surface will be one
-of a set that is saved.  If the second check box (labelled Transform?)
+of a set that is saved.  If the second check box (labeled Transform?)
 is checked, then \map{} will save the geometry will be saved with the
 current transformations (translations and rotations) applied.
 
@@ -1043,7 +1047,7 @@ NOTE: If there are windows that overlap, the one on top might not be the one
 \map{} thinks is on top.  So if after moving windows around, it is
 necessary to click inside the
 window (not the title bar), to tell \map{} it is on the top.  Otherwise,
-data that appears on the computer screen may end up obscurred by other
+data that appears on the computer screen may end up obscured by other
 windows that appear to lie beneath. 
 
 If the Save... window is in the way, close it, and pressing the 'w'
@@ -1118,13 +1122,13 @@ are saved to a file and when \map{} is executed, the options get inserted
 into the command line before any other arguments.  Note that this also
 happens when you run \map{} from a script.  Also note that the options set
 in the .map3drc file may be overridden by subsequent arguments.
-(Naturally, both the .map3drc file and the script file may be editted by
+(Naturally, both the .map3drc file and the script file may be edited by
 hand.)
 
 These are three types of options that \map{} can save: global options,
 which are set independent of any surface; surface transformations, which
 will save the rotation, translation, and scaling of the surfaces; and other
-surface options, which save everything else.  You may select or deselect
+surface options, which save everything else.  You may select or de-select
 any of these three items as you wish.  Note, if none of them is selected
 and save a .map3drc file, it will be empty.  If none is selected and you
 save a script, then it will save the filenames and the window information.
@@ -1160,7 +1164,7 @@ Section~\ref{sec:display} for more information on these features.
         window as opposed to the surface\\ \hline 
         \multicolumn{2}{|c||}{\textbf{Other Surface Options}} \\ \hline
         -c r g b        &       Mesh Color, red, green, blue values \\
-        -sm mode        &       Shading model (flat, gouraud, banded) -
+        -sm mode        &       Shading model (flat, Gouraud, banded) -
         mode is a number between 0-3 \\ 
         -rm mode        &       Mesh render mode (dots, connectivity, etc.)
         - mode is a number between 0-5 \\ 
@@ -1301,7 +1305,7 @@ adjust the size.  However, most of these only have 10 possible sizes.
   \caption{\label{fig:scale1} The three tabs of the Scaling Dialog.}
 \end{figure}
 
-This three-tabbed dialog contains the same opions as the Scaling Menu in
+This three-tabbed dialog contains the same options as the Scaling Menu in
 the Geometry menu, but in dialog form for convenience.  Click on the tab at
 the top of the scaling type you wish to change (Range, Function, or
 Mapping), and click on the check box of the feature you wish to select, and
@@ -1322,14 +1326,14 @@ The contour setting dialog allows selection of the contour spacing, number
 of contours and scaling range.  A side-effect of this dialog is that a
 change of one feature has consequences on other features.  For example,
 changing the number of contours will likely also change the spacing between
-the contours.  ALternatively, it could change the range of the scaling,
-\ie{} the maxiumum and minimum used to map value to color.  This
+the contours.  Alternatively, it could change the range of the scaling,
+\ie{} the maximum and minimum used to map value to color.  This
 interdependence of the control parameters can make this dialog somewhat
 obscure but it does allow broad flexibility of settings.
 
 There are two controls that affect the interplay among features.  The bar
 at the top contain two buttons: ``Keep spacing constant'' and ``Keep num
-contours constant''.  The choice between thee two will determine which
+contours constant''.  The choice between these two will determine which
 parameter will remain constant when the range changes (the range can change
 by selecting a different contour or by setting the range explicitly).
 
@@ -1339,7 +1343,7 @@ of contours and vice-versa.  If it is unchecked, then changing the number
 of contours or the spacing will affect the range, and changing the range
 will affect the feature that is not held selected in the top bar.  Also,
 unselecting ``Default Range'' will set the scaling range for this surface
-to the range specifed in the contour dialog and will not reflect the
+to the range specified in the contour dialog and will not reflect the
 default range parameter.
 
 Upon pressing ``Preview'' or ``Okay'', the changes will take effect.  Note that
@@ -1400,6 +1404,21 @@ There are two dialogs because there are two ways of viewing fiducials.
     potentials as black contours drawn over shaded color isochrone map.
     The window allows selection of the particular fiducial to display.
 \end{description}
+
+\begin{figure}[htb]
+  \begin{makeimage}
+  \end{makeimage}
+  \fidexamples
+  \caption{\label{fig:fidexamples} Examples of fiducial displays.  Panels
+    A, and B show different forms of activation contour display over shaded
+    potential maps.  Panels D and E show displays of shaded acivation maps
+    with superimposed potentials (Panel C) and a single acivation contour
+    (Panel D).  Panel E shows a conoour display of ativation time. }
+\end{figure}
+
+
+Figure~\ref{fig:fidexamples} shows different forms of display of activation
+times using the fiducial display options.  
 
 
 \subsection{Picking mode}
@@ -1484,7 +1503,7 @@ Section~\ref{sec:saving}).  To control picking, use the top-level
     resolve this, triangles nodes should be ordered in a counterclockwise
     direction as viewed from the ``outside'' of the surface to which the
     triangle belongs.  This convention is used by OpenGL to decide which
-    triangles to show in ``hide backfacing triangles'' mode.
+    triangles to show in ``hide back-facing triangles'' mode.
     Unfortunately, it is not always possible when constructing geometric
     models to tell which way the triangle is to be viewed---this is still
     something humans do better than computers---and so we often need to
@@ -1536,7 +1555,7 @@ Section~\ref{sec:saving}).  To control picking, use the top-level
     & Catheter Color & select catheter color \\ \hline
     Points & & toggle and select color for point landmarks\\
     & Toggle temporary occlusions & toggle temporary occlusion display\\
-    & Toggle permanent occlusions (stich) & toggle stitch display \\ 
+    & Toggle permanent occlusions (stitch) & toggle stitch display \\ 
     & Toggle stimulation site & toggle stim display \\ 
     & Toggle recording site (lead) & toggle lead display \\ 
     & Occlus Color & select occlus color \\
