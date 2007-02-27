@@ -1,167 +1,5 @@
 \begin{thebibliography}{10}
 
-\bibitem{RSM:Mac92c}
-R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
-\newblock Visualization tools for computational electrocardiography.
-\newblock In {\em Visualization in Biomedical Computing}, pages 433--444,
-  Bellingham, Wash., 1992. Proceedings of the SPIE \#1808.
-
-\bibitem{RSM:Mac92d}
-R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
-\newblock Visualization of cardiac bioelectricity --- a case study.
-\newblock In {\em Proceedings of the IEEE Visualization 92}, pages 411--418.
-  IEEE CS Press, 1992.
-
-\bibitem{RSM:Mac93}
-R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
-\newblock Visualizing bioelectric fields.
-\newblock {\em {IEEE} Comp. Graph. \& Applic.}, 13(4):10--12, 1993.
-
-\bibitem{RSM:Mac93a}
-R.S. MacLeod and C.R. Johnson.
-\newblock Map3d: {I}nteractive scientific visualization for bioengineering
-  data.
-\newblock In {\em Proceedings of the {IEEE} Engineering in Medicine and Biology
-  Society 15th Annual International Conference}, pages 30--31. IEEE Press,
-  1993.
-\newblock http://software.sci.utah.edu/map3d.html.
-
-\bibitem{RSM:Mac94d}
-R.S. MacLeod, P.R. Ershler, C.R. Johnson, and M.A. Matheson.
-\newblock Map3d: Scientific visualization program for multichannel time series
-  data on unstructured, three-dimensional meshes. program user's guide.
-\newblock Technical Report UUCS-94-016, University of Utah, Department of
-  Computer Science, 1994.
-
-\bibitem{RSM:Mac94c}
-R.S. MacLeod, D.H. Brooks, H.~On, H.~Krim, R.L. Lux, and F.~Kornreich.
-\newblock Analysis of {PTCA}-induced ischemia using both an
-  electrocardiographic inverse solution and the wavelet transform.
-\newblock {\em J. Electrocardiol.}, 27(Suppl):90--96, 1994.
-
-\bibitem{RSM:Mac94f}
-R.S. MacLeod, B.~Taccardi, and R.L. Lux.
-\newblock The influence of torso inhomogeneities on epicardial potentials.
-\newblock In {\em {IEEE} Computers in Cardiology}, pages 793--796. {IEEE}
-  Computer Society, 1994.
-
-\bibitem{RSM:Mac95d}
-R.S. MacLeod, B.~Taccardi, and R.L. Lux.
-\newblock Electrocardiographic mapping in a realistic torso tank preparation.
-\newblock In {\em Proceedings of the {IEEE} Engineering in Medicine and Biology
-  Society 17th Annual International Conference}, pages 245--246. IEEE Press,
-  1995.
-
-\bibitem{RSM:Mac97}
-R.S. MacLeod, R.L. Lux, and B.~Taccardi.
-\newblock A possible mechanism for electrocardiographically silent changes in
-  cardiac repolarization.
-\newblock {\em J. Electrocardiol.}, 30(Suppl):114--121, 1997.
-
-\bibitem{RSM:Mac98}
-R.S. MacLeod and D.H. Brooks.
-\newblock Recent progress in inverse problems in electrocardiology.
-\newblock {\em IEEE Eng. in Med. \& Biol. Soc. Magazine}, 17(1):73--83, January
-  1998.
-
-\bibitem{RSM:Mac2000a}
-R.S. MacLeod, Q.~Ni, B.~Punske, P.R. Ershler, B.~Yilmaz, and B.~Taccardi.
-\newblock Effects of heart position on the body-surface {ECG}.
-\newblock {\em J. Electrocardiol.}, 33((supp)):229--238, 2000.
-
-\bibitem{RSM:Mac2001}
-R.S. MacLeod, B.~Punske, S.~Shome, B.~Yilmaz, and B.~Taccardi.
-\newblock The role of heart rate and coronary flow during myocardial ischemia.
-\newblock {\em J. Electrocardiol.}, pages 43--51, 2001.
-
-\bibitem{RSM:Pun98}
-B.B. Punske, W.E. Cascio, C.~Engle, H.T. Nagle, L.S. Gettes, and T.A. Johnson.
-\newblock Quantitative characterization of epicardial wave fronts during
-  regional ischemia and elevated extracellular potassium ion concentration.
-\newblock {\em Ann Biomed Eng}, 26(6):1010--1021, November-December 1998.
-
-\bibitem{RSM:Pun99}
-B.B. Punske, R.L. Lux, R.S. MacLeod, M.S. FUller, P.E. Ershler, T.J. Dustman,
-  Y.~Vyhmeister, and B.~Taccardi.
-\newblock Mechanisms of the spatial distribution of {QT} intervals on the
-  epicardial and body surfaces.
-\newblock {\em J. Cardiovasc. Electrophysiol.}, 10(12):1605--1618, 1999.
-
-\bibitem{RSM:Tac92}
-B.~Taccardi, R.L. Lux, P.R. Ershler, R.S. MacLeod, C.~Zabawa, and
-  Y.~Vyhmeister.
-\newblock Potential distributions and excitation time maps recorded with high
-  spatial resolution from the entire ventricular surface of exposed dog hearts.
-\newblock In {\em {IEEE} Computers in Cardiology}, pages 1--4. IEEE Press,
-  1992.
-
-\bibitem{RSM:Tac92b}
-B.~Taccardi, R.L. Lux, P.R. Ershler, R.S. MacLeod, and Y.~Vyhmeister.
-\newblock Effect of myocardial fiber direction on 3-{D} shape of excitation
-  wavefronts and associated potential distributions in ventricular walls.
-\newblock {\em Circ.}, 86(Suppl):I--752, 1992.
-
-\bibitem{RSM:Tac94}
-B.~Taccardi, E.~Macchi, R.L. Lux, P.R. Ershler, S.~Spaggiari, S.~Baruffi, and
-  Y.~Vyhmeister.
-\newblock Effect of myocardial fiber direction on epicardial potentials.
-\newblock {\em Circ.}, 90:3076--3090, 1994.
-
-\bibitem{RSM:Tac96}
-B.~Taccardi, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, and
-  Y.~Vhymeister.
-\newblock {ECG} waveforms and cardiac electric sources.
-\newblock {\em J. Electrocardiol.}, 29(Suppl):98--100, 1996.
-
-\bibitem{RSM:Tac96b}
-B.~Taccardi, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, M.~Scott,
-  Y.~Vyhmeister, and N.~Ingebrigtsen.
-\newblock {ECG} waveforms and cardiac electric sources.
-\newblock {\em J. Electrocardiol.}, 29(Suppl):98--100, 1996.
-
-\bibitem{RSM:Tac97b}
-B.~Taccardi, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, and
-  N.~Ingebrigtsen.
-\newblock Assessment of spatial resolution of body surface potentials maps in
-  localizing ventricular tachycardia foci.
-\newblock {\em J. Electrocardiol.}, 30(Suppl):1--4, 1997.
-
-\bibitem{RSM:Ni98}
-Q.~Ni, R.S. MacLeod, R.L. Lux, and B.~Taccardi.
-\newblock A novel interpolation method for electric potential fields in the
-  heart during excitation.
-\newblock {\em Annal. Biomed. Eng.}, 26(4):597--607, 1998.
-
-\bibitem{RSM:Ni99}
-Q.~Ni, R.S. MacLeod, and R.L. Lux.
-\newblock Three-dimensional activation mapping in canine ventricles:
-  Interpolation and approximation of activation times.
-\newblock {\em Annal. Biomed. Eng.}, 27(5):617--626, 1999.
-
-\bibitem{RSM:Ni2000b}
-Q.~Ni, R.S. MacLeod, B.B. Punske, and B.~Taccardi.
-\newblock Computing and visualizing electric potentials and current pathways in
-  the thorax.
-\newblock {\em J. Electrocardiol.}, 33(Suppl):189--198, 2000.
-
-\bibitem{RSM:Lux96}
-R.L. Lux, P.R. Ershler, and B.~Taccardi.
-\newblock Measuring spatial waves of repolarization in canine ventricles using
-  high resolution epicardial mapping.
-\newblock {\em J. Electrocardiol.}, 29(Suppl):130--134, 1996.
-
-\bibitem{RSM:Lux2001}
-R.L. Lux, M.~Akhtar, and R.S. MacLeod.
-\newblock Mapping and invasive analysis.
-\newblock In P.M. Spooner and M.R. Rosen, editors, {\em Foundations of Cardiac
-  Arrhythmias: Basic Concepts and Clinical Approaches}, chapter~15, pages
-  393--424. Marcel Dekker, 2001.
-
-\bibitem{CRJ:Joh93b}
-C.R. Johnson, R.S. MacLeod, and M.A. Matheson.
-\newblock Computational medicine: {B}ioelectric field problems.
-\newblock {\em IEEE COMPUTER}, pages 59--67, October 1993.
-
 \bibitem{CRJ:Joh93d}
 C.R. Johnson and R.~S. MacLeod.
 \newblock High performance computing in medicine: {D}irect and inverse problems
@@ -183,6 +21,129 @@ C.R. Johnson and R.~S. MacLeod.
 \newblock In D.~N. Ghista, editor, {\em Biomedical and Life Physics}, pages
   224--234. Vieweg-Verlag, Braunschweig, 1996.
 
+\bibitem{CRJ:Joh93b}
+C.R. Johnson, R.S. MacLeod, and M.A. Matheson.
+\newblock Computational medicine: {B}ioelectric field problems.
+\newblock {\em IEEE COMPUTER}, pages 59--67, October 1993.
+
+\bibitem{RSM:Lux2001}
+R.L. Lux, M.~Akhtar, and R.S. MacLeod.
+\newblock Mapping and invasive analysis.
+\newblock In P.M. Spooner and M.R. Rosen, editors, {\em Foundations of Cardiac
+  Arrhythmias: Basic Concepts and Clinical Approaches}, chapter~15, pages
+  393--424. Marcel Dekker, 2001.
+
+\bibitem{RSM:Lux96}
+R.L. Lux, P.R. Ershler, and B.~Taccardi.
+\newblock Measuring spatial waves of repolarization in canine ventricles using
+  high resolution epicardial mapping.
+\newblock {\em J. Electrocardiol.}, 29(Suppl):130--134, 1996.
+
+\bibitem{RSM:Mac98}
+R.S. MacLeod and D.H. Brooks.
+\newblock Recent progress in inverse problems in electrocardiology.
+\newblock {\em IEEE Eng. in Med. \& Biol. Soc. Magazine}, 17(1):73--83, January
+  1998.
+
+\bibitem{RSM:Mac94c}
+R.S. MacLeod, D.H. Brooks, H.~On, H.~Krim, R.L. Lux, and F.~Kornreich.
+\newblock Analysis of {PTCA}-induced ischemia using both an
+  electrocardiographic inverse solution and the wavelet transform.
+\newblock {\em J. Electrocardiol.}, 27(Suppl):90--96, 1994.
+
+\bibitem{RSM:Mac94d}
+R.S. MacLeod, P.R. Ershler, C.R. Johnson, and M.A. Matheson.
+\newblock Map3d: Scientific visualization program for multichannel time series
+  data on unstructured, three-dimensional meshes. program user's guide.
+\newblock Technical Report UUCS-94-016, University of Utah, Department of
+  Computer Science, 1994.
+
+\bibitem{RSM:Mac93a}
+R.S. MacLeod and C.R. Johnson.
+\newblock Map3d: {I}nteractive scientific visualization for bioengineering
+  data.
+\newblock In {\em Proceedings of the {IEEE} Engineering in Medicine and Biology
+  Society 15th Annual International Conference}, pages 30--31. IEEE Press,
+  1993.
+\newblock http://software.sci.utah.edu/map3d.html.
+
+\bibitem{RSM:Mac92d}
+R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
+\newblock Visualization of cardiac bioelectricity --- a case study.
+\newblock In {\em Proceedings of the IEEE Visualization 92}, pages 411--418.
+  IEEE CS Press, 1992.
+
+\bibitem{RSM:Mac92c}
+R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
+\newblock Visualization tools for computational electrocardiography.
+\newblock In {\em Visualization in Biomedical Computing}, pages 433--444,
+  Bellingham, Wash., 1992. Proceedings of the SPIE \#1808.
+
+\bibitem{RSM:Mac93}
+R.S. MacLeod, C.R. Johnson, and M.A. Matheson.
+\newblock Visualizing bioelectric fields.
+\newblock {\em {IEEE} Comp. Graph. \& Applic.}, 13(4):10--12, 1993.
+
+\bibitem{RSM:Mac97}
+R.S. MacLeod, R.L. Lux, and B.~Taccardi.
+\newblock A possible mechanism for electrocardiographically silent changes in
+  cardiac repolarization.
+\newblock {\em J. Electrocardiol.}, 30(Suppl):114--121, 1997.
+
+\bibitem{RSM:Mac2000a}
+R.S. MacLeod, Q.~Ni, B.~Punske, P.R. Ershler, B.~Yilmaz, and B.~Taccardi.
+\newblock Effects of heart position on the body-surface {ECG}.
+\newblock {\em J. Electrocardiol.}, 33((supp)):229--238, 2000.
+
+\bibitem{RSM:Mac2001}
+R.S. MacLeod, B.~Punske, S.~Shome, B.~Yilmaz, and B.~Taccardi.
+\newblock The role of heart rate and coronary flow during myocardial ischemia.
+\newblock {\em J. Electrocardiol.}, pages 43--51, 2001.
+
+\bibitem{RSM:Mac94f}
+R.S. MacLeod, B.~Taccardi, and R.L. Lux.
+\newblock The influence of torso inhomogeneities on epicardial potentials.
+\newblock In {\em {IEEE} Computers in Cardiology}, pages 793--796. {IEEE}
+  Computer Society, 1994.
+
+\bibitem{RSM:Mac95d}
+R.S. MacLeod, B.~Taccardi, and R.L. Lux.
+\newblock Electrocardiographic mapping in a realistic torso tank preparation.
+\newblock In {\em Proceedings of the {IEEE} Engineering in Medicine and Biology
+  Society 17th Annual International Conference}, pages 245--246. IEEE Press,
+  1995.
+
+\bibitem{RSM:Ni99}
+Q.~Ni, R.S. MacLeod, and R.L. Lux.
+\newblock Three-dimensional activation mapping in canine ventricles:
+  Interpolation and approximation of activation times.
+\newblock {\em Annal. Biomed. Eng.}, 27(5):617--626, 1999.
+
+\bibitem{RSM:Ni98}
+Q.~Ni, R.S. MacLeod, R.L. Lux, and B.~Taccardi.
+\newblock A novel interpolation method for electric potential fields in the
+  heart during excitation.
+\newblock {\em Annal. Biomed. Eng.}, 26(4):597--607, 1998.
+
+\bibitem{RSM:Ni2000b}
+Q.~Ni, R.S. MacLeod, B.B. Punske, and B.~Taccardi.
+\newblock Computing and visualizing electric potentials and current pathways in
+  the thorax.
+\newblock {\em J. Electrocardiol.}, 33(Suppl):189--198, 2000.
+
+\bibitem{RSM:Pun98}
+B.B. Punske, W.E. Cascio, C.~Engle, H.T. Nagle, L.S. Gettes, and T.A. Johnson.
+\newblock Quantitative characterization of epicardial wave fronts during
+  regional ischemia and elevated extracellular potassium ion concentration.
+\newblock {\em Ann Biomed Eng}, 26(6):1010--1021, November-December 1998.
+
+\bibitem{RSM:Pun99}
+B.B. Punske, R.L. Lux, R.S. MacLeod, M.S. FUller, P.E. Ershler, T.J. Dustman,
+  Y.~Vyhmeister, and B.~Taccardi.
+\newblock Mechanisms of the spatial distribution of {QT} intervals on the
+  epicardial and body surfaces.
+\newblock {\em J. Cardiovasc. Electrophysiol.}, 10(12):1605--1618, 1999.
+
 \bibitem{RSM:Pun2003}
 B.B. Punske, Q.~Ni, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, M.J.
   Allison, and B.~Taccardi.
@@ -194,5 +155,44 @@ Y.~Serina{\~{g}}ao{\~{g}}lu, R.S. MacLeod, B.~Yilmaz, and D.H. Brooks.
 \newblock Epicardial mapping from venous catheter measurements, body surface
   potential maps, and an electrocardiographic inverse solution.
 \newblock {\em J. Electrocardiol.}, 35(supp):65--74, 2002.
+
+\bibitem{RSM:Tac92b}
+B.~Taccardi, R.L. Lux, P.R. Ershler, R.S. MacLeod, and Y.~Vyhmeister.
+\newblock Effect of myocardial fiber direction on 3-{D} shape of excitation
+  wavefronts and associated potential distributions in ventricular walls.
+\newblock {\em Circ.}, 86(Suppl):I--752, 1992.
+
+\bibitem{RSM:Tac92}
+B.~Taccardi, R.L. Lux, P.R. Ershler, R.S. MacLeod, C.~Zabawa, and
+  Y.~Vyhmeister.
+\newblock Potential distributions and excitation time maps recorded with high
+  spatial resolution from the entire ventricular surface of exposed dog hearts.
+\newblock In {\em {IEEE} Computers in Cardiology}, pages 1--4. IEEE Press,
+  1992.
+
+\bibitem{RSM:Tac97b}
+B.~Taccardi, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, and
+  N.~Ingebrigtsen.
+\newblock Assessment of spatial resolution of body surface potentials maps in
+  localizing ventricular tachycardia foci.
+\newblock {\em J. Electrocardiol.}, 30(Suppl):1--4, 1997.
+
+\bibitem{RSM:Tac96b}
+B.~Taccardi, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, M.~Scott,
+  Y.~Vyhmeister, and N.~Ingebrigtsen.
+\newblock {ECG} waveforms and cardiac electric sources.
+\newblock {\em J. Electrocardiol.}, 29(Suppl):98--100, 1996.
+
+\bibitem{RSM:Tac96}
+B.~Taccardi, R.L. Lux, R.S. MacLeod, P.R. Ershler, T.J. Dustman, and
+  Y.~Vhymeister.
+\newblock {ECG} waveforms and cardiac electric sources.
+\newblock {\em J. Electrocardiol.}, 29(Suppl):98--100, 1996.
+
+\bibitem{RSM:Tac94}
+B.~Taccardi, E.~Macchi, R.L. Lux, P.R. Ershler, S.~Spaggiari, S.~Baruffi, and
+  Y.~Vyhmeister.
+\newblock Effect of myocardial fiber direction on epicardial potentials.
+\newblock {\em Circ.}, 90:3076--3090, 1994.
 
 \end{thebibliography}
