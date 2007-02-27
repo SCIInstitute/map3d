@@ -9,11 +9,11 @@
 include Makefile.obj
 #######################	 EDIT HERE  #########################
 # For SCI:
-OSXHOME = /usr/sci/projects/map3d
+#OSXHOME = /usr/sci/projects/map3d
 # For CVRTI (well, sort of...):
 #OSXHOME = /u/blackham/usr-osx/local
 # For Rob's macs:
-#OSXHOME = ${HOME}
+OSXHOME = ${HOME}
 
 SYSEXT   = -osx
 # Do not change this name to "map3d" as a symbolic link is being created
@@ -33,14 +33,39 @@ LIBS     = $(GTK_LIBS) \
 #LIBS     = -lgfile -lnumseq -lfids -lfi -lcutil -lgraphicsio \
 #	   -lpng -lm -lobjc
 
-LIBPATHS = -L${OSXHOME}/lib -L/sw/lib -L/usr/X11R6/lib \
+#LIBPATHS = -L${OSXHOME}/lib -L/sw/lib -L/usr/X11R6/lib \
+#	    -framework OpenGL
+#LIBPATHS = -L${OSXHOME}/lib -L/usr/local/map3d/lib -L/usr/X11R6/lib \
+#	    -framework OpenGL
+LIBPATHS = -L${OSXHOME}/lib -L/opt/local/lib -L/usr/X11R6/lib \
 	    -framework OpenGL
 
-INCPATHS = -I${OSXHOME}/include -I/sw/include -I/sw/lib/gtk-2.0/include \
-		-I/sw/include/gtk-2.0 -I/sw/lib/glib-2.0/include \
-		-I/sw/include/glib-2.0 -I/sw/include/pango-1.0 \
-		-I/sw/include/gtkglext-1.0 -I/sw/lib/gtkglext-1.0/include \
-		-I/usr/X11R6/include -I/sw/include/atk-1.0
+#INCPATHS = -I${OSXHOME}/include -I/sw/include -I/sw/lib/gtk-2.0/include \
+#		-I/sw/include/gtk-2.0 -I/sw/lib/glib-2.0/include \
+#		-I/sw/include/glib-2.0 -I/sw/include/pango-1.0 \
+#		-I/sw/include/gtkglext-1.0 -I/sw/lib/gtkglext-1.0/include \
+#		-I/usr/X11R6/include -I/sw/include/atk-1.0
+
+#INCPATHS = -I${OSXHOME}/include -I/usr/local/map3d/include \
+#	   -I/usr/local/map3d/include/gtk-2.0/include \
+#	   -I/usr/local/map3d/include/gtk-2.0 \
+#	   -I/usr/local/map3d/include/glib-2.0 \
+#	   -I/usr/local/map3d/include/pango-1.0 \
+#	   -I/usr/local/map3d/include/gtkglext-1.0 \
+#	   -I/usr/local/map3d/lib/gtkglext-1.0/include \
+#	   -I/usr/X11R6/include -I/local/map3d/include/atk-1.0
+
+INCPATHS = -I${OSXHOME}/include -I/opt/local/include \
+	   -I/opt/local/include/atk-1.0 \
+	   -I/opt/local/lib/gtk-2.0/include \
+	   -I/opt/local/include/gtk-2.0 \
+	   -I/opt/local/include/glib-2.0 \
+	   -I/opt/local/lib/glib-2.0/include \
+	   -I/opt/local/include/cairo \
+	   -I/opt/local/include/pango-1.0 \
+	   -I/opt/local/include/gtkglext-1.0 \
+	   -I/opt/local/lib/gtkglext-1.0/include \
+	   -I/usr/X11R6/include -I/local/map3d/include/atk-1.0
 
 ARCH_CFLAGS =
 DEV_CFLAGS =  -c -g
