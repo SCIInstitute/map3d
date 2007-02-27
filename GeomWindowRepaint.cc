@@ -685,12 +685,13 @@ void DrawCont(Mesh_Info * curmesh)
   if (curcont) {
     contpts1 = curcont->contpt1;
     contpts2 = curcont->contpt2;
+	  length = curcont->numisosegs;  
+
   }
   
   glLineWidth(curmesh->contsize);
   glPointSize(curmesh->contsize);
   
-  length = curcont->numisosegs;  
   
   float potval;
   for (loop2 = 0; loop2 < length; loop2++) {    
