@@ -23,37 +23,35 @@ installing the gnome environment will take care of it).
 
 To get the dependencies from the internet, navigate your favorite browser
 to \htmladdnormallink{\texttt{http://www.rpmfind.net}} {http://www.rpmfind.net}, and
-search for \texttt{gtk-2.0}.  Try to find one that matches your
-distribution (redhat, mandrake, etc.). We directly support development for
-\texttt{gtk2-2.2.1} and \texttt{gtk2-2.0.6,} so if you can find one of
-these that would be encouraged.
+search for \texttt{gtk-2}.  Try to find one that matches your
+distribution (redhat, mandrake, etc.). \map{} requires gtk2-2.4 or greater.
+
+%If your GTK version is 2.0.6 or 2.2.1 (you can find out by
+%looking at \texttt{gtkversion.h} which will be where you installed gtk
+%(normally \texttt{/usr/include/gtk-2.0/gtk/gtkversion.h}), and look for
+%\verb|GTK_MAJOR_VERSION|, \verb|GTK_MINOR_VERSION|, and
+%\verb|GTK_MICRO_VERSION|.  There will be numbers on the same lines as each
+%of these, and if you put them together it will be something like 2.2.1).
+%If you are using one of these versions download
+%\texttt{gtkglext-linux-2.2.1.tar.gz} or \texttt{gtkglext-linux-2.0.6.tar.gz} from
+%the \map{} \htmladdnormallink{\texttt{download page}}
+%{http://www.sci.utah.edu/software/map3d.html} and follow these
+%instructions:
+%
+%\begin{verbatim}
+%    cd <download directory>
+%    gunzip gtkglext-linux-<version>.tar.gz
+%    tar xf gtkglext-linux-<version>.tar
+%    cp libgtkglext-x11-1.0.so.0 /usr/local/lib
+%    cp libgdkglext-x11-1.0.so.0 /usr/local/lib
+%\end{verbatim}
+
+%You can copy them to some directory other than \texttt{/usr/local/lib} if
+%you wish.
 
 The next part is to download gtkglext, the library that supports OpenGL for
-GTK widgets.  As of this release, this is not standard in most
-distributions.  If your GTK version is 2.0.6 or 2.2.1 (you can find out by
-looking at \texttt{gtkversion.h} which will be where you installed gtk
-(normally \texttt{/usr/include/gtk-2.0/gtk/gtkversion.h}), and look for
-\verb|GTK_MAJOR_VERSION|, \verb|GTK_MINOR_VERSION|, and
-\verb|GTK_MICRO_VERSION|.  There will be numbers on the same lines as each
-of these, and if you put them together it will be something like 2.2.1).
-If you are using one of these versions download
-\texttt{gtkglext-linux-2.2.1.tar.gz} or \texttt{gtkglext-linux-2.0.6.tar.gz} from
-the \map{} \htmladdnormallink{\texttt{download page}}
-{http://www.sci.utah.edu/software/map3d.html} and follow these
-instructions:
-%
-\begin{verbatim}
-    cd <download directory>
-    gunzip gtkglext-linux-<version>.tar.gz
-    tar xf gtkglext-linux-<version>.tar
-    cp libgtkglext-x11-1.0.so.0 /usr/local/lib
-    cp libgdkglext-x11-1.0.so.0 /usr/local/lib
-\end{verbatim}
-
-You can copy them to some directory other than \texttt{/usr/local/lib} if
-you wish.
-
-If this doesn't work, you will need to download the gtkglext source and
+GTK widgets.  Some distrubutions come with gtkglext.
+If yours doesn't, you will need to download the gtkglext source and
 compile it yourself (don't worry---if your gtk is properly set up, this
 will be very easy).  Download the sources from Source Forge
 \htmladdnormallink{\texttt{http://sourceforge.net/projects/gtkglext}}
