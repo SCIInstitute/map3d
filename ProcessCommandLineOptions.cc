@@ -483,7 +483,7 @@ Mesh_List FindAndReadGeom(Surf_Input * surf, Mesh_List currentMeshes, int reload
       }
       if (reload == LOAD_RMS_DATA) {
         num = 1;
-        startsurf = 1;
+        //startsurf = 1;
       }
 
       for (unsigned i = 0; i < num; i++) {
@@ -903,16 +903,6 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
   }  
 
   case DATA_FILE:
-    sprintf(surf->potfilename, "%s.data", surf->potfilename);
-    s = ReadDataFile(surf, s, 1, 0);
-    if (s == NULL) {
-      printf("MAP3D WARNING: Unable to read data file: %s\n", surf->potfilename);
-      mesh->data = 0;
-      return;
-    }
-    mesh->data = s;
-    s->mesh = mesh;
-    break;
   case TSDF_FILE:
     sprintf(surf->potfilename, "%s.tsdf", surf->potfilename);
     s = ReadDataFile(surf, s, 1, 0);
@@ -990,11 +980,26 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
     }
 
     // check the fiducials - whether they came from tsdfc or from .fid file or matlab file
+    // also adjust the fids if the data does not start at the beginning
+
+    int fidAdjustment = mesh->data->ts_start;
     for(int fidsets = 0; fidsets < mesh->data->numfs; fidsets++){
+      Series_Fids& fids = mesh->data->fids[fidsets];
+      // adjust the fids
+      if (fidAdjustment > 0) {
+        for (int lead = 0; lead < fids.numfidleads; lead++) {
+          for (int numfidinlead = 0; numfidinlead < fids.leadfids[lead].numfids; numfidinlead++)
+            fids.leadfids[lead].fidvals[numfidinlead] -= fidAdjustment;
+        }
+        //for (int globalfid = 0; globalfid < mesh->data->globalfids.numfids; globalfid++)
+          //mesh->data->globalfids.fidvals[globalfid] -= fidAdjustment;
+      }
       for(int numfids = 0; numfids < mesh->data->fids[fidsets].numfidtypes; numfids++){
-//#if 0 //for new fid dialog
+//#if 0 
+        
+        //for new fid dialog
           mesh->fidConts.push_back(new Contour_Info(mesh));
-          mesh->fidConts.back()->datatype = mesh->data->fids[fidsets].fidtypes[numfids];
+          mesh->fidConts.back()->datatype = fids.fidtypes[numfids];
           mesh->fidConts.back()->fidset = fidsets;
           switch(mesh->fidConts.back()->datatype){
             case 0:
@@ -1050,7 +1055,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
               break;              
           }
           mesh->fidMaps.push_back(new Contour_Info(mesh));
-          mesh->fidMaps.back()->datatype = mesh->data->fids[fidsets].fidtypes[numfids];
+          mesh->fidMaps.back()->datatype = fids.fidtypes[numfids];
           mesh->fidMaps.back()->fidset = fidsets;
           mesh->fidMaps.back()->fidmap = 1;
 //#endif    
