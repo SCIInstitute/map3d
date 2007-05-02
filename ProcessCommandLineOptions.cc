@@ -67,16 +67,13 @@
   else { action; } 
 
 Map3d_Geom *map3d_geom;
+vector<Surface_Group> surf_group;
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
 extern FilesDialog *filedialog;
 extern ScaleDialog *scaledialog;
 extern FileCache file_cache;
 extern int fstep;
-extern vector<Surface_Group> surf_group;
-
-
-vector<Surface_Group> surf_group;
 
 
 int ProcessCommandLineOptions(Global_Input & g)

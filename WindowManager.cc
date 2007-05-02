@@ -393,6 +393,8 @@ void ComputeLockFrameData()
 
 void updateGroup(Mesh_Info * mesh, int gid)
 {
+  if (gid >= surf_group.size())
+    surf_group.resize(gid+1);
   if (mesh->groupid != gid && mesh->gpriv->dominantsurf != -1) {
     int oldid = mesh->groupid;
     mesh->groupid = gid;
@@ -414,6 +416,12 @@ void updateGroup(Mesh_Info * mesh, int gid)
 
 void recalcGroup(int gid)
 {
+  if (gid == 2) {
+    int x = 5;
+    int y = x;
+  }
+  surf_group[gid].potmin = -FLT_MAX;
+  surf_group[gid].potmax = FLT_MAX;
   Init_Surface_Group(&surf_group[gid]);
   for (MeshIterator mi2(0,0); !mi2.isDone(); ++mi2) {
     Mesh_Info* mesh = mi2.getMesh();
@@ -436,6 +444,10 @@ void assignMasters(Global_Input *)
 {
   for (MeshIterator mi(0,0); !mi.isDone(); ++mi) {
     Mesh_Info* orig_mesh = mi.getMesh();
+    if (orig_mesh->mysurf->scale_lock == orig_mesh->geom->surfnum) {
+      printf("Cannot slave surf %d to itself\n", orig_mesh->geom->surfnum);
+      orig_mesh->mysurf->scale_lock = -1;
+    }
     for (MeshIterator mi2(0,0); !mi2.isDone(); ++mi2) {
       Mesh_Info* comp_mesh = mi2.getMesh();
       if (orig_mesh->mysurf->scale_lock == comp_mesh->geom->surfnum && orig_mesh->data && comp_mesh->data) {
