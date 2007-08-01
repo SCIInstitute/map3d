@@ -137,6 +137,7 @@ struct Global_Input
   int lockframes; /*** Whether Frames lock is enabled ***/
   int pickmode; /*** Pick Mode ***/
   int framestep;
+  bool same_scale;
 };
 typedef Global_Input *Global_Input_p;
 
@@ -216,6 +217,7 @@ public:
   char imagefile[257]; /*** Output file for images (map3d will automatically append 0000,0001, etc.) ***/
   int imagesuffix; /*** suffix num for image file - 0, 1, etc, ***/
   bool saving_animations;
+  bool same_scale;
   
   bool contour_antialiasing;
 };

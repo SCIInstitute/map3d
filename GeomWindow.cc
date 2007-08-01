@@ -89,6 +89,7 @@ GeomWindow::GeomWindow() : GLWindow(GEOMWINDOW, "Geometry Display",100,100)
   modifiers = 0;
   idle_id = 0;
   showlocks = 1;
+  l2norm = 0;
 
   setupEventHandlers();
 }
@@ -188,7 +189,16 @@ void GeomWindow::recalcMinMax()
   xcenter = xsize / 2.f + xmin;
   ycenter = ysize / 2.f + ymin;
   zcenter = zsize / 2.f + zmin;
-  l2norm = sqrt(xsize * xsize + ysize * ysize + zsize * zsize);
+
+  // Set the "fit" for the window.  If -ss is specified, set
+  // all windows' fit to the first window's.  If it's the first
+  // window, set it only once.
+  GeomWindow* first_geom_window = GetGeomWindow(0);
+  bool lock_l2norms = map3d_info.same_scale;
+  if (!lock_l2norms || (this == first_geom_window && l2norm == 0))
+    l2norm = sqrt(xsize * xsize + ysize * ysize + zsize * zsize);
+  else if (lock_l2norms && this != first_geom_window)
+    l2norm = first_geom_window->l2norm;
 
 
   /* Adjust clipping plane coordinates */

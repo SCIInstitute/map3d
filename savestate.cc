@@ -95,6 +95,10 @@ void outputGlobalInfo(FILE* f, char* cont, SaveDialog* sd)
   if (map3d_info.qnoborders)
     fprintf(f, "-b%s",cont);
 
+  // save -ss
+  if (map3d_info.same_scale)
+    fprintf(f, "-ss%s",cont);
+
   // save scaling range, function, mapping
   fprintf(f, "-sc %d %d %d%s", map3d_info.scale_scope, map3d_info.scale_model, map3d_info.scale_mapping,cont);
 

@@ -98,6 +98,8 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_3("-sc", globalInput.scale_scope, globalInput.scale_model, globalInput.scale_mapping)
       /* -v print the map3d version info */
       OPTION_CODE("-v", 0, printf("Map3D version " VERSION "\n");)
+      /* -ss sets the 'scale' (l2norm) of all windows to the same as the first window, and won't change */
+      OPTION_VALUE("-ss", globalInput.same_scale, true)
 
       /* OPTIONS THAT COULD AFFECT ALL MESHES (if done before first -f)
           OR THE CURRENT MESH ONLY */

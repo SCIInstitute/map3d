@@ -75,7 +75,6 @@ public:
   GtkWidget *front_plane, *back_plane, *c_together, *c_with_object;
   GtkWidget *noFidCont, *actFidCont, *recFidCont,
     *noFidMap, *actFidMap, *recFidMap;
-
 };
 
 #ifdef __cplusplus

@@ -48,6 +48,7 @@ void Init_Global_Input(Global_Input * s)
   s->pickmode = NEW_WINDOW_PICK_MODE;
   s->framestep = 1;
   s->report_level = 1;
+  s->same_scale = 0;
 }
 
 void Init_Scalar_Input(Scalar_Input * s)
@@ -297,6 +298,7 @@ Map3d_Info::Map3d_Info()
   global_potmin = 0;
   user_fstep = 1;
   
+  same_scale = 0;
   contour_antialiasing = true;
 }
 

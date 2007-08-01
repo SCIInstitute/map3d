@@ -251,7 +251,7 @@ void Surf_Data::get_minmax(float &min, float &max)
   case GLOBAL_FRAME:           /* min and max over one frame (all surfaces) */
     if (!map3d_info.scale_frame_set) {
       FrameMinMax();
-      map3d_info.scale_frame_set = 0;
+      map3d_info.scale_frame_set = 1;
     }
     max = map3d_info.scale_frame_max;
     min = map3d_info.scale_frame_min;
@@ -260,7 +260,7 @@ void Surf_Data::get_minmax(float &min, float &max)
     if (!map3d_info.scale_frame_set) {
       for (unsigned i = 0; i < surf_group.size(); i++) {
         recalcGroup(i);
-        map3d_info.scale_frame_set = 0;
+        map3d_info.scale_frame_set = 1;
       }
     }
     min = surf_group[mesh->groupid].framemin;
@@ -285,7 +285,7 @@ void Surf_Data::get_minmax(float &min, float &max)
     min = map3d_info.global_potmin;
     break;
   case SLAVE_FRAME:
-    if (mastersurf)
+    if (mastersurf && mastersurf != this)
       mastersurf->get_minmax(min, max);
 #if 0
       if (mastersurf->minmaxframes != NULL) {
