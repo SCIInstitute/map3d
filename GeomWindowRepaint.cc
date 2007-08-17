@@ -599,7 +599,7 @@ void DrawSurf(Mesh_Info * curmesh)
   }
   
   //band shading
-  if (curmesh->shadingmodel == SHADE_BANDED) {
+  if (curmesh->shadingmodel == SHADE_BANDED && curcont) {
     if (curmesh->lighting)
       glShadeModel(GL_SMOOTH);
 
