@@ -84,6 +84,7 @@ public:
   Landmark_Draw landmarkdraw;   /* Info for drawing landmarks (colors, toggling, etc.)*/
 
   bool drawcont;                /* indicates whether to render contour lines */
+  bool drawfids;                /* indicates whether to render fiducials in general */
   
   bool drawactcont;                /* indicates whether to render fiducial contour lines */
   bool drawreccont;                /* indicates whether to render fiducial contour lines */

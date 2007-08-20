@@ -127,7 +127,7 @@ void GeomWindowRepaint(GtkWidget *widget, GdkEvent *, gpointer data)
     }
     
     /* draw fiducial map surface*/
-    if (curmesh->data){
+    if (curmesh->data && curmesh->drawfids){
       if(curmesh->fidmapindex > 0){
         if (curmesh->fidshadingmodel != SHADE_NONE ){
           glEnable(GL_POLYGON_OFFSET_FILL);
@@ -167,7 +167,7 @@ void GeomWindowRepaint(GtkWidget *widget, GdkEvent *, gpointer data)
       DrawCont(curmesh);
     
     /* draw the fiducial contour lines */
-    if (curmesh->data){
+    if (curmesh->data && curmesh->drawfids){
       for(unsigned i = 0; i<curmesh->fidConts.size();i++){
         DrawFidCont(curmesh,curmesh->fidConts[i]);
       }

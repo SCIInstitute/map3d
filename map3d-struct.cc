@@ -125,6 +125,7 @@ void Init_Surf_Input(Surf_Input * s)
   s->invert = -1;
   s->negcontdashed = -1;
   s->drawcont = -1;
+  s->drawfids = -1;
   s->showlegend = -1;
   s->legendticks = -1;
   s->lighting = -1;

@@ -43,6 +43,7 @@ Mesh_Info::Mesh_Info()
   gpriv = 0;
   drawmesh = RENDER_MESH_CONN;
   drawcont = 1;
+  drawfids = 1;
   drawactcont = false;
   drawreccont = false;
   drawfidmapcont = -1;

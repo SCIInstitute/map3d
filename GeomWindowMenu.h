@@ -92,7 +92,7 @@ enum menuitem
   frame_lock, trans_lock, frame_reset, frame_dialog, frame_step_1, frame_step_2, frame_step_4,
   frame_step_5, frame_step_10, frame_step_45, frame_step_90, frame_step_user,
   frame_align, frame_zero, screen_save,
-  fid_dialog, fid_map_dialog,no_fid_cont, act_fid_cont, rec_fid_cont, no_fid_map, act_fid_map, rec_fid_map, fid_map_toggle
+  fid_dialog, fid_map_dialog,no_fid_cont, act_fid_cont, rec_fid_cont, no_fid_map, act_fid_map, rec_fid_map, fid_map_toggle, fid_draw_fid
 };
 
 // these macro is to align toggleable features together

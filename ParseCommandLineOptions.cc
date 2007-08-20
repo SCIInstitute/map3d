@@ -117,6 +117,7 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_1("-cm", globalInput.SurfList[GEOM_INDEX]->colormap)
       OPTION_1("-sm", globalInput.SurfList[GEOM_INDEX]->shadingmodel)
       OPTION_1("-rm", globalInput.SurfList[GEOM_INDEX]->drawmesh)
+      OPTION_1("-rf", globalInput.SurfList[GEOM_INDEX]->drawfids)
       OPTION_1("-ic", globalInput.SurfList[GEOM_INDEX]->invert)
       OPTION_1("-nco", globalInput.SurfList[GEOM_INDEX]->numconts)
       OPTION_4("-rq", globalInput.SurfList[GEOM_INDEX]->rotationQuat.w,

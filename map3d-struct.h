@@ -99,6 +99,7 @@ struct Surf_Input
   long fogging;
   long drawcont;
   long negcontdashed;
+  long drawfids;
   long axes;
   long axes_color[3];
 

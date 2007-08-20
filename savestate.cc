@@ -152,6 +152,8 @@ void outputMeshInfo(FILE* f, char* cont, SaveDialog* sd, Mesh_Info* mesh)
     fprintf(f, "-sco %d%s",mesh->drawcont?1:0, cont);
     // neg conts dashed?
     fprintf(f, "-nc %d%s",mesh->negcontdashed?1:0, cont);
+    // draw fids (in general)?
+    fprintf(f, "-rf %d%s",mesh->drawfids?1:0, cont);
     // marks size and color (all of them)?
     //fprintf(f, "-c %d %d %d", (int)mesh->meshcolor[0]*255
     // axes?

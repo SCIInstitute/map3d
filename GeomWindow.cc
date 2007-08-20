@@ -1064,6 +1064,7 @@ void GeomWindow::setInitialMenuChecks()
   bool all_node_sphere = false, ext_node_sphere = false, pick_node_sphere = false, lead_node_sphere = false;
   bool all_value = false;
   int all_node_num = 0, ext_node_num = 0, pick_node_num = 0, lead_node_num = 0;
+  bool draw_fids = false;
   for (unsigned i = 0; i < meshes.size(); i++) {
     Mesh_Info* mesh = meshes[i];
     if (mesh->cmap == &Grayscale) surface_color = 2;
@@ -1080,6 +1081,7 @@ void GeomWindow::setInitialMenuChecks()
     if (mesh->mark_extrema_sphere) ext_node_sphere = true;
     if (mesh->mark_ts_sphere) pick_node_sphere = true;
     if (mesh->mark_lead_sphere) lead_node_sphere = true;
+    if (mesh->drawfids) draw_fids = true;
     all_node_num = mesh->mark_all_number;
     ext_node_num = mesh->mark_extrema_number;
     pick_node_num = mesh->mark_ts_number;
@@ -1098,6 +1100,8 @@ void GeomWindow::setInitialMenuChecks()
   node_ext_sphere.setValue(0, ext_node_sphere);
   node_pick_sphere.setValue(0, pick_node_sphere);
   node_lead_sphere.setValue(0, lead_node_sphere);
+ 
+  draw_fid.setValue(0, draw_fids);
 
   if (all_node_num > 0) node_all.setActive(all_node_num-1);
   if (ext_node_num > 0) node_ext.setActive(ext_node_num-1);

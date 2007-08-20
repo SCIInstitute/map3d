@@ -72,6 +72,7 @@ public:
   MenuGroup frame_num;
   MenuGroup lighting;
   MenuGroup surf_invert;
+  MenuGroup draw_fid;
   GtkWidget *front_plane, *back_plane, *c_together, *c_with_object;
   GtkWidget *noFidCont, *actFidCont, *recFidCont,
     *noFidMap, *actFidMap, *recFidMap;

@@ -1281,6 +1281,9 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   // show contour lines (or not)
   INITIALIZE_VALUE(drawcont, drawcont, -1, DEF_DRAWCONT);
 
+  // render fiducials (or not)
+  INITIALIZE_VALUE(drawfids, drawfids, -1, 1);
+
   // whether to draw the negative contours dashed or not
   INITIALIZE_VALUE(negcontdashed, negcontdashed, -1, DEF_NEGCONTDASHED);
 

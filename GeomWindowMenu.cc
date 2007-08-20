@@ -244,7 +244,12 @@ void GeomWindowHandleMenu(menu_data * data)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->actFidMap), 0);
         menulock = false;
         break;
-        
+      case fid_draw_fid:
+        mesh->drawfids = !mesh->drawfids;
+        priv->draw_fid.setValue(0, mesh->drawfids);
+        break;
+
+
       case scaling_dialog:
         gtk_widget_show(scaledialog->window);
         break;
@@ -1582,42 +1587,8 @@ void GeomBuildMenus(GeomWindow * priv)
   gtk_tooltips_set_tip(fiducial_map_button_tips, GTK_WIDGET(fiducialmapbutton),
                        "Brings up a dialog that allows "
                        "user to control fiducial maps.", "");
-  //AddMenuEntry(main_menus[10], "", fid_dialog, priv, GeomWindowMenu);  // Insert a separator.
-  
-  //  
-  //  fiducial_menus[0] = AddSubMenu(main_menus[10], "Fiducial Contours");
-  //  fiducial_menus[1] = AddSubMenu(main_menus[10], "Fiducial Maps");
-  // 
-  //  //
-  //  priv->noFidCont =
-  //    AddCheckMenuEntry(fiducial_menus[0], "No Fiducials", no_fid_cont, priv, GeomWindowMenu);
-  //  priv->actFidCont =
-  //    AddCheckMenuEntry(fiducial_menus[0], "Activation Time", act_fid_cont, priv, GeomWindowMenu);  
-  //  priv->recFidCont =
-  //    AddCheckMenuEntry(fiducial_menus[0], "Recovery Time", rec_fid_cont, priv, GeomWindowMenu);
-  //  
-  //  gtk_widget_set_sensitive(priv->actFidCont, false);
-  //  gtk_widget_set_sensitive(priv->recFidCont, false);
-  //
-  //  menulock = true;
-  //  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->noFidCont), 1);
-  //  menulock = false;
-  //  
-  //
-  //  priv->noFidMap =
-  //    AddCheckMenuEntry(fiducial_menus[1], "No Fiducials", no_fid_map, priv, GeomWindowMenu);
-  //  priv->actFidMap =
-  //    AddCheckMenuEntry(fiducial_menus[1], "Activation Map", act_fid_map, priv, GeomWindowMenu);  
-  //  priv->recFidMap =
-  //    AddCheckMenuEntry(fiducial_menus[1], "Recovery Map", rec_fid_map, priv, GeomWindowMenu);
-  //
-  //  gtk_widget_set_sensitive(priv->actFidMap, false);
-  //  gtk_widget_set_sensitive(priv->recFidMap, false);
-  //
-  //  menulock = true;
-  //  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(priv->noFidMap), 1);
-  //  menulock = false;
-  
+
+  priv->draw_fid.add(AddCheckMenuEntry(main_menus[10], "Draw Fiducials", fid_draw_fid, priv, GeomWindowMenu));
   //
   // frame control menu
   //
