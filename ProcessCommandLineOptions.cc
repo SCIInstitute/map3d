@@ -1192,6 +1192,14 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   m->meshcolor[1] /= 255.f;
   m->meshcolor[2] /= 255.f;
 
+  // default leadlinks color to purple
+  INITIALIZE_VALUE(colour_ll[0], mark_lead_color[0], -1, 255);
+  INITIALIZE_VALUE(colour_ll[1], mark_lead_color[1], -1, 0);
+  INITIALIZE_VALUE(colour_ll[2], mark_lead_color[2], -1, 255);
+  m->mark_lead_color[0] /= 255.f;
+  m->mark_lead_color[1] /= 255.f;
+  m->mark_lead_color[2] /= 255.f;
+
   // contour spacing
   // set it to a default later, after we've read data
   INITIALIZE_VALUE(contourstep, contourspacing, 0, DEF_CONTOURSPACING);
@@ -1247,6 +1255,7 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
   INITIALIZE_VALUE(pick_sphere, mark_ts_sphere, -1, 1);
   INITIALIZE_VALUE(pick_mark, mark_ts_number, -1, 3);
 
+  INITIALIZE_VALUE(size_ll, mark_lead_size, -1, 3);
   // rotation quaternion - special case
   if (s->rotationQuat.w != -FLT_MAX && s->rotationQuat.x != -FLT_MAX && 
       s->rotationQuat.y != -FLT_MAX && s->rotationQuat.z != -FLT_MAX) {

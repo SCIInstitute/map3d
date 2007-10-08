@@ -85,6 +85,7 @@ struct Surf_Input
   // options that can be global or for each surface
   float contourstep; /*** User Step size between contours ***/
   long colour_mesh[3]; /*** Colour for drawing mesh ***/
+  long colour_ll[3]; /*** Colour for drawing leadlinks ***/
   long colormap;
   long shadingmodel;
   long drawmesh;
@@ -111,6 +112,8 @@ struct Surf_Input
   long extrema_sphere, extrema_mark;
   long pick_sphere, pick_mark;
   long lead_sphere, lead_mark;
+  long size_ll; /*** Size of leadlinks ***/
+
 };
 typedef Surf_Input *Surf_Input_p;
 

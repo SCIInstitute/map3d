@@ -109,6 +109,9 @@ void Init_Surf_Input(Surf_Input * s)
   s->colour_mesh[0] = -1;
   s->colour_mesh[1] = -1;
   s->colour_mesh[2] = -1;
+  s->colour_ll[0] = -1;
+  s->colour_ll[1] = -1;
+  s->colour_ll[2] = -1;
   s->colour_bg[0] = -1;
   s->colour_bg[1] = -1;
   s->colour_bg[2] = -1;
@@ -143,6 +146,7 @@ void Init_Surf_Input(Surf_Input * s)
 
   s->showinfotext = -1;
   s->showlocks = -1;
+  s->size_ll = -1;
 }
 
 

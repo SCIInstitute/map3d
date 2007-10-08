@@ -143,7 +143,7 @@ void outputMeshInfo(FILE* f, char* cont, SaveDialog* sd, Mesh_Info* mesh)
     // show legend?
     fprintf(f, "-slw %d%s",mesh->showlegend?1:0, cont);
     // legend ticks?
-    fprintf(f, "-lwt %d%s",mesh->legendwin&&mesh->legendwin->matchContours?-1:mesh->legendwin->nticks, cont);
+    fprintf(f, "-lwt %d%s",mesh->legendwin&&mesh->legendwin->matchContours?mesh->legendwin->nticks:-1, cont);
     // lighting
     fprintf(f, "-el %d%s",mesh->lighting?1:0, cont);
     // depth cue
@@ -169,7 +169,7 @@ void outputMeshInfo(FILE* f, char* cont, SaveDialog* sd, Mesh_Info* mesh)
     // draw node marks (pick)
     fprintf(f, "-nmp %d %d%s",mesh->mark_ts_sphere, mesh->mark_ts_number, cont);
     // draw node marks (lead)
-    fprintf(f, "-nml %d %d%s",mesh->mark_lead_sphere, mesh->mark_lead_number, cont);
+    fprintf(f, "-nml %d %d -Cll %d %d %d -Sll %d%s",mesh->mark_lead_sphere, mesh->mark_lead_number, (int)mesh->mark_lead_color[0]*255, (int)mesh->mark_lead_color[1]*255, (int)mesh->mark_lead_color[2]*255, (int)mesh->mark_lead_size, cont);
     // show info text in windows
     fprintf(f, "-sit %d ", mesh->gpriv->showinfotext);
     // show locks

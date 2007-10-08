@@ -104,6 +104,11 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       /* OPTIONS THAT COULD AFFECT ALL MESHES (if done before first -f)
           OR THE CURRENT MESH ONLY */
 
+      /* -Cll - leadlinks color */
+      OPTION_ARRAY("-Cll", 3, globalInput.SurfList[GEOM_INDEX]->colour_ll)
+
+      /* -Sll - leadlinks size */
+      OPTION_1("-Sll", globalInput.SurfList[GEOM_INDEX]->size_ll)
       /* -c set the default or current mesh color index */
       OPTION_ARRAY("-c", 3, globalInput.SurfList[GEOM_INDEX]->colour_mesh)
       /* -bg set the default or current background color index */

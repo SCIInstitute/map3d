@@ -64,11 +64,8 @@ Mesh_Info::Mesh_Info()
   mark_extrema_color[1] = 1;
   mark_ts_color[0] = mark_ts_color[1] = 1;
   mark_ts_color[2] = 0;
-  mark_lead_color[0] = mark_lead_color[2] = 1;
-  mark_lead_color[1] = 0;
   mark_all_size = 2;
   mark_extrema_size = 3;
-  mark_ts_size = 3;
   mark_lead_size = 3;
   mark_all_sphere = 0;
   mark_all_sphere_value = 0;
