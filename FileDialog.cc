@@ -404,7 +404,7 @@ void addRowToOtherDialogs()
   rowdata->cont_default_range = gtk_check_button_new();
   gtk_widget_show(rowdata->cont_default_range);
   
-  rowdata->cog_adj = gtk_adjustment_new(surfmax-surfmin, 0, surfmax-surfmin,1,5,5);
+  rowdata->cog_adj = gtk_adjustment_new(3*(surfmax-surfmin), 0, 100*(surfmax-surfmin),1,5,5);
   rowdata->cont_occlusion_gradient = gtk_spin_button_new((GtkAdjustment*)rowdata->cog_adj,1,2);
   gtk_widget_show(rowdata->cont_occlusion_gradient);
 

@@ -381,6 +381,7 @@ void cont_get_minmax(FilesDialogRowData* rowdata, float& min, float& max)
       rowdata->mesh->data->user_scaling = false;
       rowdata->mesh->data->get_minmax(min, max);
       rowdata->mesh->data->user_scaling = tempval;
+      gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_occlusion_gradient), max-min);
       gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_high_range), max);
       gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_low_range), min);
       //contourdialog->field_lock = false;
