@@ -7,10 +7,10 @@ OS=$(shell uname -s)
 # set these to your system's values
 ZLIB_INC=/usr/local/include
 ZLIB_LIB=/usr/local/lib
-GTK_INC=/usr/freeware/include
-GTK_LIB=/usr/freeware/lib
-GTKGL_INC=/usr/local/gtkgl/include
-GTKGL_LIB=/usr/local/gtlgl/lib
+GTK_INC=/usr/local/map3d/include
+GTK_LIB=/usr/local/map3d/lib
+GTKGL_INC=/usr/local/map3d/include
+GTKGL_LIB=/usr/local/map3d/lib
 
 # same, but for other components (like jpeg, png), should be in same dir
 LOCAL_INC=/usr/local/include
@@ -37,7 +37,8 @@ ifeq ("$(OS)","Darwin")
   CXX=g++
   CC=gcc
   SYSEXT=-osx
-  ARCH_FLAGS=-MMD -DOSX
+  ARCH_FLAGS=-DOSX -arch i386 -arch ppc
+  LFLAGS=-arch i386 -arch ppc
 else
 ifeq ("$(OS)","IRIX64")
   CXX=CC
