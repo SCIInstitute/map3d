@@ -261,6 +261,9 @@ The following general parameters affect the entire display:
   \item[{\tt -bgi x1 y1 z1 x2 y2 z2}] = Coordinates in world space to display
         the image specified with -bgp.  If unspecified, the image will fill the
         geometry window.
+  \item[{\tt -ss}] = Sets the scale to be the same between all windows.  Typically
+        \map{} will position each window such that its geometries fill up the window, 
+        but this will enforce that all positioning is done the same.
 %  \item [{\tt -rl report\_level}] = set the report level for this execution
 %        of \map{}.  The legal values are 0 (no reporting) to 4 (full
 %        debug-level reporting).  
@@ -707,7 +710,9 @@ line, or all surfaces if placed before.
   have the same meanings as [{-nma}], except the affect only the nodes that are
   represented in the active leadlinks file, except that a mark of 3 will display the lead label
   instead of the data value.
-  
+  \item[{-Sll value}] Sets the size of the leadlinks points, from 0-9.
+  \item[{-Cll r g b}] Sets the color of the leadlinks points, with RGB numbers from 0-255
+  \item[{-rf num}] Whether or not to draw fiducials, 1 meaning yes, 0 meaning no.  
   
   
 \end{description}

@@ -97,6 +97,21 @@ displaying the elements of the mesh.  Additional controls to note are depth
 cueing, which can reveal the depth relationships between elements of the
 mesh. 
 
+\map{} will render the mesh as best as it can to match the surface data
+settings.  I.e., if the surface data is set to render flat, the mesh will
+render flat, and if the surface data is set to render gouraud or band shaded, 
+then the mesh will render shaded.
+
+\map{} will render the mesh and surface data best if all the triangles are
+front-facing.  If some of the triangles are not front-facing, they will look
+out of place when gouraud shading is on.  However, this is not enough to 
+determine which triangle is back-facing.  Since \map{} renders both front-
+and back-facing triangles, the only distinguishing factor is the normal
+vector when being drawn in gouraud shading.  If all the triangles are back-facing,
+none of them will look out of place.  If you're trying to get all triangles to face
+the same direction, then it's best to render the mesh as Elements and 
+Connectivities, as back-facing triangles will explicitly be drawn as connectivities.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Surface Data Display} 
