@@ -23,8 +23,10 @@ EXENAME  = map3d${SYSEXT}
 GTK_LIBS = -lgtk-x11-2.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0 -lgdkglext-x11-1.0 \
            -lgtkglext-x11-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0
 
-LIBS     = $(GTK_LIBS) \
-           -lGLU -lGL -lXi -lXext -lXmu -lX11 \
+GL_LIBS = -dylib_file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib /usr/X11R6/lib/libGL.dylib
+
+LIBS     = $(GTK_LIBS) $(GL_LIBS) \
+           -lGLU  -lXi -lXext -lXmu -lX11 \
 	   -lgfile${SYSEXT} -lfids${SYSEXT} -lfi${SYSEXT} -ltsdf${SYSEXT} \
            -lcutil${SYSEXT} -lgdbmp${SYSEXT} -lgraphicsio${SYSEXT} \
 	   -lnumseq${SYSEXT} \
