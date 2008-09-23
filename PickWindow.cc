@@ -782,16 +782,16 @@ void PickWindowDrawNode(GtkWidget *, GdkEvent *, gpointer arg)
     
     if (data) {
       // print real frame num if start is not beginning
+      int real_frame = data->framenum * data->ts_sample_step + data->ts_start;
+      int zero_frame = data->zerotimeframe * data->ts_sample_step + data->ts_start;
       if (data->ts_start != 0 || data->ts_sample_step != 1)
         renderString3f(pos[0], pos[1], pos[2], priv->mesh->gpriv->med_font, 
-                       "Frame: %d (%d)   Time: %dms", data->framenum + 1,
-                       data->framenum * data->ts_sample_step + 
-                       data->ts_start + 1,
-                       (data->framenum - data->zerotimeframe));
+                       "Frame: %d (%d)   Time: %d%s", data->framenum + 1, real_frame + 1,
+                       (real_frame-zero_frame) * map3d_info.frames_per_time_unit, map3d_info.time_unit);
       else
         renderString3f(pos[0], pos[1], pos[2], priv->mesh->gpriv->med_font, 
-                       "Frame: %d   Time: %dms", data->framenum + 1,
-                       (data->framenum - data->zerotimeframe));
+                       "Frame: %d   Time: %d%s", data->framenum + 1,
+                       (real_frame-zero_frame) * map3d_info.frames_per_time_unit, map3d_info.time_unit);
     }
     else {
       renderString3f(pos[0], pos[1], pos[2], priv->mesh->gpriv->med_font, "Frame: ---");

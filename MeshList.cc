@@ -67,6 +67,7 @@ Mesh_Info::Mesh_Info()
   mark_all_size = 2;
   mark_extrema_size = 3;
   mark_lead_size = 3;
+  mark_ts_size = 4;
   mark_all_sphere = 0;
   mark_all_sphere_value = 0;
   mark_all_number = 0;

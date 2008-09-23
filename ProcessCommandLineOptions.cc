@@ -132,6 +132,10 @@ int ProcessCommandLineOptions(Global_Input & g)
   map3d_info.lockframes = g.lockframes;
   map3d_info.pickmode = g.pickmode;
   map3d_info.user_fstep = g.framestep;
+  if (g.time_unit && (strcmp(g.time_unit, "s") == 0 || strcmp(g.time_unit, "ms") == 0 || 
+      strcmp(g.time_unit, "us")  == 0 || strcmp(g.time_unit, "ns") == 0))
+    map3d_info.time_unit = g.time_unit; // defaults to ms
+  map3d_info.frames_per_time_unit = g.frames_per_time_unit;
   map3d_info.same_scale = g.same_scale;
   fstep = g.framestep;
 

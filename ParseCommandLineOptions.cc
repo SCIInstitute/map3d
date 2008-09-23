@@ -96,6 +96,10 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       OPTION_1("-rl", globalInput.report_level)
       /* -sc range function map - sets the initial scaling configuration to be range, function, and map */
       OPTION_3("-sc", globalInput.scale_scope, globalInput.scale_model, globalInput.scale_mapping)
+      /* -sr (sample rate) sets the amount of real time between frames, in terms of the time unit (below)*/
+      OPTION_1("-sr", globalInput.frames_per_time_unit)
+      /* -tu sets the time unit to display in the time series window */
+      OPTION_1("-tu", globalInput.time_unit)
       /* -v print the map3d version info */
       OPTION_CODE("-v", 0, printf("Map3D version " VERSION "\n");)
       /* -ss sets the 'scale' (l2norm) of all windows to the same as the first window, and won't change */

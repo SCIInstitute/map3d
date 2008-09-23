@@ -48,6 +48,8 @@ void Init_Global_Input(Global_Input * s)
   s->pickmode = NEW_WINDOW_PICK_MODE;
   s->framestep = 1;
   s->report_level = 1;
+  s->time_unit = 0;
+  s->frames_per_time_unit = 1;
   s->same_scale = 0;
 }
 
@@ -303,6 +305,9 @@ Map3d_Info::Map3d_Info()
   global_potmin = 0;
   user_fstep = 1;
   
+  time_unit = "ms";
+  frames_per_time_unit = 1;
+
   same_scale = 0;
   contour_antialiasing = true;
 }

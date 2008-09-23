@@ -140,7 +140,10 @@ struct Global_Input
   int lockrotate; /*** Whether Transformation lock is enabled ***/
   int lockframes; /*** Whether Frames lock is enabled ***/
   int pickmode; /*** Pick Mode ***/
-  int framestep;
+  int framestep;  // how many frames to advance when advancing time
+
+  int frames_per_time_unit; // num of (s, ms, us, ns) per frame
+  char* time_unit;  // s, ms, us, ns
   bool same_scale;
 };
 typedef Global_Input *Global_Input_p;
@@ -221,6 +224,12 @@ public:
   char imagefile[257]; /*** Output file for images (map3d will automatically append 0000,0001, etc.) ***/
   int imagesuffix; /*** suffix num for image file - 0, 1, etc, ***/
   bool saving_animations;
+
+  // for time display in the time series window
+  int frames_per_time_unit; // num of (s, ms, us, ns) per frame
+  char* time_unit;  // s, ms, us, ns
+
+
   bool same_scale;
   
   bool contour_antialiasing;
