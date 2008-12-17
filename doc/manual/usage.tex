@@ -256,23 +256,27 @@ The following general parameters affect the entire display:
 %        first {\tt -f filename} in the command line, or separately for each
 %        surface. 
 
-  \item[{\tt -bgi image\_filename}] = An image file (in jpg or png) to
+      \item[{\tt -bgi image\_filename}] = An image file (in jpg or png) to
         display in the background.  Used in conjunction with -bgp.
-  \item[{\tt -bgi x1 y1 z1 x2 y2 z2}] = Coordinates in world space to display
+      \item[{\tt -bgi x1 y1 z1 x2 y2 z2}] = Coordinates in world space to display
         the image specified with -bgp.  If unspecified, the image will fill the
         geometry window.
-  \item[{\tt -ss}] = Sets the scale to be the same between all windows.  Typically
-        \map{} will position each window such that its geometries fill up the window, 
-        but this will enforce that all positioning is done the same.
-  \item[{\tt -sr}] = Sets the amount of time (sample rate) between frames, for display purposes in
-        the time series window.  This is on a time-unit basis; e.g., if the time unit
-        is ns, and the sample rate is 3, the time series window will show that 3 ns passes
-        with every frame advance.  Works in conjunction with the \emph{-tu} option.
-  \item[(\tt -tu}] = Sets the time unit to display in the time series window.  Works in
-        conjunction with the \emph(-sr} option.
-  \item[{\tt -ss}] = Sets the scale to be the same between all windows.  Typically
-        \map{} will position each window such that its geometries fill up the window, 
-        but this will enforce that all positioning is done the same.
+      \item[{\tt -ss}] = Sets the scale to be the same between all windows.
+        Typically \map{} will position each window such that its geometries
+        fill up the window, but this will enforce that all positioning is
+        done the same.
+      \item[{\tt -sr}] = Sets the amount of time (sample rate) between
+        frames, for display purposes in the time series window.  This is on
+        a time-unit basis; e.g., if the time unit is ns, and the sample
+        rate is 3, the time series window will show that 3 ns passes with
+        every frame advance.  Works in conjunction with the \emph{-tu}
+        option.
+      \item[{\tt -tu}] = Sets the time unit to display in the time series
+        window.  Works in conjunction with the \emph{-sr} option.
+      \item[{\tt -ss}] = Sets the scale to be the same between all windows.
+        Typically \map{} will position each window such that its geometries
+        fill up the window, but this will enforce that all positioning is
+        done the same.
 %  \item [{\tt -rl report\_level}] = set the report level for this execution
 %        of \map{}.  The legal values are 0 (no reporting) to 4 (full
 %        debug-level reporting).  

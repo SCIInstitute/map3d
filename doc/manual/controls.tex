@@ -611,37 +611,38 @@ OpenGL convention.  Below is a series of tables of the menu layout for
       unless otherwise specified.}
   \begin{center}
     \begin{tabular}{|l|p{4 in}|} \hline
-      \multicolumn{2}{|c|}{\textbf{Picking Menus I}} \\ \hline
-      Time Signal (new window mode) & create a new time signal window with
-      each pick of a node \\
-      Time Signal (refresh window mode) & update the last time signal 
-      window with each pick of a node \\
-      Display node info mode & Picking will cause certain node information
-      to be dumped to the console. \\
-      Display triangle info mode & Picking will cause information about
-      the triangle you click in to be dumped to the console.
-      It may be easier to pick triangles with clipping planes on. \\
-      Triangle construction/deletion & Normal picking (ctrl-clicking on nodes)
-      will select points to form a triangle (triangulate).  Clicking the first 
-      two nodes in this fashion will display the selected nodes, and then a 
-      line between the two.  When the third is clicked, a new triangle is 
-      displayed and added to the geometry. \\
-      & CTRL-middle clicking selects a triangle (and not nodes) to be deleted.
-      Again, it may be easier to pick triangles with clipping planes on. \\
-      Flip triangle mode & Will change the order of drawing the triangle's
-      points.  This will cause front-facing triangles to become back-facing
-      and vice-versa.  See Section~\ref{sec:display-mesh, mesh rendering options}
-      for information on how to tell which way a triangle is facing. \\
-      Edit node mode & Will allow you to pick a point and translate it
-      with the keyboard transform controls (see
-      Section~\ref{sec:control-keys}, keypad controls) \\
-      Edit landmark point mode & Will allow you to pick a landmark point
-      and translate it with the keyboard transform controls (see
-      Section~\ref{sec:control-keys}, keypad controls) \\
-      Delete node mode & Will remove from the geometry any node that you pick
-      and any triangles associated with it. \\
-      \hline
-  \end{tabular}
+        \multicolumn{2}{|c|}{\textbf{Picking Menus I}} \\ \hline
+        Time Signal (new window mode) & create a new time signal window with
+        each pick of a node \\
+        Time Signal (refresh window mode) & update the last time signal 
+        window with each pick of a node \\
+        Display node info mode & Picking will cause certain node information
+        to be dumped to the console. \\
+        Display triangle info mode & Picking will cause information about
+        the triangle you click in to be dumped to the console.
+        It may be easier to pick triangles with clipping planes on. \\
+        Triangle construction/deletion & Normal picking (ctrl-clicking on nodes)
+        will select points to form a triangle (triangulate).  Clicking the first 
+        two nodes in this fashion will display the selected nodes, and then a 
+        line between the two.  When the third is clicked, a new triangle is 
+        displayed and added to the geometry. \\
+        & CTRL-middle clicking selects a triangle (and not nodes) to be deleted.
+        Again, it may be easier to pick triangles with clipping planes on. \\
+        Flip triangle mode & Will change the order of drawing the triangle's
+        points.  This will cause front-facing triangles to become back-facing
+        and vice-versa.  See Section~\ref{sec:display-mesh}, mesh rendering
+        options 
+        for information on how to tell which way a triangle is facing. \\
+        Edit node mode & Will allow you to pick a point and translate it
+        with the keyboard transform controls (see
+        Section~\ref{sec:control-keys}, keypad controls) \\
+        Edit landmark point mode & Will allow you to pick a landmark point
+        and translate it with the keyboard transform controls (see
+        Section~\ref{sec:control-keys}, keypad controls) \\
+        Delete node mode & Will remove from the geometry any node that you pick
+        and any triangles associated with it. \\
+        \hline
+    \end{tabular}
 \end{center}
 \end{table}
 
