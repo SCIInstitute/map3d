@@ -3,7 +3,7 @@
  ***/
 #include "graphicsio.h"
 #ifndef _WIN32
-#ifdef LINUX
+#ifdef __linux__
 #include <endian.h>
 #elif defined(OSX)
 #include <machine/endian.h>
