@@ -14,17 +14,17 @@ INCLUDEPATH += ../thirdparty/MatlabIO
 INCLUDEPATH += ../thirdparty/tsdflib
 INCLUDEPATH += $$QMAKE_INCDIR_QT/../src/3rdparty/zlib
 
-CONFIG += console
+CONFIG += console link_prl
 
 include (../options.pri)
 
+LIBS += -lMatlabIO -lcutil
+LIBS += -lfids -lfi -ltsdflib -lgraphicsio -lgfilelib -lgdbmp
 win32 {
     LIB_DIR=/release
     debug {
         LIB_DIR=/debug
         }
-    LIBS += -lfids -lfi -ltsdflib -lgraphicsio -lgfilelib -lcutil -lgdbmp -lMatlabIO
-} else { 	 
 }
 
 LIBPATH += ../thirdparty/cutil$$LIB_DIR
