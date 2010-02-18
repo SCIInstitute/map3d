@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-CONFIG += staticlib
+CONFIG += staticlib create_prl
 
 include (../../options.pri)
 
@@ -11,4 +11,3 @@ INCLUDEPATH += ../cutil
 SOURCES += dfilefids.c \
            fidfilesubs.c \
            fidsubs.c
-           

@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-CONFIG += staticlib
+CONFIG += staticlib create_prl
 
 include (../../options.pri)
 

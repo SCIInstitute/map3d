@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-CONFIG += staticlib
+CONFIG += staticlib create_prl
 
 include (../../options.pri)
 
@@ -15,5 +15,3 @@ SOURCES += container.cc \
            gdbmkeys.cc \
            giofidset.cc \
            myfile.c 
-           
-           

@@ -2,6 +2,7 @@ TEMPLATE = lib
 
 CONFIG += staticlib
 CONFIG += no_cpp
+CONFIG += create_prl
 
 include (../../options.pri)
 
