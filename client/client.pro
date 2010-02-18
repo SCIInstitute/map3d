@@ -18,8 +18,8 @@ CONFIG += console link_prl
 
 include (../options.pri)
 
-LIBS += -lMatlabIO -lcutil
-LIBS += -lfids -lfi -ltsdflib -lgraphicsio -lgfilelib -lgdbmp
+LIBS += -lMatlabIO
+LIBS += -lfids -lfi -ltsdflib -lgfilelib -lgraphicsio -lgdbmp -lcutil
 win32 {
     LIB_DIR=/release
     debug {
