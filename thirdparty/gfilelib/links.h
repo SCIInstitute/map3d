@@ -1,6 +1,10 @@
 #ifndef __LINK_STRUCTS__
 #define __LINK_STRUCTS__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct Lead_Link	/*** Link infomation for a node ***/
 {
     long leadnum; /*** Number of the lead to which this applies ***/
@@ -25,5 +29,9 @@ typedef struct Surf_Link
 Lead_Link *ReadChannelLinksFile( char *infilename, Surf_Geom *onesurfgeom,
                                  long *numclinks);
 Lead_Link *ReadGeomLinksFile( char *infilename, long *numglinks );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

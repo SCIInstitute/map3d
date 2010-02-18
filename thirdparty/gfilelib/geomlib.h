@@ -18,6 +18,10 @@
 #define GFILESHARE
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum geomfiletype{ Gfile_geom=1, Gfile_ptsfac=2};
 
 typedef struct /*** Geometry for a single surface. ***/
@@ -72,7 +76,8 @@ GFILESHARE long WritePtsFile( Surf_Geom *surfgeom );
 GFILESHARE long WriteSurfGeomFile( Surf_Geom *onesurfgeom, FileInfoPtr luout, 
 		       long outsurfnum, long reportlevel );
 
+#ifdef __cplusplus
+}
 #endif
 
-
-
+#endif

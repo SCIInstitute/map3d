@@ -12,6 +12,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
 	FILE	*fptr;
 	int	byteswap; } MFILE;
@@ -76,5 +80,8 @@ int	mfseek(MFILE *mptr,long offset,int origin);
 void   *mfmemread(void *buffer,size_t size,size_t count,void *datablock, int type);
 void   *mfmemwrite(void *buffer,size_t size,size_t count,void *datablock, int type);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

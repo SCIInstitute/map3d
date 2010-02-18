@@ -8,6 +8,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define LM_COR      1 /*** Landmark code for coronary arteries ***/
 #define LM_OCCLUS   2 /*** Landmark code for temporary occlusions***/
 #define LM_STITCH   3 /*** Landmark code for permanent occlusions***/
@@ -61,5 +65,9 @@ long WriteLandMarks( Land_Mark *landmarks, const long numlmarks,
 		     char *outfilename, long reportlevel );
 long WriteOneLandMark( FILE *luout_p, Land_Mark *onelandmark, 
 			long reportlevel );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

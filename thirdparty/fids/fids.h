@@ -20,6 +20,10 @@
 #define FIDSSHARE
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /*****************************************************************/
 /*                        Fiducials Constants                    */
@@ -95,5 +99,9 @@ FIDSSHARE long WriteOneFidsAsTimeSeries( FileInfoPtr lu_out,
 FIDSSHARE long WriteOneFidTimeseries( FileInfoPtr lu_out, long index, 
 			    long numleads, long numframes, 
 			    char *labelstring, float *databuff );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
