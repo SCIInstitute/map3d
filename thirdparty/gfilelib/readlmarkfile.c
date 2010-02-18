@@ -167,9 +167,12 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
         else
           segnumval = -1;
 
-        for (int c = 0; c < 3; c++) {
-          onelandmark->segs[segnum].color[c] = 
-	      (short) optional[c + (optionalIndex != 3?1:0)];
+        {
+          int c;
+          for (c = 0; c < 3; c++) {
+            onelandmark->segs[segnum].color[c] =
+          (short) optional[c + (optionalIndex != 3?1:0)];
+          }
         }
 	
  /*
