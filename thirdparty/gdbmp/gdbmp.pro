@@ -3,6 +3,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 CONFIG += no_cpp
 CONFIG += create_prl
+CONFIG -= qt
 
 include (../../options.pri)
 
