@@ -53,6 +53,7 @@
  *
  */
  
+#include <cstring>
 #include "matfile.h"
 #include "matfiledata.h"
 

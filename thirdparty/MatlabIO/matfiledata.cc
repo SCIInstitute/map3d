@@ -52,7 +52,7 @@
  *
  */
  
- 
+#include <cstring>
 #include "matfiledata.h"
  
 namespace MatlabIO {
