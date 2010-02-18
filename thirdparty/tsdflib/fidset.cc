@@ -27,6 +27,7 @@
  */
 
 
+#include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
 #include "gdbm.h"
