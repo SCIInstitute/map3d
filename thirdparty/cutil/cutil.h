@@ -9,6 +9,11 @@
  ***/
 
 #include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef FALSE
   #define FALSE 0
 #endif
@@ -57,9 +62,7 @@ enum ErrorNums { ERR_FILE=-99, ERR_MISC, ERR_ENTRY, ERR_MEM, ERR_VALID };
 #ifndef LENGTH3
 #define LENGTH3(vec1) sqrt( vec1[0] * vec1[0] + vec1[1] * vec1[1] + vec1[2] * vec1[2] )
 #endif
-/***
-#ifdef __cplusplus
-***/
+
 static const double PI=3.14159265;
 static inline long MinLong( long a, long b ) 
 { return( ( a  <  b ) ? ( a ) : ( b ) ); }
@@ -70,9 +73,7 @@ static inline float MinFloat( float a, float b )
 static inline float MaxFloat( float a, float b ) 
 { return( ( a  <  b ) ? ( b ) : ( a ) ); }
 static inline float DegtoRadF( float deg ){ return( ((float)PI)/180.f * deg ); }
-/***
-#endif
-***/
+
 /***************** Some universal data structures *****************/
 typedef struct Point3D {
     float point[3];
@@ -125,5 +126,8 @@ void   StripExtension (char *filename );
 int    Trulen (const char *string);
 char   *Uppercase( char *string );
 
+#ifdef __cplusplus
+}
 #endif
 
+#endif
