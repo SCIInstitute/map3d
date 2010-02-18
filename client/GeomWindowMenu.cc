@@ -833,7 +833,14 @@ void GeomWindow::HandleMenu(int menu_data)
       case frame_dialog:
       {
         bool ok;
-        int val = QInputDialog::getInt(NULL, "Set Frame Step", "Enter New Frame Step", 1, 1, 100, 5, &ok);
+        // They renamed this method in Qt 4.5.
+#if defined(QT_VERSION) && QT_VERSION < 0x040500
+# define QtGetInt QInputDialog::getInteger
+#else
+# define QtGetInt QInputDialog::getInt
+#endif
+        int val = QtGetInt(NULL, "Set Frame Step", "Enter New Frame Step", 1,
+                           1, 100, 5, &ok);
         if (ok)
           fstep = val;
         break;
