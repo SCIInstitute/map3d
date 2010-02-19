@@ -50,13 +50,6 @@ qti      QT interval
    Last update: Sun Apr 14 20:08:41 1996
      - created from original smap version -- now more general so we can share.
 ***/
-
-#ifdef OSX
-#include <malloc/malloc.h>
-#else
-#include <malloc.h>
-#endif
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

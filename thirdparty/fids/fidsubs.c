@@ -13,12 +13,6 @@
      - created
  ***/
 
-#ifdef OSX
-#include <malloc/malloc.h>
-#else
-#include <malloc.h>
-#endif
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -11,11 +11,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#ifdef OSX
-#include <sys/malloc.h>
-#else
-#include <malloc.h>
-#endif
 #include "cutil.h"
 
 /*--------------------------------------------------------------------*/

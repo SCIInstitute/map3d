@@ -20,11 +20,6 @@ extern "C" {
 #else
 #include <unistd.h>
 #endif
-#ifdef OSX
-#include <sys/malloc.h>
-#else
-#include <malloc.h> 
-#endif
 
 #include <stdlib.h>
 #include <sys/types.h>
