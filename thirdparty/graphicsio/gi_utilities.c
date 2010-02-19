@@ -5,7 +5,7 @@
 #ifndef _WIN32
 #ifdef __linux__
 #include <endian.h>
-#elif defined(OSX)
+#elif defined(__APPLE__)
 #include <machine/endian.h>
 #elif defined(SOLARIS)
 #include <machine/endian.h>

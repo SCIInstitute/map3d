@@ -8,7 +8,7 @@
 #endif
 
 #include <math.h>
-#ifdef OSX
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else
