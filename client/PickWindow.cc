@@ -5,7 +5,7 @@
 #pragma warning(disable:4505)
 #undef TRACE
 #endif
-#ifdef OSX
+#ifdef __APPLE__
 #include <OpenGL/glu.h>
 #else
 #include <GL/glu.h>

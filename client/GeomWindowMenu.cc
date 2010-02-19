@@ -28,13 +28,10 @@
 
 #include <QMenu>
 #include <QInputDialog>
-#ifdef OSX
-#  include <stdlib.h>
-#else
-#  include <malloc.h>
-#endif
+#include <stdlib.h>
+
 #include <math.h>
-#ifdef OSX
+#ifdef __APPLE__
 #  include <OpenGL/glu.h>
 #else
 #  include <GL/glu.h>

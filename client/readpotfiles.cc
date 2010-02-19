@@ -15,11 +15,7 @@ Author: Rob MacLeod
 #include <stdlib.h>
 #include <string.h>
 #include <stdlib.h>
-#ifdef OSX
-#include <stdlib.h>
-#else
-#include <malloc.h>
-#endif
+
 #include "readpotfiles.h"
 #include "map3d.h"
 #include "Surf_Data.h"

@@ -4,7 +4,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#ifdef OSX
+#ifdef __APPLE__
 #include <OpenGL/glu.h>
 #include <OpenGl/gl.h>
 #else

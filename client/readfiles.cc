@@ -5,11 +5,7 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
-#ifdef OSX
-#include <stdlib.h>
-#else
-#include <malloc.h>
-#endif
+
 #include "landmarks.h"
 #include "readfiles.h"
 #include "Surf_Data.h"
