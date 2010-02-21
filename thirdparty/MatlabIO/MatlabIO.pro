@@ -1,7 +1,10 @@
 TEMPLATE = lib
 
 CONFIG += staticlib create_prl
-CONFIG -= qt
+
+!win32 {
+  CONFIG -= qt
+}
 
 include (../../options.pri)
 
