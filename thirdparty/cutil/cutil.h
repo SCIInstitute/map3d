@@ -12,6 +12,11 @@
 
 #ifdef __cplusplus
 extern "C" {
+#else
+#  ifdef _WIN32
+//  windows C doesn't have 'inline'
+#    define inline __inline
+#  endif
 #endif
 
 #ifndef FALSE

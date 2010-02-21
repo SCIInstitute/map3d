@@ -181,7 +181,7 @@ long createfile_(char *fileName, long fileType, long errorLevel,
     FileInfoBlock	thisFileInfoBlock;
     long		bytesWritten;
     long    	    	fibStart;
-
+    int flags;
 
     /* Allocate a FileInfo structure for this file */
     
@@ -196,9 +196,9 @@ long createfile_(char *fileName, long fileType, long errorLevel,
     
     /* Create and Open the file */
 #ifdef _WIN32
-    int flags = O_CREAT | O_RDWR | O_EXCL | O_BINARY;
+    flags = O_CREAT | O_RDWR | O_EXCL | O_BINARY;
 #else
-    int flags = O_CREAT | O_RDWR | O_EXCL;
+    flags = O_CREAT | O_RDWR | O_EXCL;
 #endif
 
 #ifdef VAXVERSION
