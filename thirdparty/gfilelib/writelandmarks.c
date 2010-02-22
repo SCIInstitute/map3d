@@ -97,9 +97,9 @@ long WriteOneLandMark( FILE *luout_p, Land_Mark *onelandmark,
 	    for (i=0; i<onelandmark->segs[segnum].numpts; i++)
 	    {
 		error = fprintf( luout_p, " %8.2f %8.2f %8.2f %6.2f %s\n",
-				 onelandmark->segs[segnum].pts[i][X],
-				 onelandmark->segs[segnum].pts[i][Y],
-				 onelandmark->segs[segnum].pts[i][Z],
+				 onelandmark->segs[segnum].pts[i][CUTIL_X],
+				 onelandmark->segs[segnum].pts[i][CUTIL_Y],
+				 onelandmark->segs[segnum].pts[i][CUTIL_Z],
 				 onelandmark->segs[segnum].rad[i],
                                  onelandmark->segs[segnum].labels[i]);
 		if ( error < 0 ) 

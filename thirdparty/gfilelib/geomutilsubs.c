@@ -30,9 +30,9 @@ float *CrossProd( float *vec1, float *vec2 )
     //    float xprod[3];
 /**********************************************************************/
 
-    xprod[X] = vec1[Y] * vec2[Z] - vec1[Z] * vec2[Y];
-    xprod[Y] = vec1[Z] * vec2[X] - vec1[X] * vec2[Z];
-    xprod[Z] = vec1[X] * vec2[Y] - vec1[Y] * vec2[X];
+    xprod[CUTIL_X] = vec1[CUTIL_Y] * vec2[CUTIL_Z] - vec1[CUTIL_Z] * vec2[CUTIL_Y];
+    xprod[CUTIL_Y] = vec1[CUTIL_Z] * vec2[CUTIL_X] - vec1[CUTIL_X] * vec2[CUTIL_Z];
+    xprod[CUTIL_Z] = vec1[CUTIL_X] * vec2[CUTIL_Y] - vec1[CUTIL_Y] * vec2[CUTIL_X];
     return( xprod );
 }
 
@@ -45,7 +45,7 @@ float DotProd3( float *vec1, float *vec2 )
     float dprod;
 /**********************************************************************/
 
-    dprod = vec1[X] * vec2[X] + vec1[Y] * vec2[Y] + vec1[Z] * vec2[Z];
+    dprod = vec1[CUTIL_X] * vec2[CUTIL_X] + vec1[CUTIL_Y] * vec2[CUTIL_Y] + vec1[CUTIL_Z] * vec2[CUTIL_Z];
     return( dprod );
 }
 
@@ -75,12 +75,12 @@ float CalcTriNormal (float *pt1, float *pt2, float *pt3,
 	vec2[i] = pt1[i] - pt2[i];
     }
 
-    xprod[X] = vec1[Y] * vec2[Z] - vec1[Z] * vec2[Y];
-    xprod[Y] = vec1[Z] * vec2[X] - vec1[X] * vec2[Z];
-    xprod[Z] = vec1[X] * vec2[Y] - vec1[Y] * vec2[X];
+    xprod[CUTIL_X] = vec1[CUTIL_Y] * vec2[CUTIL_Z] - vec1[CUTIL_Z] * vec2[CUTIL_Y];
+    xprod[CUTIL_Y] = vec1[CUTIL_Z] * vec2[CUTIL_X] - vec1[CUTIL_X] * vec2[CUTIL_Z];
+    xprod[CUTIL_Z] = vec1[CUTIL_X] * vec2[CUTIL_Y] - vec1[CUTIL_Y] * vec2[CUTIL_X];
 
-    triarea = sqrt( xprod[X]*xprod[X] + xprod[Y]*xprod[Y] + 
-		    xprod[Z]*xprod[Z] );
+    triarea = sqrt( xprod[CUTIL_X]*xprod[CUTIL_X] + xprod[CUTIL_Y]*xprod[CUTIL_Y] + 
+		    xprod[CUTIL_Z]*xprod[CUTIL_Z] );
     if ( triarea < 1.E-10 )
     {
 	ReportError("CalcTriNormal", "area value is too small", 0, "");
@@ -90,12 +90,12 @@ float CalcTriNormal (float *pt1, float *pt2, float *pt3,
 	    printf("  %7.2f %7.2f %7.2f \n", pt1[i], pt2[i], pt3[i] );
 	}
 	printf(" And cross product is %7.2f %7.2f %7.2f\n",
-	       xprod[X], xprod[Y], xprod[Z] );
+	       xprod[CUTIL_X], xprod[CUTIL_Y], xprod[CUTIL_Z] );
 	return( 0.0 );
     }
-    normcosines[X] = (float) (xprod[X] / triarea);
-    normcosines[Y] = (float) (xprod[Y] / triarea);
-    normcosines[Z] = (float) (xprod[Z] / triarea);
+    normcosines[CUTIL_X] = (float) (xprod[CUTIL_X] / triarea);
+    normcosines[CUTIL_Y] = (float) (xprod[CUTIL_Y] / triarea);
+    normcosines[CUTIL_Z] = (float) (xprod[CUTIL_Z] / triarea);
     triarea /= 2.;
     return( (float) triarea);
 }

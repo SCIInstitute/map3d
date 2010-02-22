@@ -76,9 +76,9 @@ long ReadPtsFile( Surf_Geom *onesurfgeom, long reportlevel )
  /*** Read the points from the file. ***/
 
     for (count = 0; fscanf(luin_p, "%f%f%f",
-			   &nodes[count][X], 
-			   &nodes[count][Y],
-			   &nodes[count][Z]) != EOF; count++);
+			   &nodes[count][CUTIL_X], 
+			   &nodes[count][CUTIL_Y],
+			   &nodes[count][CUTIL_Z]) != EOF; count++);
 
 
  /*** Now set up just enough memory and transfer points. ***/

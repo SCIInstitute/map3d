@@ -225,9 +225,9 @@ long WriteSurfGeomFile( Surf_Geom *onesurfgeom, FileInfoPtr luout,
 	
     for (i=0; i < numpts; nodes_p++, i++)
     {
-	nodes_p->x = onesurfgeom->nodes[i][X] ;
-	nodes_p->y = onesurfgeom->nodes[i][Y] ;
-	nodes_p->z = onesurfgeom->nodes[i][Z] ;
+	nodes_p->x = onesurfgeom->nodes[i][CUTIL_X] ;
+	nodes_p->y = onesurfgeom->nodes[i][CUTIL_Y] ;
+	nodes_p->z = onesurfgeom->nodes[i][CUTIL_Z] ;
     }
     nodes_p = savenodes_p;
     error = setnodes_( luout, numpts, nodes_p );

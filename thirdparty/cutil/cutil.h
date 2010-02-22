@@ -26,14 +26,14 @@ extern "C" {
   #define TRUE ( !FALSE )
 #endif
 #define SUCCESS 0
-#ifndef X
-  #define X 0
+#ifndef CUTIL_X
+  #define CUTIL_X 0
 #endif
-#ifndef Y
-  #define Y 1
+#ifndef CUTIL_Y
+  #define CUTIL_Y 1
 #endif
-#ifndef Z
-  #define Z 2
+#ifndef CUTIL_Z
+  #define CUTIL_Z 2
 #endif
 #if !defined(__GL_GL_H__) && !defined(__GRAPHICSIO_H__) && !defined(Boolean)
 typedef unsigned char Boolean; 

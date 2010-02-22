@@ -3,11 +3,11 @@
 /*======================================================================*/
 double Dist3d( float node1[3], float node2[3] )
 {
-    return sqrt( ((double) node1[X] - (double) node2[X]) * 
-		 ((double) node1[X] - (double) node2[X]) + 
-		 ((double) node1[Y] - (double) node2[Y]) * 
-		 ((double) node1[Y] - (double) node2[Y]) + 
-		 ((double) node1[Z] - (double) node2[Z]) * 
-		 ((double) node1[Z] - (double) node2[Z]) );
+    return sqrt( ((double) node1[CUTIL_X] - (double) node2[CUTIL_X]) * 
+		 ((double) node1[CUTIL_X] - (double) node2[CUTIL_X]) + 
+		 ((double) node1[CUTIL_Y] - (double) node2[CUTIL_Y]) * 
+		 ((double) node1[CUTIL_Y] - (double) node2[CUTIL_Y]) + 
+		 ((double) node1[CUTIL_Z] - (double) node2[CUTIL_Z]) * 
+		 ((double) node1[CUTIL_Z] - (double) node2[CUTIL_Z]) );
 }
 

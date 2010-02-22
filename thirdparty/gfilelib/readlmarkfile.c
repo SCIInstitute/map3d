@@ -309,9 +309,9 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 		return( ERR_FILE );
 	    }
 	    if (sscanf( instring, "%f %f %f %f %39s", 
-		       &onelandmark->segs[segnum].pts[npts][X], 
-		       &onelandmark->segs[segnum].pts[npts][Y],
-		       &onelandmark->segs[segnum].pts[npts][Z], 
+		       &onelandmark->segs[segnum].pts[npts][CUTIL_X], 
+		       &onelandmark->segs[segnum].pts[npts][CUTIL_Y],
+		       &onelandmark->segs[segnum].pts[npts][CUTIL_Z], 
 		       &onelandmark->segs[segnum].rad[npts],
                        onelandmark->segs[segnum].labels[npts]) >= 4)
 	    {
@@ -320,8 +320,8 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 			    "proper format\n");
 	    }
 	    else if (sscanf( instring, "%f %f", 
-			    &onelandmark->segs[segnum].pts[npts][X],
-			    &onelandmark->segs[segnum].pts[npts][Y]) == 2)
+			    &onelandmark->segs[segnum].pts[npts][CUTIL_X],
+			    &onelandmark->segs[segnum].pts[npts][CUTIL_Y]) == 2)
 	    {
 		printf(" This is old format Coronary file\n"
 		       " Redo the file !!!\n");
@@ -355,9 +355,9 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 		return( ERR_FILE );
 	    }
 	    if (sscanf( instring, "%f %f %f %f %39s", 
-		       &onelandmark->segs[segnum].pts[npts][X], 
-		       &onelandmark->segs[segnum].pts[npts][Y],
-		       &onelandmark->segs[segnum].pts[npts][Z], 
+		       &onelandmark->segs[segnum].pts[npts][CUTIL_X], 
+		       &onelandmark->segs[segnum].pts[npts][CUTIL_Y],
+		       &onelandmark->segs[segnum].pts[npts][CUTIL_Z], 
 		       &onelandmark->segs[segnum].rad[npts],
                        onelandmark->segs[segnum].labels[npts])
 		< 4)
@@ -370,12 +370,12 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 		return (error);
 	    }
 	    if ( pntnum == j_start )
-		dist_threshold = ( onelandmark->segs[segnum].pts[npts][X] *
-				   onelandmark->segs[segnum].pts[npts][X] +
-				   onelandmark->segs[segnum].pts[npts][Y] *
-				   onelandmark->segs[segnum].pts[npts][Y] +
-				   onelandmark->segs[segnum].pts[npts][Z] *
-				   onelandmark->segs[segnum].pts[npts][Z] ) /
+		dist_threshold = ( onelandmark->segs[segnum].pts[npts][CUTIL_X] *
+				   onelandmark->segs[segnum].pts[npts][CUTIL_X] +
+				   onelandmark->segs[segnum].pts[npts][CUTIL_Y] *
+				   onelandmark->segs[segnum].pts[npts][CUTIL_Y] +
+				   onelandmark->segs[segnum].pts[npts][CUTIL_Z] *
+				   onelandmark->segs[segnum].pts[npts][CUTIL_Z] ) /
 		10.E8;
 	    npts++;
 	    
@@ -384,12 +384,12 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 	    for (pnum=firstpnum; pnum<npts-1; pnum++)
 	    {
 		if ( ( distance =
-		      VECMAG3((onelandmark->segs[segnum].pts[pnum][X] - 
-			       onelandmark->segs[segnum].pts[npts-1][X] ),
-			      (onelandmark->segs[segnum].pts[pnum][Y] - 
-			       onelandmark->segs[segnum].pts[npts-1][Y] ),
-			      (onelandmark->segs[segnum].pts[pnum][Z] - 
-			       onelandmark->segs[segnum].pts[npts-1][Z] ) ) )
+		      VECMAG3((onelandmark->segs[segnum].pts[pnum][CUTIL_X] - 
+			       onelandmark->segs[segnum].pts[npts-1][CUTIL_X] ),
+			      (onelandmark->segs[segnum].pts[pnum][CUTIL_Y] - 
+			       onelandmark->segs[segnum].pts[npts-1][CUTIL_Y] ),
+			      (onelandmark->segs[segnum].pts[pnum][CUTIL_Z] - 
+			       onelandmark->segs[segnum].pts[npts-1][CUTIL_Z] ) ) )
 		    < dist_threshold ) {
 		    fprintf(stderr,"+++ ReadLmarkfile in segment %d"
 			    ": You have doubled"
@@ -398,9 +398,9 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 			    " %f, %f, %f \n"
 			    " And distance between them is %f\n",
 			    segnum+1, pntnum+1, 
-			    onelandmark->segs[segnum].pts[npts-1][X],
-			    onelandmark->segs[segnum].pts[npts-1][Y],
-			    onelandmark->segs[segnum].pts[npts-1][Z],
+			    onelandmark->segs[segnum].pts[npts-1][CUTIL_X],
+			    onelandmark->segs[segnum].pts[npts-1][CUTIL_Y],
+			    onelandmark->segs[segnum].pts[npts-1][CUTIL_Z],
 			    distance);
 		    npts--;
 		    nnewcorpts--;
@@ -413,9 +413,9 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 		    fprintf(stderr," Line %d reads %s\n"
 			    " and returns %f %f %f and %f\n",
 			    npts, instring, 
-			    onelandmark->segs[segnum].pts[npts-1][X],
-			    onelandmark->segs[segnum].pts[npts-1][Y],
-			    onelandmark->segs[segnum].pts[npts-1][Z],
+			    onelandmark->segs[segnum].pts[npts-1][CUTIL_X],
+			    onelandmark->segs[segnum].pts[npts-1][CUTIL_Y],
+			    onelandmark->segs[segnum].pts[npts-1][CUTIL_Z],
 			    onelandmark->segs[segnum].rad[npts-1]);
 		}
 	    }
@@ -432,9 +432,9 @@ long ReadLandMarkFile (char filename[], Land_Mark *onelandmark,
 	    {
 		fprintf(stderr," %d %f %f %f %f \n",
 			i, 
-			onelandmark->segs[segnum].pts[i][X], 
-			onelandmark->segs[segnum].pts[i][Y],
-			onelandmark->segs[segnum].pts[i][Z], 
+			onelandmark->segs[segnum].pts[i][CUTIL_X], 
+			onelandmark->segs[segnum].pts[i][CUTIL_Y],
+			onelandmark->segs[segnum].pts[i][CUTIL_Z], 
 			onelandmark->segs[segnum].rad[i]);
 	    }
 	}

@@ -43,9 +43,9 @@ long WritePtsFile( Surf_Geom *surfgeom )
     
     for ( i=0; i < surfgeom->numpts; i++ ) {
 	fprintf( luout_p, "%8.2f %8.2f %8.2f \n", 
-		surfgeom->nodes[i][X],
-		surfgeom->nodes[i][Y],
-		surfgeom->nodes[i][Z]);
+		surfgeom->nodes[i][CUTIL_X],
+		surfgeom->nodes[i][CUTIL_Y],
+		surfgeom->nodes[i][CUTIL_Z]);
     }
     
     fclose( luout_p );

@@ -261,9 +261,9 @@ long ReadOneSurf( FileInfoPtr luin, char *geomfilename,
     for (nodenum = 0; nodenum < numnodes;
 	 tempnodes++, nodenum++)
     {
-	onesurfgeom->nodes[nodenum][X] = tempnodes->x;
-	onesurfgeom->nodes[nodenum][Y] = tempnodes->y;
-	onesurfgeom->nodes[nodenum][Z] = tempnodes->z;
+	onesurfgeom->nodes[nodenum][CUTIL_X] = tempnodes->x;
+	onesurfgeom->nodes[nodenum][CUTIL_Y] = tempnodes->y;
+	onesurfgeom->nodes[nodenum][CUTIL_Z] = tempnodes->z;
     }
     
     free(savenodes);    

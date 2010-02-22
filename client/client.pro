@@ -41,9 +41,13 @@ include (../options.pri)
 
 FORMS += forms/FileDialog.ui \
          forms/FileDialogWidget.ui \
-         forms/ImageControlDialog.ui \
+         forms/ImageControlDialog.ui
 
-# fies that need to be moc'ed
+macx {
+  ICON = ../map3dapp/map3d-icon.icns
+}
+
+# files that need to be moc'ed
 HEADERS += GeomWindow.h \
            FileDialog.h \
            ImageControlDialog.h \
