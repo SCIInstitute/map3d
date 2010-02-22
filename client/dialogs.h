@@ -74,8 +74,8 @@ struct SizePicker {
 // ColorPicker widget and accessor functions
 class ColorPicker;
 
-class ColorWidget : public QFrame
-{
+class ColorWidget : public QFrame {
+  Q_OBJECT
 public:
   ColorWidget(ColorPicker* parent, QColor color, bool clickable);
 
@@ -90,7 +90,7 @@ public:
 };
 
 class ColorPicker : public QDialog {
-  Q_OBJECT;
+  Q_OBJECT
 public:
 
   ColorPicker();
