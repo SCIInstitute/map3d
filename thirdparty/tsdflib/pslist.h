@@ -28,7 +28,7 @@ using std::string;
 
 class PSList {
 public:
-  
+  virtual ~PSList() {}
   virtual int Read(string tsdfcFileName, string tsdfName) = 0;
   virtual int NumSets() = 0; // returns number of parameter sets in the list
   virtual void SetArrayIndex(int i) = 0;
