@@ -1086,7 +1086,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
       int width, height;
       width = mesh->lw_xmax - mesh->lw_xmin;
       height = mesh->lw_ymax - mesh->lw_ymin;
-      lpriv = LegendWindow::LegendWindowCreate(width, height, mesh->lw_xmin, mesh->lw_ymin, !mesh->showlegend);
+      lpriv = LegendWindow::LegendWindowCreate(mesh, width, height, mesh->lw_xmin, mesh->lw_ymin, !mesh->showlegend);
 
       if (lpriv != NULL) {
         // can fail if more than MAX_SURFS l-wins.
