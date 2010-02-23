@@ -30,68 +30,6 @@ extern MainWindow *masterWindow;
 
 const char* surfPropName = "SurfaceNum";
 
-#if 0
-void addRMSData(FilesDialogRowData* data)
-{
-  char* datafilename = (char*) gtk_entry_get_text(GTK_ENTRY(data->dataname));
-  char* geomfilename = (char*) gtk_entry_get_text(GTK_ENTRY(data->geomname));
-  //char* chfilename = data->mesh->mysurf->chfilename;
-  int ds = getGtkComboIndex(data->datafile,(char*) gtk_entry_get_text(GTK_ENTRY(data->dataname)));  
-  
-  int numframes = GetNumFrames(datafilename, ds);
-  
-  // we need to load separate surfaces here so the user can browse different data while keeping
-  // the originals displayed.
-  if (strcmp(geomfilename, "") != 0 && strcmp(datafilename, "") != 0) {
-    // load geom and data so we can update the rms curve
-    Surf_Input* input = new Surf_Input;
-    Init_Surf_Input(input);
-    input->parent = map3d_info.gi;
-    input->geomfilename = new char[256];
-    input->potfilename = new char[256];
-
-    if (data->mesh->mysurf && data->mesh->mysurf->chfilename) {
-      input->chfilename = new char[256];
-      strcpy(input->chfilename,data->mesh->mysurf->chfilename);
-    }
-    else {
-      char* chfilename = (char*) gtk_entry_get_text(GTK_ENTRY(data->channelsfilename));
-      if (strcmp(chfilename,"") != 0) {
-        input->chfilename = new char[256];
-        strcpy(input->chfilename,chfilename);
-      }
-    }
-    input->geomsurfnum = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(data->geomseries)->entry)));
-    input->timeseries = ds;
-    input->displaysurfnum = atoi(gtk_entry_get_text(GTK_ENTRY(data->surfnum)));
-    strcpy(input->geomfilename,geomfilename);
-    strcpy(input->potfilename,datafilename);
-    input->ts_end = numframes-1;
-    input->ts_start = 0;
-    
-    Mesh_Info* mesh = new Mesh_Info;
-    Mesh_List currentMeshes;
-    currentMeshes.push_back(mesh);
-    
-    // turn off report level, since we'll just be duplicating what we've seen already
-    int reportlevel = map3d_info.reportlevel;
-    map3d_info.reportlevel = 0;
-    Mesh_List returnedMeshes = FindAndReadGeom(input,currentMeshes,LOAD_RMS_DATA);
-    map3d_info.reportlevel = reportlevel;
-    
-    if (returnedMeshes.size() > 0) {
-      if (data->rms_curve->mesh)
-        delete data->rms_curve->mesh;
-      data->rms_curve->mesh = mesh;
-    }
-    else {
-      delete mesh;
-    }
-    
-  }
-}
-#endif
-
 void FileDialogWidget::on_geomLineEdit_editingFinished ()
 {
   int num = GetNumGeoms(geomLineEdit->text().toAscii().data());
@@ -143,7 +81,7 @@ void FileDialogWidget::on_dataLineEdit_editingFinished ()
   startFrameSpinBox->setValue(1);
   endFrameSpinBox->setValue(numframes);
   
-  addRMSData(); 
+  updateRMS(); 
   reload_data = true;
 }
   
@@ -165,7 +103,7 @@ void FileDialogWidget::on_dataIndexComboBox_activated ( const QString & text )
     startFrameSpinBox->setValue(1);
     endFrameSpinBox->setValue(numframes);
     
-    addRMSData(); 
+    updateRMS(); 
     reload_data = true;
   }
 }
@@ -608,10 +546,11 @@ void FileDialog::addRow(Mesh_Info* mesh)
   widget->setProperty(surfPropName, surfnumber);
   _widgets.append(widget);
 
-  surfaceScrollAreaLayout->addWidget(widget);
+  // insert because we want the spacer at the end
+  surfaceScrollAreaLayout->insertWidget(surfaceScrollAreaLayout->count()-1, widget);
 
   widget->surfLabel->setText("Surface #" + QString::number(surfnumber+1));
-  widget->winComboBox->setCurrentIndex(window); // the combo box is one-based
+  widget->winComboBox->setCurrentIndex(window); // the combo box is 0-based
 
   if (!empty_mesh)
   {
@@ -633,7 +572,6 @@ void FileDialog::addRow(Mesh_Info* mesh)
       widget->startFrameSpinBox->setValue(mesh->mysurf->ts_start+1);
       widget->endFrameSpinBox->setValue(mesh->mysurf->ts_end+1);
       widget->frameStepSpinBox->setValue(mesh->mysurf->ts_sample_step);
-      // FIX rms
     }
 
     widget->leadlinksLineEdit->setText(mesh->mysurf->llfilename);
@@ -643,25 +581,91 @@ void FileDialog::addRow(Mesh_Info* mesh)
   }
   else
   {
-    foreach(QLineEdit *lineEdit, findChildren<QLineEdit*>())
+    foreach(QLineEdit *lineEdit, widget->findChildren<QLineEdit*>())
     {
       lineEdit->setText("");
     }
-    foreach(QSpinBox *spinBox, findChildren<QSpinBox*>())
+    foreach(QSpinBox *spinBox, widget->findChildren<QSpinBox*>())
     {
       spinBox->setValue(1);
     }
   }
-}
 
-void FileDialogWidget::addRMSData()
-{
-
+  widget->updateRMS();
 }
 
 void FileDialogWidget::updateRMS()
 {
+  char geom[256];
+  char data[256];
+  char ch[256];
 
+  strncpy(geom, geomLineEdit->text().toAscii().data(), 256);
+  
+  // gs should be 0 if the * was selected in a multisurf case, which is what we want 
+  int gs = geomIndexComboBox->currentIndex();
+  if (gs == geomIndexComboBox->count() - 1)
+    gs = -1;
+    
+  strncpy(data, dataLineEdit->text().toAscii().data(), 256);
+  int ds = 0;
+  
+  if (strcmp(GetExtension(data), ".tsdfc") == 0 || strcmp(GetExtension(data), ".mat") == 0) {
+    ds = dataIndexComboBox->currentIndex();
+    if (ds == -1)
+      ds = 0;
+  }
+  
+  strncpy(ch, channelsLineEdit->text().toAscii().data(), 256);
+    
+  int numframes = GetNumFrames(data, ds);
+  
+  // we need to load separate surfaces here so the user can browse different data while keeping
+  // the originals displayed.
+  if (strcmp(geom, "") != 0 && strcmp(data, "") != 0) {
+    // load geom and data so we can update the rms curve
+    Surf_Input* input = new Surf_Input;
+    Init_Surf_Input(input);
+    input->parent = map3d_info.gi;
+    input->geomfilename = new char[256];
+    input->potfilename = new char[256];
+    input->chfilename = new char[256];
+
+    input->geomsurfnum = gs;
+    input->timeseries = ds;
+    input->displaysurfnum = 1; // who cares
+    strcpy(input->geomfilename,geom);
+    strcpy(input->potfilename,data);
+    strcpy(input->chfilename,ch);
+    input->ts_end = numframes-1;
+    input->ts_start = 0;
+    
+    Mesh_Info* mesh = new Mesh_Info;
+    Mesh_List currentMeshes;
+    currentMeshes.push_back(mesh);
+    
+    // turn off report level, since we'll just be duplicating what we've seen already
+    int reportlevel = map3d_info.reportlevel;
+    map3d_info.reportlevel = 0;
+    Mesh_List returnedMeshes = FindAndReadGeom(input,currentMeshes,LOAD_RMS_DATA);
+    map3d_info.reportlevel = reportlevel;
+    
+    if (returnedMeshes.size() > 0) {
+      if (rmsWidget->mesh)
+        delete rmsWidget->mesh;
+      rmsWidget->mesh = mesh;
+    }
+    else {
+      delete mesh;
+    }
+    
+    rmsWidget->fileWidget = this;
+    rmsWidget->rms = true;
+    rmsWidget->show();
+    rmsWidget->update();
+
+
+  }
 }
 
 bool FileDialogWidget::updateFiles()
@@ -791,14 +795,15 @@ bool FileDialogWidget::updateFiles()
       GeomWindow* geompriv = GeomWindow::GeomWindowCreate(0,0,0,0);
     }
     GeomWindow* g = mesh->gpriv;
+    GeomWindow* newWindow = GetGeomWindow(win);
     for (unsigned i = 0; i < g->meshes.size(); i++) {
       // move all meshes with the same surf input to other window (multi-surf geom)
       Mesh_Info* tmp = g->meshes[i];
       if (tmp->mysurf == mesh->mysurf) {
         g->removeMesh(tmp);
-        map3d_info.geomwins[win]->addMesh(tmp);
-        map3d_info.geomwins[win]->show();
-        tmp->gpriv = map3d_info.geomwins[win];
+        newWindow->addMesh(tmp);
+        newWindow->show();
+        tmp->gpriv = newWindow;
         i--;
       }
     }
@@ -915,11 +920,15 @@ void FileDialog::on_applyButton_clicked()
 
   Broadcast(MAP3D_UPDATE,0);
   close();
+  deleteLater();
+  filedialog = 0;
 }
 
 void FileDialog::on_cancelButton_clicked()
 {
   close();
+  deleteLater();
+  filedialog = 0;
 }
 
 void FileDialog::on_newSurfaceButton_clicked()

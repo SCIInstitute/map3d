@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>577</width>
+    <width>596</width>
     <height>196</height>
    </rect>
   </property>
@@ -344,7 +344,7 @@ border: none;
              </widget>
             </item>
             <item>
-             <widget class="QWidget" name="rmsWidget" native="true"/>
+             <widget class="PickWindow" name="rmsWidget" native="true"/>
             </item>
            </layout>
           </widget>
@@ -481,6 +481,14 @@ border: none;
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PickWindow</class>
+   <extends>QWidget</extends>
+   <header>PickWindow.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

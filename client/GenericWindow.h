@@ -15,7 +15,9 @@
 
 class Map3dGLWidget : public QGLWidget {
 public:
-  Map3dGLWidget(QWidget* parent, int type, const char* title, int min_width, int min_height, bool rms=false);
+  Map3dGLWidget(QWidget* parent);  // this one should ONLY be called from the RMS Pick window in the File Dialog
+  Map3dGLWidget(QWidget* parent, int type, const char* title, int min_width, int min_height);
+
   void setPopLevel();
   void positionWindow(int _width, int _height, int _x, int _y, int def_width, int def_height, bool exactCoords = false);
 

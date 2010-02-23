@@ -92,8 +92,6 @@ GeomWindow::GeomWindow(QWidget* parent) : Map3dGLWidget(parent, GEOMWINDOW, "Geo
   showlocks = 1;
   l2norm = 0;
 
-  geomWinId = -1;  // set in AssociateWindow
-
   frameAdvanceTimer.setInterval(0);
   connect(&frameAdvanceTimer, SIGNAL(timeout()), this, SLOT(HandleFrameAdvances()));
 }

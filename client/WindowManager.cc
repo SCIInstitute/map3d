@@ -43,6 +43,8 @@ vector < GeomWindow * >GeomWindows;
 
 GeomWindow *GetGeomWindow(int index)
 {
+  if (index < 0 || index >= GeomWindows.size())
+    return NULL;
 	return GeomWindows[index];
 }
 
@@ -53,6 +55,8 @@ unsigned numGeomWindows()
 
 Map3dGLWidget *GetWindow(int index)
 {
+  if (index < 0 || index >= AllWindows.size())
+    return NULL;
 	return AllWindows[index];
 }
 

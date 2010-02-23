@@ -6,12 +6,13 @@
 #include "GenericWindow.h"
 
 struct PickInfo;
-struct FilesDialogRowData;
+class FileDialogWidget;
 class Mesh_Info;
 
 class PickWindow: public Map3dGLWidget
 {
 public:
+  PickWindow(QWidget* parent); // this one is implicit in its rms-ness (called by Qt with only one arg)
   PickWindow(QWidget* parent, bool rms);
   ~PickWindow();
   static PickWindow* PickWindowCreate(int _width, int _height, int _x, int _y);
@@ -50,7 +51,7 @@ public:
   float graph_width;
 
   // info for the rms window (inside the FilesDialog) only
-  FilesDialogRowData *dialogRowData;
+  FileDialogWidget* fileWidget;
   int window_line; // when we're dragging, we need to know if it's the line or right marker
 };
 

@@ -172,7 +172,6 @@ public slots:
   // return true if a mesh was loaded successfully
   bool updateFiles();
 
-  void addRMSData();
   void updateRMS();
 public:
   Mesh_Info* mesh;

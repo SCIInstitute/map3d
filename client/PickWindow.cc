@@ -63,25 +63,23 @@ static const int default_height = 144;
 enum pickmenu { axes_color, graph_color, full_screen, graph_width_menu};
 
 
-PickWindow::PickWindow(QWidget* parent, bool rms) : Map3dGLWidget(parent, (rms?RMSWINDOW:TIMEWINDOW),"Time Signal", 260, 120, rms), rms(rms)
+PickWindow::PickWindow(QWidget* parent) : Map3dGLWidget(parent)
 {
-  axiscolor[0] = .75;
-  axiscolor[1] = .75;
-  axiscolor[2] = .1f;
-  axiscolor[3] = 1;
-  
-  graphcolor[0] = .1f;
-  graphcolor[1] = .75f;
-  graphcolor[2] = .1f;
-  graphcolor[3] = 1.0f;
-  graph_width = 2;
-  
+  SetStyle(0);
+  mesh = 0;
+  pick = 0;
+}
+
+PickWindow::PickWindow(QWidget* parent, bool rms) : Map3dGLWidget(parent, (rms?RMSWINDOW:TIMEWINDOW),"Time Signal", 260, 120), rms(rms)
+{
   if (wintype == TIMEWINDOW) {
     SetStyle(1);
   }
   else {
     SetStyle(0);
   }
+  mesh = 0;
+  fileWidget = 0;
 }
 
 //static
@@ -106,6 +104,17 @@ PickWindow::~PickWindow()
 
 void PickWindow::initializeGL()
 {
+  axiscolor[0] = .75;
+  axiscolor[1] = .75;
+  axiscolor[2] = .1f;
+  axiscolor[3] = 1;
+  
+  graphcolor[0] = .1f;
+  graphcolor[1] = .75f;
+  graphcolor[2] = .1f;
+  graphcolor[3] = 1.0f;
+  graph_width = 2;
+  
   Map3dGLWidget::initializeGL();
   
   glMatrixMode(GL_MODELVIEW);
@@ -174,30 +183,19 @@ void PickWindow::paintGL()
   glClearColor(bgcolor[0], bgcolor[1], bgcolor[2], 1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  switch (pick->type) {
-    case 1:                      /* node */
-      if (pick->show)
-        DrawNode();
-      break;
-    case 2:                      /* segment */
-      break;
-    case 3:                      /* triangle */
-      break;
-    case 4:                      /* tetra */
-      break;
-    default:
-      break;
-  }
+  DrawNode();
 }
 
 void PickWindow::enterEvent(QEvent*)
 {
+  if (rms) return;
   mesh->curpicknode = pick->node;
   mesh->gpriv->update();
 }
 
 void PickWindow::leaveEvent(QEvent*)
 {
+  if (rms) return;
   mesh->curpicknode = -1;
   mesh->gpriv->update();
 }
@@ -311,7 +309,6 @@ void PickWindow::RMSButtonPress(QMouseEvent * event)
   if(!mesh)
     return;
   
-#if 0 // FIX
   //ComputeLockFrameData();
   float distance;
   int button = event->button();
@@ -330,27 +327,28 @@ void PickWindow::RMSButtonPress(QMouseEvent * event)
       
       // set window_line to 0 if the click is closer to the left line, 1 if closer to right
       int clicked_frame = (int) (distance+1);
-      int left_line = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart));
-      int right_line = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend));
-      window_line = (abs(clicked_frame-left_line) > abs(clicked_frame-right_line)) ? 1 : 0;
+
+      Q_ASSERT(fileWidget);
+      int start = fileWidget->startFrameSpinBox->value();
+      int end = fileWidget->endFrameSpinBox->value();
+      window_line = (abs(clicked_frame-start) > abs(clicked_frame-end)) ? 1 : 0;
       
       if(window_line == 0){
-        if(distance > gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend))){
-          gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->datastart), gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend)));
+        if(distance > end) {
+          fileWidget->startFrameSpinBox->setValue(end);
         }else{
-          gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->datastart), distance+1);
+          fileWidget->startFrameSpinBox->setValue(distance+1);
         }
       }
-      if(window_line == 1){
-        if(distance < gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart))){
-          gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->dataend), gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart)));
+      else if(window_line == 1){
+        if(distance < start){
+          fileWidget->endFrameSpinBox->setValue(start);
         }else{
-          gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->dataend), distance+1);
+          fileWidget->endFrameSpinBox->setValue(distance+1);
         }
       }
     }
   }
-#endif
 
   update();
 }
@@ -455,67 +453,70 @@ void PickWindow::RMSMotion(QMouseEvent* event)
   if(!mesh)
     return;
   
-#if 0 // FIX 
   float distance;
-  int x = (int)event->x;
-  int y = (int)(height - event->y);
-  event->y = PICK_INSIDE;
+  int x = (int)event->x();
+  int y = (int)(height() - event->y());
+
+
+  int stat = PICK_INSIDE;
   
   
-  if (COMPARE_MODIFIERS(event->state, GDK_BUTTON1_MASK) && mesh->data) {
+  if (event->buttons() == Qt::LeftButton && mesh->data) {
     //x -= width / 10;
-    distance = (x - width * leftoffset) / (rightoffset - leftoffset) / width;
+    distance = (x - width() * leftoffset) / (rightoffset - leftoffset) / width();
     
     distance = distance * (mesh->data->numframes-1);
     
     
-    if (y < height * topoffset && y > height * bottomoffset &&
-        x > width * leftoffset && x < width * rightoffset) {
+    if (y < height() * topoffset && y > height() * bottomoffset &&
+        x > width() * leftoffset && x < width() * rightoffset) {
       click = true; // to signify that we are dragging inside the pick window
     }
     
     // we used to be in the frame but we're not anymore, so set frames to max extent
     else if (click) {
-      event->y = PICK_OUTSIDE;
+      stat = PICK_OUTSIDE;
       click = false;
       //      for (i = 0; i < length; i++) {
-      if (x <= width * .1) {
+      if (x <= width() * .1) {
         
-        event->y = PICK_LEFT;
+        stat = PICK_LEFT;
         distance = 0;
       }
-      else if (x >= width * .95) {
-        event->y = PICK_RIGHT;
+      else if (x >= width() * .95) {
+        stat = PICK_RIGHT;
         distance = 1;
       }
       
-      }
+    }
     
+    int start = fileWidget->startFrameSpinBox->value();
+    int end = fileWidget->endFrameSpinBox->value();
     // set the frame vals - window_line was set in ButtonPress based on which line we were closer to
     if(window_line == 0)
     {
-      if(distance > gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend))){
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->datastart), gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend)));
+      if(distance > end){
+        fileWidget->startFrameSpinBox->setValue(end);
       }else{
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->datastart), distance+1);
+        fileWidget->startFrameSpinBox->setValue(distance+1);
       }
     }
     if(window_line == 1)
     {
-      if(distance < gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart))){
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->dataend), gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart)));
+      if(distance < start){
+        fileWidget->endFrameSpinBox->setValue(start);
       }else{
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialogRowData->dataend), distance+1);
+        fileWidget->endFrameSpinBox->setValue(distance+1);
       }
     }
   }
 
-#endif
 //delete Data;
 }
 
 void PickWindow::keyReleaseEvent(QKeyEvent* event)
 {
+  if (rms) return;
   GeomWindow *gpriv = mesh->gpriv;
   if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
     mesh->gpriv->keyReleaseEvent(event);
@@ -524,6 +525,8 @@ void PickWindow::keyReleaseEvent(QKeyEvent* event)
 
 void PickWindow::keyPressEvent(QKeyEvent* event)
 {
+  if (rms) return;
+
   int key = event->key();
   char keyChar = event->text().toAscii()[0];
   if (keyChar == 'p') {
@@ -564,7 +567,7 @@ void PickWindow::DrawNode()
   Surf_Data* data = mesh->data;  
   
   /* Find the extrema of the time signal */
-  if (data && pick->rms) {
+  if (data && rms) {
     for (loop = 0; loop < data->numframes; loop++) {
     	if (data->rmspotvals[loop] < min)
 	      min = data->rmspotvals[loop];
@@ -596,7 +599,7 @@ void PickWindow::DrawNode()
   glColor3f(fgcolor[0], fgcolor[1], fgcolor[2]);
   
   QString toRender;
-  if (showinfotext) {
+  if (showinfotext && !rms) {
     
     pos[1] = height() - getFontHeight(mesh->gpriv->med_font);
     
@@ -619,13 +622,7 @@ void PickWindow::DrawNode()
     toRender = "";
     
     if (data) {
-      
-      if(pick->rms){
-        toRender = "Value: " + QString::number(data->rmspotvals[data->framenum], 'g', 3);
-      }
-      else{
-        toRender = "Value: " + QString::number(data->rmspotvals[data->framenum], 'g', 3);
-      }
+      toRender = "Value: " + QString::number(data->rmspotvals[data->framenum], 'g', 3);
     }
     else {
       toRender = "Value: ---";
@@ -707,7 +704,7 @@ void PickWindow::DrawNode()
     glColor3f(graphcolor[0], graphcolor[1], graphcolor[2]);
     glBegin(GL_LINE_STRIP);
     for (loop = 0; loop < data->numframes; loop++) {
-      if(pick->rms){
+      if(rms){
         glVertex3f(left * width() + d * loop, data->rmspotvals[loop] * a + b, 0);
       }
       else{
@@ -770,13 +767,13 @@ void PickWindow::DrawNode()
       //int x = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart)) - 1;
       //int y = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend)) - 1;
 
-#if 0 //FIX
-      glVertex3f(left * width() + d * (gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart)) - 1), (top + .02f) * height(), 0);
-      glVertex3f(left * width() + d * (gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart)) - 1), (bottom - .02f) * height(), 0);
+      int start = fileWidget->startFrameSpinBox->value();
+      int end = fileWidget->endFrameSpinBox->value();
+      glVertex3f(left * width() + d * (start - 1), (top + .02f) * height(), 0);
+      glVertex3f(left * width() + d * (start - 1), (bottom - .02f) * height(), 0);
       glColor3f(1, 0, 0);
-      glVertex3f(left * width() + d * (gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend)) - 1), (top + .02f) * height(), 0);
-      glVertex3f(left * width() + d * (gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend)) - 1), (bottom - .02f) * height(), 0);
-#endif
+      glVertex3f(left * width() + d * (end - 1), (top + .02f) * height(), 0);
+      glVertex3f(left * width() + d * (end - 1), (bottom - .02f) * height(), 0);
       glEnd();
     }
   }
