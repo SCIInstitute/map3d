@@ -192,7 +192,6 @@ int ProcessCommandLineOptions(Global_Input & g)
       masterWindow->startHidden = true;
     filesDialogCreate();
     filedialog->addRow(0);
-    filedialog->addRow(0);
   }
 
   for (loop = 0; loop < length; loop++) {

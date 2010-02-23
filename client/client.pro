@@ -41,8 +41,9 @@ include (../options.pri)
 
 FORMS += forms/FileDialog.ui \
          forms/FileDialogWidget.ui \
-         forms/ImageControlDialog.ui
+         forms/ImageControlDialog.ui \
          forms/ScaleDialog.ui \
+
 
 macx {
   ICON = ../map3dapp/map3d-icon.icns
