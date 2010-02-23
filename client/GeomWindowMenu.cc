@@ -42,7 +42,6 @@ extern vector<Surface_Group> surf_group;
 extern MainWindow* masterWindow;
 extern int fstep;
 #if 0
-extern ScaleDialog *scaledialog;
 extern FidDialog *fiddialog;
 extern ContourDialog *contourdialog;
 #endif
@@ -227,11 +226,6 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
       case fid_draw_fid:
         mesh->drawfids = !mesh->drawfids;
-        break;
-
-
-      case scaling_dialog:
-        // FIX gtk_widget_show(scaledialog->window);
         break;
       case scaling_group_one:
         updateGroup(mesh, 0);
@@ -1215,6 +1209,9 @@ bool GeomWindow::MenuGlobalOptions(int menu)
       SaveSettings(file, false, true);
       break;
     }
+    case scaling_dialog:
+      ScaleDialog(0).exec();
+      break;
 
 
     default:
@@ -1371,7 +1368,7 @@ int GeomWindow::OpenMenu(QPoint point)
   //
   
   submenu = menu.addMenu("Contours");
-  submenu->addAction("Contour Properties...")->setData(contour_dialog);
+  // FIX submenu->addAction("Contour Properties...")->setData(contour_dialog);
 
   submenu->addSeparator();
   QMenu* subsubmenu = submenu->addMenu("Draw style");
@@ -1388,8 +1385,8 @@ int GeomWindow::OpenMenu(QPoint point)
   // Fiducials...
   //  
   submenu = menu.addMenu("Fiducials");
-  submenu->addAction("Fiducial Contours...")->setData(fid_dialog);
-  submenu->addAction("Fiducial Maps...")->setData(fid_map_dialog);
+  // FIX submenu->addAction("Fiducial Contours...")->setData(fid_dialog);
+  // FIX submenu->addAction("Fiducial Maps...")->setData(fid_map_dialog);
 
   action = submenu->addAction("Draw Fiducials");
   action->setData(fid_draw_fid); action->setCheckable(true); action->setChecked(draw_fids);
@@ -1653,43 +1650,43 @@ int GeomWindow::OpenMenu(QPoint point)
   subsubmenu = submenu->addMenu("Range");
   // make sure that these, scaling functions, and scaling maps are in the same order
   // as they are declared in scalesubs.h
-  action = submenu->addAction("Local");
+  action = subsubmenu->addAction("Local");
   action->setData(scaling_local); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 0);
-  action = submenu->addAction("Global over all frames in one surface");
+  action = subsubmenu->addAction("Global over all frames in one surface");
   action->setData(scaling_global_surface); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 1);
-  action = submenu->addAction("Global over all surfaces in one frame");
+  action = subsubmenu->addAction("Global over all surfaces in one frame");
   action->setData(scaling_global_frame); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 2);
-  action = submenu->addAction("Global over all surfaces and frames");
+  action = subsubmenu->addAction("Global over all surfaces and frames");
   action->setData(scaling_global_global); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 3);
-  action = submenu->addAction("Scaling over groups in one frame");
+  action = subsubmenu->addAction("Scaling over groups in one frame");
   action->setData(scaling_local_group); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 4);
-  action = submenu->addAction("Scaling over groups in all frames");
+  action = subsubmenu->addAction("Scaling over groups in all frames");
   action->setData(scaling_global_group); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 5);
-  action = submenu->addAction("Slave scaling over one frame");
+  action = subsubmenu->addAction("Slave scaling over one frame");
   action->setData(scaling_local_slave); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 6);
-  action = submenu->addAction("Slave scaling over all frames");
+  action = subsubmenu->addAction("Slave scaling over all frames");
   action->setData(scaling_global_slave); action->setCheckable(true); action->setChecked(map3d_info.scale_scope == 7);
 
   subsubmenu = submenu->addMenu("Function");
-  action = submenu->addAction("Linear");
+  action = subsubmenu->addAction("Linear");
   action->setData(scaling_function_linear); action->setCheckable(true); action->setChecked(map3d_info.scale_model == 0);
-  action = submenu->addAction("Exponential");
+  action = subsubmenu->addAction("Exponential");
   action->setData(scaling_function_exponential); action->setCheckable(true); action->setChecked(map3d_info.scale_model == 1);
-  action = submenu->addAction("Logarithmic");
+  action = subsubmenu->addAction("Logarithmic");
   action->setData(scaling_function_logarithmic); action->setCheckable(true); action->setChecked(map3d_info.scale_model == 2);
-  action = submenu->addAction("Lab standard");
+  action = subsubmenu->addAction("Lab standard");
   action->setData(scaling_function_lab); action->setCheckable(true); action->setChecked(map3d_info.scale_model == 3);
-  action = submenu->addAction("Lab 13 standard");
+  action = subsubmenu->addAction("Lab 13 standard");
   action->setData(scaling_function_lab13); action->setCheckable(true); action->setChecked(map3d_info.scale_model == 4);
 
   subsubmenu = submenu->addMenu("Mapping");
-  action = submenu->addAction("Symmetric about zero");
+  action = subsubmenu->addAction("Symmetric about zero");
   action->setData(scaling_mapping_symmetric); action->setCheckable(true); action->setChecked(map3d_info.scale_mapping == 0);
-  action = submenu->addAction("Separate about zero");
+  action = subsubmenu->addAction("Separate about zero");
   action->setData(scaling_mapping_separate); action->setCheckable(true); action->setChecked(map3d_info.scale_mapping == 0);
-  action = submenu->addAction("True");
+  action = subsubmenu->addAction("True");
   action->setData(scaling_mapping_true); action->setCheckable(true); action->setChecked(map3d_info.scale_mapping == 0);
-  action = submenu->addAction("Symmetric about midpoint");
+  action = subsubmenu->addAction("Symmetric about midpoint");
   action->setData(scaling_mapping_midpoint); action->setCheckable(true); action->setChecked(map3d_info.scale_mapping == 0);
   
   subsubmenu = submenu->addMenu("Grouping");

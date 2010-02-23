@@ -61,9 +61,10 @@ LegendWindow::LegendWindow(QWidget* parent) : Map3dGLWidget(parent, LEGENDWINDOW
 }
 
 //static
-LegendWindow* LegendWindow::LegendWindowCreate(int _width, int _height, int _x, int _y, bool hidden)
+LegendWindow* LegendWindow::LegendWindowCreate(Mesh_Info* mesh, int _width, int _height, int _x, int _y, bool hidden)
 {
   LegendWindow* win = new LegendWindow(masterWindow ? masterWindow->childrenFrame : NULL);
+  win->mesh = mesh;
   win->positionWindow(_width, _height, _x, _y, default_width, default_height);
   win->setVisible(!hidden);
   return win;

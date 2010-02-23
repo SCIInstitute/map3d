@@ -14,7 +14,7 @@ class LegendWindow:public Map3dGLWidget
 {
 public:
   LegendWindow(QWidget* parent);
-  static LegendWindow* LegendWindowCreate(int _width, int _height, int _x, int _y, bool hidden);
+  static LegendWindow* LegendWindowCreate(Mesh_Info* mesh, int _width, int _height, int _x, int _y, bool hidden);
   ColorMap **map;
   int orientation;              /* 0 = horizontal, 1 = vertical */
   bool matchContours;           /* 0 = does not match 1 = does match */

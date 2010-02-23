@@ -42,6 +42,7 @@ include (../options.pri)
 FORMS += forms/FileDialog.ui \
          forms/FileDialogWidget.ui \
          forms/ImageControlDialog.ui
+         forms/ScaleDialog.ui \
 
 macx {
   ICON = ../map3dapp/map3d-icon.icns
@@ -51,6 +52,7 @@ macx {
 HEADERS += GeomWindow.h \
            FileDialog.h \
            ImageControlDialog.h \
+           ScaleDialog.h \
            regressiontest.h \
            dialogs.h \
            
@@ -88,7 +90,7 @@ SOURCES += Ball.cc \
            ImageControlDialog.cc \
            savescreen.cc \
            savestate.cc \
-#           ScaleDialog.cc \
+           ScaleDialog.cc \
            scalesubs.cc \
            Surf_Data.cc \
            texture.cc \
