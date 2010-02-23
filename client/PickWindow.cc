@@ -764,8 +764,6 @@ void PickWindow::DrawNode()
       glLineWidth(1);
       glColor3f(0, 1, 0);
       glBegin(GL_LINES);
-      //int x = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->datastart)) - 1;
-      //int y = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialogRowData->dataend)) - 1;
 
       int start = fileWidget->startFrameSpinBox->value();
       int end = fileWidget->endFrameSpinBox->value();

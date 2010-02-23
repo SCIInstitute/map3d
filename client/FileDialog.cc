@@ -44,6 +44,7 @@ void FileDialogWidget::on_geomLineEdit_editingFinished ()
     indexEntries << "*";
 
   geomIndexComboBox->addItems(indexEntries);
+  geomIndexComboBox->setCurrentIndex(0);
   reload_geom = true;    
 }
 
@@ -562,6 +563,7 @@ void FileDialog::addRow(Mesh_Info* mesh)
       widget->geomIndexComboBox->setCurrentIndex(mesh->mysurf->geomsurfnum);
 
     widget->dataLineEdit->setText(mesh->mysurf->potfilename);
+    widget->on_dataLineEdit_editingFinished();
 
     // FIX widget->dataIndexComboBox->setCurrentText(mesh->mysurf->pot
     //data series
@@ -569,9 +571,9 @@ void FileDialog::addRow(Mesh_Info* mesh)
     //frame start, end, step
     if (mesh->data)
     {
-      widget->startFrameSpinBox->setValue(mesh->mysurf->ts_start+1);
-      widget->endFrameSpinBox->setValue(mesh->mysurf->ts_end+1);
-      widget->frameStepSpinBox->setValue(mesh->mysurf->ts_sample_step);
+      widget->startFrameSpinBox->setValue(mesh->data->ts_start+1);
+      widget->endFrameSpinBox->setValue(mesh->data->ts_end+1);
+      widget->frameStepSpinBox->setValue(mesh->data->ts_sample_step);
     }
 
     widget->leadlinksLineEdit->setText(mesh->mysurf->llfilename);
@@ -663,8 +665,6 @@ void FileDialogWidget::updateRMS()
     rmsWidget->rms = true;
     rmsWidget->show();
     rmsWidget->update();
-
-
   }
 }
 
