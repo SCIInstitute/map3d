@@ -51,7 +51,7 @@ static const int default_width = 170;
 static const int default_height = 256;
 
 
-LegendWindow::LegendWindow(QWidget* parent) : Map3dGLWidget(parent, LEGENDWINDOW, "Colormap Legend",120,135)
+LegendWindow::LegendWindow(QWidget* parent, Mesh_Info* mesh) : Map3dGLWidget(parent, LEGENDWINDOW, "Colormap Legend",120,135), mesh(mesh)
 {
   
   bgcolor[0] = bgcolor[1] = bgcolor[2] = 0;
@@ -63,8 +63,7 @@ LegendWindow::LegendWindow(QWidget* parent) : Map3dGLWidget(parent, LEGENDWINDOW
 //static
 LegendWindow* LegendWindow::LegendWindowCreate(Mesh_Info* mesh, int _width, int _height, int _x, int _y, bool hidden)
 {
-  LegendWindow* win = new LegendWindow(masterWindow ? masterWindow->childrenFrame : NULL);
-  win->mesh = mesh;
+  LegendWindow* win = new LegendWindow(masterWindow ? masterWindow->childrenFrame : NULL, mesh);
   win->positionWindow(_width, _height, _x, _y, default_width, default_height);
   win->setVisible(!hidden);
   return win;
@@ -85,6 +84,8 @@ void LegendWindow::initializeGL()
 
 void LegendWindow::paintGL()
 {
+  if (mesh == NULL)
+    return;
   int numconts = mesh->cont->numlevels;
 
   if (matchContours)
