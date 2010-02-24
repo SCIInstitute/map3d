@@ -51,7 +51,7 @@ static const int default_width = 170;
 static const int default_height = 256;
 
 
-LegendWindow::LegendWindow(QWidget* parent, Mesh_Info* mesh) : Map3dGLWidget(parent, LEGENDWINDOW, "Colormap Legend",120,135), mesh(mesh)
+LegendWindow::LegendWindow(QWidget* parent, Mesh_Info* mesh) : mesh(mesh), Map3dGLWidget(parent, LEGENDWINDOW, "Colormap Legend",120,135)
 {
   
   bgcolor[0] = bgcolor[1] = bgcolor[2] = 0;
