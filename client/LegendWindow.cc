@@ -84,8 +84,9 @@ void LegendWindow::initializeGL()
 
 void LegendWindow::paintGL()
 {
-  if (mesh == NULL)
+  if (mesh == NULL || mesh->cont == NULL)
     return;
+  
   int numconts = mesh->cont->numlevels;
 
   if (matchContours)
