@@ -3,282 +3,203 @@
 #include "LegendWindow.h"
 #include "MeshList.h"
 #include "Surf_Data.h"
+#include "Map3d_Geom.h"
 #include "WindowManager.h"
 #include "eventdata.h"
-#include <gtk/gtk.h>
 #include <math.h>
 
-ContourDialog *contourdialog = NULL;
-extern FilesDialog* filedialog;
+#include <QDebug>
+
 extern Map3d_Info map3d_info;
 
+const char* MeshProperty = "MeshProperty";
+
 enum contTableCols{
-  SurfNum, GeomName, Spacing, NumConts, DefaultRange, LowRange, HighRange, OccGrad, NumCols
+  SurfNum, Spacing, NumConts, DefaultRange, LowRange, HighRange, OccGrad, NumCols
 };
 
-// ------------------- //
-//contour dialog callbacks, create, and accessor functions
-void contourDialogCreate(bool show /*=true*/)
+ContourDialog::ContourDialog()
 {
-  if (!contourdialog){
-    contourdialog = new ContourDialog;
-  }
-  else if (show) {
-    gtk_widget_show(contourdialog->window);
-    return;
-  }
-  else
-    return;
-  
-  contourdialog->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  contourdialog->field_lock = false;
+  setupUi(this);
 
-  gtk_window_set_title(GTK_WINDOW(contourdialog->window), "Contour Spacing");
-  //  gtk_container_set_border_width (GTK_CONTAINER (map3d_info.window), 5);
-  gtk_window_set_resizable(GTK_WINDOW(contourdialog->window), FALSE);
-  
-  GtkWidget *vbox = gtk_vbox_new(FALSE, 5);
-  gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
-  gtk_container_add(GTK_CONTAINER(contourdialog->window), vbox);
-  gtk_widget_show(vbox);
-  
-  GtkWidget *hbox1 = gtk_hbox_new(FALSE, 5);
-  gtk_box_pack_start(GTK_BOX(vbox), hbox1, FALSE, FALSE, 2);
-  GtkWidget* const_label = gtk_label_new("When range changes: ");
-  GtkWidget* spacing_const = gtk_radio_button_new_with_label((NULL), "Keep spacing constant");
-  GtkWidget* num_const = gtk_radio_button_new_with_label(gtk_radio_button_get_group(GTK_RADIO_BUTTON(spacing_const)),
-                                                         "Keep num contours constant");
+  int row = 1;
+  for (MeshIterator mi; !mi.isDone(); ++mi, ++row)
+  {
+    Mesh_Info* mesh = mi.getMesh();
+    int index = row-1;
 
-  if (map3d_info.use_spacing) {
-    contourdialog->orig_spacing_check = true;
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(spacing_const),TRUE);
-  }
-  else {
-    contourdialog->orig_spacing_check = false;
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(num_const),TRUE);
-  }
-  gtk_box_pack_start(GTK_BOX(hbox1), const_label, FALSE, FALSE, 2);
-  gtk_box_pack_start(GTK_BOX(hbox1), spacing_const, FALSE, FALSE, 2);
-  gtk_box_pack_start(GTK_BOX(hbox1), num_const, FALSE, FALSE, 2);
-  contourdialog->lock_contspacing = spacing_const;
-  contourdialog->lock_numconts = num_const;
+    // FIX - subsurf, NULL data
+
+    float surfmin=0, surfmax=0;
+    float min=0, max=0;
+    float origSpacing=0, origNumConts=0, origMin=0, origMax=0, origOcclusion=0;
+    bool origFixed = false;
+    if (mesh->data) 
+    {
+      surfmin = mesh->data->potmin;
+      surfmax = mesh->data->potmax;
+      mesh->data->get_minmax(min, max);
+      float spaces;
+      if (map3d_info.use_spacing && mesh->contourspacing)
+        spaces = mesh->contourspacing;
+      else {
+        spaces = (max - min)/float(mesh->data->numconts+1);
+        mesh->contourspacing = spaces;
+      }
+      origSpacing = spaces;
+      origNumConts = (float) mesh->data->numconts;
+      origMin = mesh->data->userpotmin;
+      origMax = mesh->data->userpotmax;
+      origOcclusion = mesh->cont->occlusion_gradient;
+      origFixed = mesh->data->user_scaling;
+    }
+
+    origSpacings << origSpacing;
+    origNumContours << origNumConts;
+    origMins << origMin;
+    origMaxes << origMax;
+    origOcclusions << origOcclusion;
+    origFixedRange << origFixed;
+
+    meshes << mesh;
+
+    float cs_min = (surfmax-surfmin)/1000;  // 1000 because local windows can often be a small subset of the data range
+    float high = MAX(fabs(surfmax), fabs(surfmin));
+
+    QLabel* label = new QLabel(QString::number(mesh->geom->surfnum+1), this);
+    gridLayout->addWidget(label, row, SurfNum);
+
+    QDoubleSpinBox* spacing = new QDoubleSpinBox(this);
+    spacing->setRange(1e-6, surfmax-surfmin);
+    spacing->setSingleStep(cs_min);
+    spacing->setValue(origSpacing);
+    spacing->setProperty(MeshProperty, index);
+    spacingBoxes << spacing;  
+    gridLayout->addWidget(spacing, row, Spacing);
     
-  gtk_widget_show(hbox1);
-  gtk_widget_show(const_label);
-  gtk_widget_show(spacing_const);
-  gtk_widget_show(num_const);
-  
-  GtkWidget* table = gtk_table_new(1, NumCols, FALSE);
-  contourdialog->table = table;
-  gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, FALSE, 2);
-  gtk_widget_show(table);
-  
-  GtkWidget* surfnumtitle = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(surfnumtitle), "Surf"); 
-  gtk_editable_set_editable(GTK_EDITABLE(surfnumtitle), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(surfnumtitle), 6);
-  gtk_table_attach_defaults(GTK_TABLE(table), surfnumtitle, SurfNum, SurfNum+1, 0,1);
-  gtk_widget_show(surfnumtitle);
-  
-  GtkWidget* geomnametitle = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(geomnametitle), "Geom File"); 
-  gtk_editable_set_editable(GTK_EDITABLE(geomnametitle), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(geomnametitle), 12);
-  gtk_table_attach_defaults(GTK_TABLE(table), geomnametitle, GeomName, GeomName+1, 0,1);
-  gtk_widget_show(geomnametitle);
-  
-  GtkWidget* spacing = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(spacing), "Spacing"); 
-  gtk_editable_set_editable(GTK_EDITABLE(spacing), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(spacing), 10);
-  gtk_table_attach_defaults(GTK_TABLE(table), spacing, Spacing, Spacing+1, 0,1);
-  gtk_widget_show(spacing);
-  
-  GtkWidget* num_conts = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(num_conts), "Num Conts"); 
-  gtk_editable_set_editable(GTK_EDITABLE(num_conts), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(num_conts), 12);
-  gtk_table_attach_defaults(GTK_TABLE(table), num_conts, NumConts, NumConts+1, 0,1);
-  gtk_widget_show(num_conts);
-  
-  GtkWidget* default_range = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(default_range), "Default Range?"); 
-  gtk_editable_set_editable(GTK_EDITABLE(default_range), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(default_range), 18);
-  gtk_table_attach_defaults(GTK_TABLE(table), default_range, DefaultRange, DefaultRange+1, 0,1);
-  gtk_widget_show(default_range);
+    QSpinBox* conts = new QSpinBox(this);
+    conts->setRange(1, 100);
+    conts->setSingleStep(1);
+    conts->setValue(origNumConts);
+    conts->setProperty(MeshProperty, index);
+    numContBoxes << conts;  
+    gridLayout->addWidget(conts, row, NumConts);
 
-  GtkWidget* range_low = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(range_low), "Low Range"); 
-  gtk_editable_set_editable(GTK_EDITABLE(range_low), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(range_low), 12);
-  gtk_table_attach_defaults(GTK_TABLE(table), range_low, LowRange, LowRange+1, 0,1);
-  gtk_widget_show(range_low);
+    QCheckBox* fixed = new QCheckBox(this);
+    fixed->setChecked(origFixed);
+    fixed->setProperty(MeshProperty, index);
+    fixedRangeBoxes << fixed;  
+    gridLayout->addWidget(fixed, row, DefaultRange);
 
-  GtkWidget* range_high = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(range_high), "High Range"); 
-  gtk_editable_set_editable(GTK_EDITABLE(range_high), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(range_high), 12);
-  gtk_table_attach_defaults(GTK_TABLE(table), range_high, HighRange, HighRange+1, 0,1);
-  gtk_widget_show(range_high);
-  
-  GtkWidget* occ_grad = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(occ_grad), "Occlusion Grad"); 
-  gtk_editable_set_editable(GTK_EDITABLE(occ_grad), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(occ_grad), 16);
-  gtk_table_attach_defaults(GTK_TABLE(table), occ_grad, OccGrad, OccGrad+1, 0,1);
-  gtk_widget_show(occ_grad);
-  
-  
-  
-  // fill the table in fileDialogCreate - that way when we add new surfaces we can
-  // update the surfaces in the table as well.  Make sure the file window is created
-  // to copy from
-  filesDialogCreate(false);
-  
-  GtkWidget *notebook = gtk_notebook_new();
-  gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_TOP);
-  gtk_box_pack_start(GTK_BOX(vbox), notebook, FALSE, TRUE, 0);
-  //  gtk_container_add(GTK_CONTAINER(contourdialog->window), notebook);
-  gtk_widget_show(notebook);
-  
-  //////////////////////////////////////////////////////////////
-  // Create the horizontal box on the bottom of the dialog
-  //     with the "Reset" and "Close" buttons.
-  GtkWidget *hbox = gtk_hbox_new(FALSE, 10);
-  gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
-  
-  GtkWidget *preview, *cancel, *okay;
-  preview = gtk_button_new_with_label("Preview");
-  cancel = gtk_button_new_with_label("Cancel");
-  okay = gtk_button_new_with_label("OK");
-  
-  gtk_box_pack_start(GTK_BOX(hbox), preview, TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(hbox), cancel, TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(hbox), okay, TRUE, TRUE, 0);
-  
-  gtk_widget_show_all(hbox);
-  
-  ////
-  //////////////////////////////////////////////////////////////
-  
-  
-  g_signal_connect(G_OBJECT(cancel), "clicked", G_CALLBACK(ContourCancel), NULL);
-  g_signal_connect(G_OBJECT(okay), "clicked", G_CALLBACK(ContourOkay), NULL);
-  g_signal_connect_swapped(G_OBJECT(preview), "clicked", G_CALLBACK(ContourPreview), false);
-    
-  g_signal_connect(G_OBJECT(contourdialog->window), "delete_event", G_CALLBACK(contourdestroycallback), NULL);
-  
-  if (show)
-    gtk_widget_show(contourdialog->window);
-  
+    QDoubleSpinBox* low = new QDoubleSpinBox(this);
+    low->setRange(-3*high, 3*high);
+    low->setSingleStep(1);
+    low->setValue(origMin);
+    low->setProperty(MeshProperty, index);
+    minBoxes << low;  
+    gridLayout->addWidget(low, row, LowRange);
+
+    QDoubleSpinBox* highBox = new QDoubleSpinBox(this);
+    highBox->setRange(-3*high, 3*high);
+    highBox->setSingleStep(1);
+    highBox->setValue(origMax);
+    highBox->setProperty(MeshProperty, index);
+    maxBoxes << highBox;  
+    gridLayout->addWidget(highBox, row, HighRange);
+
+    QDoubleSpinBox* occlusion = new QDoubleSpinBox(this);
+    occlusion->setRange(0, 2*(surfmax-surfmin));
+    occlusion->setSingleStep(1);
+    occlusion->setValue(origOcclusion);
+    occlusion->setProperty(MeshProperty, index);
+    occlusionBoxes << occlusion;  
+    gridLayout->addWidget(occlusion, row, OccGrad);
+
+    connect(spacing, SIGNAL(valueChanged(double)), this, SLOT(contourCallback()));
+    connect(conts, SIGNAL(valueChanged(int)), this, SLOT(contourCallback()));
+    connect(low, SIGNAL(valueChanged(double)), this, SLOT(contourCallback()));
+    connect(highBox, SIGNAL(valueChanged(double)), this, SLOT(contourCallback()));
+    connect(occlusion, SIGNAL(valueChanged(double)), this, SLOT(contourCallback()));
+    connect(fixed, SIGNAL(toggled(bool)), this, SLOT(contourCallback()));
+  }
+  connect(contSpacingRadioButton, SIGNAL(toggled(bool)), this, SLOT(contourCallback()));
+  connect(numContsRadioButton, SIGNAL(toggled(bool)), this, SLOT(contourCallback()));
 }
 
-void ContourCancel(){
-  contourdialog->field_lock = true;
-  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(contourdialog->lock_contspacing)) != contourdialog->orig_spacing_check) {
-    if (contourdialog->orig_spacing_check) {
-      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(contourdialog->lock_contspacing),TRUE);
-    }
-    else {
-      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(contourdialog->lock_numconts),TRUE);
-    }
-  }
-
-  for (unsigned i = 0; i < filedialog->rowData.size(); i++) {
-    FilesDialogRowData* rowdata = filedialog->rowData[i];
-    
-    if(gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(rowdata->numcontours)) != rowdata->orig_numconts){
-      gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->numcontours), rowdata->orig_numconts);
-    }
-    if(gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->contourspacing)) != rowdata->orig_numspaces) {
-      gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->contourspacing), rowdata->orig_numspaces);
-    }
-    if((gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_low_range)) != rowdata->orig_lowrange)||
-       (gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_high_range)) != rowdata->orig_highrange)||
-       (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(rowdata->cont_default_range)) != rowdata->orig_defaultrange)){
-      gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_low_range), rowdata->orig_lowrange);
-      gtk_spin_button_set_value(GTK_SPIN_BUTTON(rowdata->cont_high_range), rowdata->orig_highrange);
-      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(rowdata->cont_default_range), rowdata->orig_defaultrange);
-    }  
-    contourcallback(rowdata);
-  }
-  Broadcast(MAP3D_UPDATE, 0);
-  contourdestroycallback();
-  contourdialog->field_lock = false;
-}
-
-
-void ContourPreview(bool okay){
-  if (okay) 
-    contourdialog->orig_spacing_check = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(contourdialog->lock_contspacing));
-
-  for (unsigned i = 0; i < filedialog->rowData.size(); i++) {
-    FilesDialogRowData* rowdata = filedialog->rowData[i];
-    
-    contourcallback(rowdata);
-
-    if(okay){
-      rowdata->orig_numconts = (float) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(rowdata->numcontours));
-      rowdata->orig_numspaces = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->contourspacing));
-      rowdata->orig_lowrange = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_low_range));
-      rowdata->orig_highrange = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_high_range));
-      rowdata->orig_defaultrange = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(rowdata->cont_default_range));
-    }
-
-    
-  }
-  Broadcast(MAP3D_UPDATE, 0);
-}
-
-void ContourOkay(){
-  ContourPreview(true);
-  contourdestroycallback();
-}
-
-// called from cancel or preview
-void contourcallback(FilesDialogRowData* rowdata)
+void ContourDialog::on_cancelButton_clicked()
 {
-  int numconts;
-  map3d_info.use_spacing = (bool) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(contourdialog->lock_contspacing));
+  // restore old values
 
-  Mesh_List meshes = rowdata->mesh->gpriv->findMeshesFromSameInput(rowdata->mesh);
-  for (unsigned i = 0; i < meshes.size(); i++) {
-
+  for (int i = 0; i < meshes.size(); i++)
+  {
     Mesh_Info* mesh = meshes[i];
 
-    if (mesh->data) {
-      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(rowdata->cont_default_range)))
-        mesh->data->user_scaling = false;
-      else
-        mesh->data->user_scaling = true;
-
-      mesh->data->userpotmin = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_low_range));
-      mesh->data->userpotmax = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_high_range));
+    if (mesh->cont && mesh->data)
+    {
+      mesh->contourspacing = origSpacings[i];
+      mesh->data->numconts = origNumContours[i];
+      mesh->data->userpotmin = origMins[i];
+      mesh->data->userpotmax = origMaxes[i];
+      mesh->cont->occlusion_gradient = origOcclusions[i];
+      mesh->data->user_scaling = origFixedRange[i];
     }
+  }
+
+  Broadcast(MAP3D_UPDATE);
+  close();
+}
+
+void ContourDialog::on_applyButton_clicked()
+{
+  Broadcast(MAP3D_UPDATE);
+  close();
+}
+
+
+// called from cancel or preview
+void ContourDialog::contourCallback()
+{
+  int numconts;
+  map3d_info.use_spacing = contSpacingRadioButton->isChecked();
+
+  Q_ASSERT(sender());
+
+  QVariant rowProp = sender()->property(MeshProperty);
+  if (!rowProp.isValid())
+    return; // was a global radio button or something
+
+  int row = rowProp.toInt();
+
+  Mesh_Info* mesh = meshes[row];
+
+  //FIX Mesh_List meshes = rowdata->mesh->gpriv->findMeshesFromSameInput(rowdata->mesh);
+
+  if (mesh->data) {
+    if (fixedRangeBoxes[row]->isChecked())
+      mesh->data->user_scaling = true;
+    else
+      mesh->data->user_scaling = false;
+
+    mesh->data->userpotmin = (float) minBoxes[row]->value();
+    mesh->data->userpotmax = (float) maxBoxes[row]->value();
 
 
     if (map3d_info.use_spacing) {
-      mesh->contourspacing = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->contourspacing));
-      mesh->gpriv->cont_num.setActive(0); // check in user-specified contour menu
+      mesh->contourspacing = (float) spacingBoxes[row]->value();
       numconts = mesh->cont->buildContours();
     }
     else {
-      int numconts = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(rowdata->numcontours));
+      numconts = numContBoxes[row]->value();
       if (mesh->data)
         mesh->data->numconts = numconts;
     }
-    mesh->cont->occlusion_gradient = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->cont_occlusion_gradient));
+    mesh->cont->occlusion_gradient = (float) occlusionBoxes[row]->value();
+
   }
+  Broadcast(MAP3D_UPDATE);
 }
 
-
-
-void contourdestroycallback()
-{
-  gtk_widget_hide(contourdialog->window);
-}
-
+#if 0
 void updateContourDialogValues(Mesh_Info* mesh)
 {
   if (!contourdialog)
@@ -495,3 +416,4 @@ void modifyContourDialogRow_NumContChange(FilesDialogRowData* rowdata)
 
   contourdialog->field_lock = false;
 }
+#endif

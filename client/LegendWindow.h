@@ -13,7 +13,7 @@ class Mesh_Info;
 class LegendWindow:public Map3dGLWidget
 {
 public:
-  LegendWindow(QWidget* parent, Mesh_Info* mesh);
+  LegendWindow(QWidget* parent);
   static LegendWindow* LegendWindowCreate(Mesh_Info* mesh, int _width, int _height, int _x, int _y, bool hidden);
   ColorMap **map;
   int orientation;              /* 0 = horizontal, 1 = vertical */

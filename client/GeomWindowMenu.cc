@@ -43,7 +43,6 @@ extern MainWindow* masterWindow;
 extern int fstep;
 #if 0
 extern FidDialog *fiddialog;
-extern ContourDialog *contourdialog;
 #endif
 
 bool menulock = false;
@@ -350,8 +349,11 @@ void GeomWindow::HandleMenu(int menu_data)
           numconts = 50;
         break;
       case contour_dialog:
-        //  FIX contourDialogCreate(true);
+      {
+        ContourDialog dialog;
+        dialog.exec();
         break;
+      }
       case contour_style_dashed:
         mesh->negcontdashed = 1;
         mesh->drawcont = 1;
@@ -1368,7 +1370,7 @@ int GeomWindow::OpenMenu(QPoint point)
   //
   
   submenu = menu.addMenu("Contours");
-  // FIX submenu->addAction("Contour Properties...")->setData(contour_dialog);
+  submenu->addAction("Contour Properties...")->setData(contour_dialog);
 
   submenu->addSeparator();
   QMenu* subsubmenu = submenu->addMenu("Draw style");

@@ -41,6 +41,7 @@ include (../options.pri)
 
 FORMS += forms/FileDialog.ui \
          forms/FileDialogWidget.ui \
+         forms/ContourDialog.ui \
          forms/ImageControlDialog.ui \
          forms/ScaleDialog.ui \
 
@@ -51,6 +52,7 @@ macx {
 
 # files that need to be moc'ed
 HEADERS += GeomWindow.h \
+           ContourDialog.h \
            FileDialog.h \
            ImageControlDialog.h \
            ScaleDialog.h \
@@ -63,7 +65,7 @@ SOURCES += Ball.cc \
            BallMath.cc \
            colormaps.cc \
            Contour_Info.cc \
-#           ContourDialog.cc \
+           ContourDialog.cc \
            dialogs.cc \
            dot.cc \
            drawlandmarks.cc \

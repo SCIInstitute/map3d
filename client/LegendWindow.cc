@@ -51,9 +51,11 @@ static const int default_width = 170;
 static const int default_height = 256;
 
 
-LegendWindow::LegendWindow(QWidget* parent, Mesh_Info* mesh) : mesh(mesh), Map3dGLWidget(parent, LEGENDWINDOW, "Colormap Legend",120,135)
+LegendWindow::LegendWindow(QWidget* parent) : Map3dGLWidget(parent, LEGENDWINDOW, "Colormap Legend",120,135)
 {
-  
+  // since we can't guarantee the order of initialization, or when the window will be created, we need
+  //   to initialize mesh to NULL, and set it later
+  mesh = NULL;
   bgcolor[0] = bgcolor[1] = bgcolor[2] = 0;
   fgcolor[0] = fgcolor[1] = fgcolor[2] = 1;
   //showinfotext = 1;
@@ -63,14 +65,19 @@ LegendWindow::LegendWindow(QWidget* parent, Mesh_Info* mesh) : mesh(mesh), Map3d
 //static
 LegendWindow* LegendWindow::LegendWindowCreate(Mesh_Info* mesh, int _width, int _height, int _x, int _y, bool hidden)
 {
-  LegendWindow* win = new LegendWindow(masterWindow ? masterWindow->childrenFrame : NULL, mesh);
+  LegendWindow* win = new LegendWindow(masterWindow ? masterWindow->childrenFrame : NULL);
   win->positionWindow(_width, _height, _x, _y, default_width, default_height);
   win->setVisible(!hidden);
+  //win->mesh = mesh;
   return win;
 }
 
 void LegendWindow::initializeGL()
 {
+  // since we can't guarantee the order of initialization, or when the window will be created, we need
+  //   to initialize mesh to NULL, and set it later
+  mesh = NULL;
+
   Map3dGLWidget::initializeGL();
   // FIX if (matchContours)
   //  ticks.setActive(7);
