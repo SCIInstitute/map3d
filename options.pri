@@ -1,8 +1,8 @@
 win32 {
   !no_cpp {
     # instructs the compiler to use C++ instead of C, which we want in most cases
-    QMAKE_CXXFLAGS += /TP
-    QMAKE_CFLAGS += /TP
+    # QMAKE_CXXFLAGS += /TP
+    # QMAKE_CFLAGS += /TP
   }
   # MT = don't use CRT DLL
   QMAKE_CXXFLAGS += /D_CRT_SECURE_NO_WARNINGS
@@ -12,6 +12,8 @@ win32 {
   #QMAKE_CXXFLAGS_RELEASE -= -MD
   #QMAKE_CFLAGS_RELEASE -= -MD
 }
+
+QT += core
 
 CONFIG -= release
 CONFIG += debug
