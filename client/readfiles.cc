@@ -667,9 +667,6 @@ Return:	    pointer to updated surf_data array or NULL for error
   /*** Now set up the memory for the potential data array.
     ***/
   
-  if (insurfnum > 0)
-    insurfnum--;
-  
   surfstart = insurfnum;
   surfend = insurfnum + numsurfsread - 1;
   for (displaysurfnum = 0; displaysurfnum <= surfend - surfstart; displaysurfnum++) {
@@ -690,7 +687,7 @@ Return:	    pointer to updated surf_data array or NULL for error
     surfdata[displaysurfnum].userpotmin = sinputlist->potusermin;
     surfdata[displaysurfnum].userpotmax = sinputlist->potusermax;
     surfdata[displaysurfnum].potscale = potscale;
-    surfdata[displaysurfnum].seriesnum = seriesnum;
+    surfdata[displaysurfnum].seriesnum = surfstart + displaysurfnum;
     surfdata[displaysurfnum].numseries = numseries;
     
     /******************** Fiducials ***********************/

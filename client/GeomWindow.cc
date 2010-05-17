@@ -42,8 +42,10 @@
 #include "readfiles.h"
 #include "reportstate.h"
 #include "GeomWindowMenu.h"
+#include "FileDialog.h"
 
 #include <QFile>
+
 
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
@@ -492,9 +494,8 @@ bool GeomWindow::Pick(int meshnum, int x, int y, bool del /*= false*/ )
       for(unsigned i = 0; i<curmesh->fidConts.size();i++){      
         curmesh->fidConts[i]->buildContours();
       }
-      for(unsigned i = 0; i<curmesh->fidMaps.size();i++){      
-        curmesh->fidMaps[i]->buildContours();
-      }
+      if (curmesh->fidMap)
+        curmesh->fidMap->buildContours();
     }
     else if (map3d_info.pickmode == TRIANGULATE_PICK_MODE && del) {
       DelTriangle(curmesh, selection[4]);
@@ -503,9 +504,8 @@ bool GeomWindow::Pick(int meshnum, int x, int y, bool del /*= false*/ )
       for(unsigned i = 0; i<curmesh->fidConts.size();i++){      
         curmesh->fidConts[i]->buildContours();
       }
-      for(unsigned i = 0; i<curmesh->fidMaps.size();i++){      
-        curmesh->fidMaps[i]->buildContours();
-      }
+      if (curmesh->fidMap)
+        curmesh->fidMap->buildContours();
     }
     else if (map3d_info.pickmode == EDIT_LANDMARK_PICK_MODE) {
       curmesh->landmarkdraw.picked_segnum = selection[4];
@@ -642,9 +642,8 @@ void Triangulate(Mesh_Info * curmesh, int nodenum)
     for(unsigned i = 0; i<curmesh->fidConts.size();i++){      
       curmesh->fidConts[i]->buildContours();
     }
-    for(unsigned i = 0; i<curmesh->fidMaps.size();i++){      
-      curmesh->fidMaps[i]->buildContours();
-    }
+    if (curmesh->fidMap)
+      curmesh->fidMap->buildContours();
   }
 }
 

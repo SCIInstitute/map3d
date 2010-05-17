@@ -89,7 +89,9 @@ void FileDialogWidget::on_dataLineEdit_editingFinished ()
   
 void FileDialogWidget::on_dataIndexComboBox_activated ( const QString & text )
 {
-  char* filename = dataLineEdit->text().toAscii().data();
+  char filename[256];
+  strncpy(filename, dataLineEdit->text().toAscii().data(), 256);
+
   if(strcmp(filename,"")!=0)
   {  
     int ds = dataIndexComboBox->currentIndex();
@@ -111,13 +113,13 @@ void FileDialogWidget::on_dataIndexComboBox_activated ( const QString & text )
   
 void FileDialogWidget::on_startFrameSpinBox_valueChanged ( int i )
 {
-  updateRMS();
+  rmsWidget->update();
   reload_data = true;
 }
   
 void FileDialogWidget::on_endFrameSpinBox_valueChanged ( int i )
 {
-  updateRMS();
+  rmsWidget->update();
   reload_data = true;
 }
 
@@ -565,7 +567,7 @@ void FileDialog::addRow(Mesh_Info* mesh)
     widget->dataLineEdit->setText(mesh->mysurf->potfilename);
     widget->on_dataLineEdit_editingFinished();
 
-    // FIX widget->dataIndexComboBox->setCurrentText(mesh->mysurf->pot
+    widget->dataIndexComboBox->setCurrentIndex(mesh->mysurf->timeseries);
     //data series
 
     //frame start, end, step

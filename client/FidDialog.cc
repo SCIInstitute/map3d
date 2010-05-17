@@ -5,132 +5,118 @@
 #include "Map3d_Geom.h"
 #include "WindowManager.h"
 #include "eventdata.h"
-#include <gtk/gtk.h>
 #include <math.h>
 
-
-extern FilesDialog* filedialog;
-extern Map3d_Info map3d_info;
-
-FidDialog *fiddialog = NULL;
-FidMapDialog *fidmapdialog = NULL;
-FidColorPicker *fcp = NULL;
+#include <QCheckBox>
+#include <QRadioButton>
 
 enum fidTableCols{
-  SurfNum, GeomName, Fiducial, ContWidth, ContColor, NumCols
+  Fiducial, DrawMap, DrawContour, ContColor, ContSize, NumCols
 };
-
-enum fidMapTableCols{
-  SurfNumMap, GeomNameMap, FiducialMap, SpacingMap, NumContsMap, DefaultRangeMap, 
-  LowRangeMap, HighRangeMap, OcclusionMap, NumColsMap
-};
-
 
 // ------------------- //
 //fid dialog callbacks, create, and accessor functions
-void fidDialogCreate(bool show /*=true*/)
+FidDialog::FidDialog(QWidget* parent) : QDialog(parent)
 {
-  if (!fiddialog){
-    fiddialog = new FidDialog;
-  }
-  else if (show) {
-    gtk_widget_show(fiddialog->window);
-    return;
-  }
-  else
-    return;
-  
-  fiddialog->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  fiddialog->field_lock = false;
-  gtk_window_set_title(GTK_WINDOW(fiddialog->window), "Fiducials");
-  //  gtk_container_set_border_width (GTK_CONTAINER (map3d_info.window), 5);
-  gtk_window_set_resizable(GTK_WINDOW(fiddialog->window), FALSE);
-  
-  GtkWidget *vbox = gtk_vbox_new(FALSE, 5);
-  gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
-  gtk_container_add(GTK_CONTAINER(fiddialog->window), vbox);
-  gtk_widget_show(vbox);
-  
-  GtkWidget* table = gtk_table_new(1, NumCols, FALSE);
-  fiddialog->table = table;
-  gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, FALSE, 2);
-  gtk_widget_show(table);
-  
-  GtkWidget* surfnumtitle = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(surfnumtitle), "Surf"); 
-  gtk_editable_set_editable(GTK_EDITABLE(surfnumtitle), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(surfnumtitle), 6);
-  gtk_table_attach_defaults(GTK_TABLE(table), surfnumtitle, SurfNum, SurfNum+1, 0,1);
-  gtk_widget_show(surfnumtitle);
-  
-  GtkWidget* geomnametitle = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(geomnametitle), "Data File"); 
-  gtk_editable_set_editable(GTK_EDITABLE(geomnametitle), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(geomnametitle), 15);
-  gtk_table_attach_defaults(GTK_TABLE(table), geomnametitle, GeomName, GeomName+1, 0,1);
-  gtk_widget_show(geomnametitle);
-  
-  
-  GtkWidget* fidnametitle = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(fidnametitle), "Fiducial"); 
-  gtk_editable_set_editable(GTK_EDITABLE(fidnametitle), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(fidnametitle), 15);
-  gtk_table_attach_defaults(GTK_TABLE(table), fidnametitle, Fiducial, Fiducial+1, 0,1);
-  gtk_widget_show(fidnametitle);
-  
-  GtkWidget* contwidthtitle = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(contwidthtitle), "Contour Size"); 
-  gtk_editable_set_editable(GTK_EDITABLE(contwidthtitle), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(contwidthtitle), 15);
-  gtk_table_attach_defaults(GTK_TABLE(table), contwidthtitle, ContWidth, ContWidth+1, 0,1);
-  gtk_widget_show(contwidthtitle);
-  
-  GtkWidget* contcolortitle = gtk_entry_new(); 
-  gtk_entry_set_text(GTK_ENTRY(contcolortitle), "Contour Color"); 
-  gtk_editable_set_editable(GTK_EDITABLE(contcolortitle), false);
-  gtk_entry_set_width_chars(GTK_ENTRY(contcolortitle), 15);
-  gtk_table_attach_defaults(GTK_TABLE(table), contcolortitle, ContColor, ContColor+1, 0,1);
-  gtk_widget_show(contcolortitle);  
-  
-  // fill the table in fileDialogCreate - that way when we add new surfaces we can
-  // update the surfaces in the table as well.  Make sure the file window is created
-  // to copy from
-  filesDialogCreate(false);
-  
-  GtkWidget *notebook = gtk_notebook_new();
-  gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_TOP);
-  gtk_box_pack_start(GTK_BOX(vbox), notebook, FALSE, TRUE, 0);
-  gtk_widget_show(notebook);
-  
-  //////////////////////////////////////////////////////////////
-  // Create the horizontal box on the bottom of the dialog
-  //     with the "Reset" and "Close" buttons.
-  //  GtkWidget *hbox = gtk_hbox_new(FALSE, 10);
-  //  gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
-  //  
-  //  GtkWidget *preview, *cancel, *okay;
-  //  preview = gtk_button_new_with_label("Preview");
-  //  cancel = gtk_button_new_with_label("Cancel");
-  //  okay = gtk_button_new_with_label("OK");
-  //  
-  //  //gtk_box_pack_start(GTK_BOX(hbox), preview, TRUE, TRUE, 0);
-  //  gtk_box_pack_start(GTK_BOX(hbox), cancel, TRUE, TRUE, 0);
-  //  gtk_box_pack_start(GTK_BOX(hbox), okay, TRUE, TRUE, 0);
-  //  
-  //  gtk_widget_show_all(hbox);
-  
-  ////
-  //////////////////////////////////////////////////////////////
-  
+  setupUi(this);
 
-  
-  g_signal_connect(G_OBJECT(fiddialog->window), "delete_event", G_CALLBACK(gtk_widget_hide), NULL);
-  
-  if (show)
-    gtk_widget_show(fiddialog->window);
-  
+  for (MeshIterator mi(0,0); !mi.isDone(); ++mi)
+  {
+    surfComboBox->addItem(QString::number(mi.getMesh()->geom->surfnum));
+  }
+
+  on_surfComboBox_currentIndexChanged(0);
 }
 
+void FidDialog::on_surfComboBox_currentIndexChanged(int index)
+{
+  // clear
+  dataLabel->setText("No Data");
+  spacingSpinBox->setValue(1);
+
+  foreach (QLabel* widget, _fiducialLabels)
+    widget->deleteLater();
+  foreach (ColorWidget* widget, _fiducialColors)
+    widget->deleteLater();
+  foreach (QSpinBox* widget, _fiducialSizes)
+    widget->deleteLater();
+  foreach (QCheckBox* widget, _fiducialContourCheckBox)
+    widget->deleteLater();
+  foreach (QRadioButton* widget, _fiducialMapRadio)
+    widget->deleteLater();
+
+  // reset
+  int i = 0;
+  MeshIterator mi(0,0); 
+  for (; !mi.isDone() && i < index; ++mi, i++)
+  {
+    // just iterate until we get to index
+  }
+
+  if (!mi.isDone())
+  {
+    _currentMesh = mi.getMesh();
+    if (_currentMesh->data)
+    {
+      Surf_Data* data = _currentMesh->data;
+      dataLabel->setText(_currentMesh->mysurf->potfilename);
+
+      if (data->numfs == 0)
+      {
+        QLabel* label = new QLabel("No fiducials", fidFrame);
+        _fiducialLabels.append(label);
+        gridLayout->addWidget(label, 1, Fiducial, 1, 1);
+      }
+      else
+      {
+        int selectedMap = 0;
+        if (_currentMesh->fidmapindex > 0)
+          selectedMap = _currentMesh->fidmapindex - 1;
+
+        int row = 1;
+        for (int i = 0; i < data->numfs; i++)
+        {
+          for(int j = 0; j < data->fids[i].numfidtypes; j++)
+          {
+            QLabel* label = new QLabel(QString(data->fids[i].fidnames[j]) + " " + data->fids[i].fidlabel, fidFrame);
+            _fiducialLabels.append(label);
+            gridLayout->addWidget(label, row, Fiducial, 1, 1);
+
+            ColorWidget* cw = new ColorWidget(this, QColor(_currentMesh->fidConts[row-1]->fidcolor));
+            gridLayout->addWidget(cw, row, ContColor, 1, 1);
+
+            QRadioButton* rb = new QRadioButton(this);
+            _fiducialMapRadio.append(rb);
+            gridLayout->addWidget(rb, row, DrawMap, 1, 1);
+
+            if (row-1 == selectedMap)
+              rb->setChecked(true);
+
+            QCheckBox* cb = new QCheckBox(this);
+            _fiducialContourCheckBox.append(cb);
+            gridLayout->addWidget(cb, row, DrawContour, 1, 1);
+
+            // TODO - size widget
+            row++;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+void FidDialog::on_applyButton_clicked()
+{
+  close();
+}
+
+void FidDialog::on_cancelButton_clicked()
+{
+  close();
+}
+
+#if 0
 void fidNameChange(FilesDialogRowData* rowdata){
   if (fiddialog->field_lock)
     return;
@@ -844,3 +830,4 @@ void FidPickColor(GdkColor *storage, int index, GtkTreeIter iter,FilesDialogRowD
   gtk_widget_modify_bg(fcp->orig_color_widget, GTK_STATE_NORMAL, &fcp->selected_color);
 }
 
+#endif

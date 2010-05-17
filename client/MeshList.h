@@ -62,7 +62,7 @@ public:
   Surf_Data *data;              /* potential/scalar data */
   Contour_Info *cont;           /* contours lines and bands */
   vector < Contour_Info * > fidConts; /* fiducial contours lines and bands */
-  vector < Contour_Info * > fidMaps; /* fiducial contours lines and bands */
+  Contour_Info *fidMap;          /* fiducial contours lines and bands - only store one, since only one can be drawn at a time*/
 
 //  Contour_Info *fidactcont;        /* fiducial contours lines and bands */
 //  Contour_Info *fidreccont;        /* fiducial contours lines and bands */

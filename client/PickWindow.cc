@@ -28,6 +28,7 @@
 #include "scalesubs.h"
 #include "savescreen.h"
 #include "MainWindow.h"
+#include "FileDialog.h"
 
 #include <QMouseEvent>
 #include <QKeyEvent>
@@ -45,7 +46,6 @@ extern int key_pressed;
 extern int pick;
 extern int delay;
 extern MainWindow *masterWindow;
-extern FileDialog *filedialog;
 
 PickInfo *pickstack[100] = { 0 };
 int pickstacktop = -1;
@@ -819,13 +819,13 @@ void PickWindow::MenuEvent(int menu_data)
 {
   switch (menu_data) {
     case axes_color:
-      // FIX PickColor(axiscolor);
+      PickColor(axiscolor);
       break;
     case graph_color:
-      // FIX PickColor(graphcolor);
+      PickColor(graphcolor);
       break;
     case graph_width_menu:
-      // FIX PickSize(&graph_width, 10, "Graph Width");
+      PickSize(&graph_width, 10, "Graph Width");
       break;
     case full_screen:
       SetStyle(showinfotext);

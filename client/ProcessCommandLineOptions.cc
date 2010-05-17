@@ -38,6 +38,8 @@
 #include "Transforms.h"
 #include "glprintf.h"
 #include "savescreen.h"
+#include "FileDialog.h"
+#include "ScaleDialog.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -827,7 +829,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
     Container *c = file_cache.readContainerFile(containerFileName);
     string fullname;
     if(c){
-      // FIX fullname = string(get_path(surf->potfilename))+c->entryArray[surf->timeseries]->entryName;   
+      fullname = string(get_path(surf->potfilename))+c->entryArray[surf->timeseries]->entryName;   
       surf->tmpfilename = (char *)fullname.c_str();
     }
     else {
@@ -1006,10 +1008,14 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
               fidcolor = Qt::blue;
               break;              
           }
-          mesh->fidMaps.push_back(new Contour_Info(mesh));
-          mesh->fidMaps.back()->datatype = fids.fidtypes[numfids];
-          mesh->fidMaps.back()->fidset = fidsets;
-          mesh->fidMaps.back()->fidmap = 1;
+
+          if (mesh->fidMap == NULL)
+          {
+            mesh->fidMap = new Contour_Info(mesh);
+            mesh->fidMap->datatype = fids.fidtypes[numfids];
+            mesh->fidMap->fidset = fidsets;
+            mesh->fidMap->fidmap = 1;
+          }
 //#endif    
         //printf("fid %d - %d\n",numfids,mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids]);
 //        if((mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids] == 10)){
@@ -1641,8 +1647,8 @@ unsigned GetNumFrames(char *s, int ds)
   else if (strcmp(GetExtension(s),".tsdfc") == 0) {
     Container *c = file_cache.readContainerFile(s);
     if (c){
-      // FIX string fullname = string(get_path(s))+c->entryArray[ds]->entryName;    
-      // FIX numframes =  GetNumFrames((char*)(fullname.c_str()),0);
+      string fullname = string(get_path(s))+c->entryArray[ds]->entryName;    
+      numframes =  GetNumFrames((char*)(fullname.c_str()),0);
     }
   }
   else if (strcmp(GetExtension(s),".mat") == 0) {

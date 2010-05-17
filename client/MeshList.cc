@@ -23,7 +23,7 @@ Mesh_Info::Mesh_Info()
   data = 0;                     // leave as 0 until it gets used
   cont = 0;
   fidConts.clear();
-  fidMaps.clear();
+  fidMap = 0;
 
 //  fidactcont = 0;
 //  fidreccont = 0;

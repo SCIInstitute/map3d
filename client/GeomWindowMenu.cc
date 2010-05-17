@@ -17,6 +17,11 @@
 #include "WindowManager.h"
 #include "dialogs.h"
 #include "ProcessCommandLineOptions.h"
+#include "FileDialog.h"
+#include "ContourDialog.h"
+#include "FidDialog.h"
+#include "ScaleDialog.h"
+#include "ImageControlDialog.h"
 
 #include "colormaps.h"
 #include "eventdata.h"
@@ -41,9 +46,6 @@ extern Map3d_Info map3d_info;
 extern vector<Surface_Group> surf_group;
 extern MainWindow* masterWindow;
 extern int fstep;
-#if 0
-extern FidDialog *fiddialog;
-#endif
 
 bool menulock = false;
 
@@ -148,10 +150,10 @@ void GeomWindow::HandleMenu(int menu_data)
           lpriv->update();
         break;
       case fid_dialog:
-        // FIX fidDialogCreate(true);
-        break;
-      case fid_map_dialog:
-        // FIX fidMapDialogCreate(true);
+        {
+          FidDialog dialog;
+          dialog.exec();
+        }
         break;
       case fid_map_toggle:
         switch (mesh->fidshadingmodel) {
@@ -849,18 +851,9 @@ void GeomWindow::HandleMenu(int menu_data)
         for(unsigned i = 0; i<mesh->fidConts.size();i++){      
           mesh->fidConts[i]->buildContours();
         }
-          for(unsigned i = 0; i<mesh->fidMaps.size();i++){      
-            mesh->fidMaps[i]->buildContours();
-          }
- //         if(mesh->fidactcont)
-//            mesh->fidactcont->buildContours();
-//          if(mesh->fidreccont)
-//            mesh->fidreccont->buildContours();
-//            if(mesh->fidactmapcont)
-//              mesh->fidactmapcont->buildContours();
-//              if(mesh->fidrecmapcont)
-//                mesh->fidrecmapcont->buildContours();
-                //ComputeLockFrameData();
+        if (mesh->fidMap)
+          mesh->fidMap->buildContours();
+          
         break;
       case frame_zero:
         if (mesh->data){
@@ -1387,8 +1380,7 @@ int GeomWindow::OpenMenu(QPoint point)
   // Fiducials...
   //  
   submenu = menu.addMenu("Fiducials");
-  // FIX submenu->addAction("Fiducial Contours...")->setData(fid_dialog);
-  // FIX submenu->addAction("Fiducial Maps...")->setData(fid_map_dialog);
+  submenu->addAction("Fiducial Settings...")->setData(fid_dialog);
 
   action = submenu->addAction("Draw Fiducials");
   action->setData(fid_draw_fid); action->setCheckable(true); action->setChecked(draw_fids);
@@ -1796,6 +1788,3 @@ int GeomWindow::OpenMenu(QPoint point)
     return -1;
 
 }
-
-// FIX
-void PickSize(float *storage, float f, char* string) {}

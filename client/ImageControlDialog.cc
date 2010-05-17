@@ -7,7 +7,6 @@
 #include "savestate.h"
 #include "dialogs.h"
 
-extern FileDialog* filedialog;
 extern Map3d_Info map3d_info;
 
 ImageControlDialog::ImageControlDialog()

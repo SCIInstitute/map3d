@@ -43,6 +43,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QApplication>
 
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
@@ -724,17 +725,8 @@ void GeomWindow::UpdateAndRedraw()
     for(unsigned i = 0; i<mesh->fidConts.size();i++){      
       mesh->fidConts[i]->buildContours();
     }
-    for(unsigned i = 0; i<mesh->fidMaps.size();i++){      
-      mesh->fidMaps[i]->buildContours();
-    }
-//    if(mesh->fidactcont)
-//      mesh->fidactcont->buildContours();
-//    if(mesh->fidreccont)
-//      mesh->fidreccont->buildContours();
-//    if(mesh->fidactmapcont)
-//      mesh->fidactmapcont->buildContours();
-//    if(mesh->fidrecmapcont)
-//      mesh->fidrecmapcont->buildContours();
+    if (mesh->fidMap)
+      mesh->fidMap->buildContours();
     
     // if legend window exists, update it too
     if (mesh->legendwin != 0) {
@@ -1176,17 +1168,8 @@ void GeomWindow::TransformKeyboard(Mesh_Info * curmesh, QKeyEvent* event)
     for(unsigned i = 0; i<curmesh->fidConts.size();i++){      
       curmesh->fidConts[i]->buildContours();
     }
-    for(unsigned i = 0; i<curmesh->fidMaps.size();i++){      
-      curmesh->fidMaps[i]->buildContours();
-    }
-//    if(curmesh->fidactcont)
-//      curmesh->fidactcont->buildContours();
-//    if(curmesh->fidreccont)
-//      curmesh->fidreccont->buildContours();
-//    if(curmesh->fidactmapcont)
-//      curmesh->fidactmapcont->buildContours();
-//    if(curmesh->fidrecmapcont)
-//      curmesh->fidrecmapcont->buildContours();
+    if (curmesh->fidMap)
+      curmesh->fidMap->buildContours();
   }
   // finish rotations - save quaternion and matrix to arcball
   //   if we used the arcball's rotation matrix, next time we used the mouse to rotate

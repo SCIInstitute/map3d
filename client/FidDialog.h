@@ -2,56 +2,40 @@
 #define FIDDIALOG_H
 
 #include "dialogs.h"
+#include "ui_FidDialog.h"
+
+class QCheckBox;
+class QRadioButton;
+
+class FidDialog : public QDialog, public Ui::FidDialog 
+{
+  Q_OBJECT;
+public:
+  FidDialog(QWidget* parent = NULL);
+
+public slots:
+  void on_applyButton_clicked();
+  void on_cancelButton_clicked();
+  void on_surfComboBox_currentIndexChanged(int index);
+private:
+  Mesh_Info* _currentMesh;
+
+  QList<QLabel*> _fiducialLabels;
+  QList<ColorWidget*> _fiducialColors;
+  QList<QSpinBox*> _fiducialSizes;
+  QList<QRadioButton*> _fiducialMapRadio;
+  QList<QCheckBox*> _fiducialContourCheckBox;
+
+  QList<int> _origContourSpacing;
+  QList<int> _origSelectedMap;
+
+  QList<QList<QColor> > _origContourColors;
+  QList<QList<float> > _origContourSizes;
+  QList<QList<bool> > _origSelectedContours;
+
+};
 
 #if 0
-struct FilesDialogRowData;
-
-
-// --------------------------- //
-// FidDialog widget and accessor/helper functions //
-struct FidDialog {
-  GtkWidget* window;
-  Mesh_Info* mesh;
-  
-  GtkWidget* table;
-  
-  bool field_lock; // when you change one field and the code sets another
-                   // it wants to call the callback for that field as well
-                   // hopefully this will prevent that.
-};
-
-
-
-// --------------------------- //
-// FidMapDialog widget and accessor/helper functions //
-struct FidMapDialog {
-  GtkWidget* window;
-  Mesh_Info* mesh;
-  GtkWidget* table;  
-  bool orig_spacing_check;
-  bool field_lock; // when you change one field and the code sets another
-                   // it wants to call the callback for that field as well
-                   // hopefully this will prevent that.
-  
-    
-  GtkWidget* lock_numconts;
-  GtkWidget* lock_contspacing;  
-};
-
-// --------------------------- //
-// ColorPicker widget and accessor functions
-
-struct FidColorPicker {
-  GtkWidget *fidcolorpicker;
-  GtkWidget *orig_color_widget;
-  GtkWidget *selected_color_widget;
-  GdkColor selected_color;
-  GdkColor cs_orig_vals;
-  int index;
-  GtkTreeIter iter;
-  FilesDialogRowData* rowdata;
-};
-
 void FidPickColor(GdkColor *, int index, GtkTreeIter iter, FilesDialogRowData* rowdata);
 void fidDialogCreate(bool show);
 void fidMapDialogCreate(bool show);

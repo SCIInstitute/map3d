@@ -55,18 +55,59 @@ void incrSize(float *storage, float maxChange, float midpoint, float inc);
 
 // --------------------------- //
 // SizePicker widget and accessor functions
+class SizePicker;
 
-struct SizePicker {
-  GtkWidget *sizepicker;
-  GtkWidget *size_slider;
-  float factor;
-  float selected_size;
-  vector < float* > ss_float;
-  vector < float > ss_orig_vals;
+class SizeWidget : public QWidget {
+  Q_OBJECT
+public:
+  SizeWidget(QWidget* parent, int size);
+
+  void setSize(int size) { _size = size; }
+
+  virtual void mousePressEvent ( QMouseEvent * event );
+  virtual void mouseDoubleClickEvent ( QMouseEvent * event );
+  virtual void paintEvent ( QPaintEvent * event );
+
+  int _size;
+  bool _selected;
+
+signals:
+  void clicked();
+  void doubleClicked();
+};
+
+class SizePicker : public QDialog {
+  Q_OBJECT
+public:
+
+  SizePicker();
+
+  // public interface to everything to minimize reworking of legacy code
+
+  QDialog *sizepicker;
+  SizeWidget *orig_size_widget;
+  SizeWidget *selected_size_widget;
+
+  int selected_size;
+  float factor; // scale the size*10 by this
+
+  vector < float *> ss_float;
+  vector < float *> ss_orig_vals;
 
   // this is so we can clear the storage on a subsequent call to PickColor
   // right now, kind of hacky, it is set at the end of GeomWindowMenu
   bool post_change;
+
+  void closeEvent(QCloseEvent*) { hide(); }
+
+public slots:
+  void on_cancelButton_clicked();
+  void on_closeButton_clicked();
+  void sizeSelected();
+
+private:
+  QPushButton* cancelButton;
+  QPushButton* closeButton;
 };
 
 
@@ -74,19 +115,23 @@ struct SizePicker {
 // ColorPicker widget and accessor functions
 class ColorPicker;
 
-class ColorWidget : public QFrame {
+class ColorWidget : public QWidget {
   Q_OBJECT
 public:
-  ColorWidget(ColorPicker* parent, QColor color, bool clickable);
+  ColorWidget(QWidget* parent, QColor color);
 
   void setColor(QColor color) { _color = color; }
 
   virtual void mousePressEvent ( QMouseEvent * event );
+  virtual void mouseDoubleClickEvent ( QMouseEvent * event );
   virtual void paintEvent ( QPaintEvent * event );
 
-  ColorPicker* _colorPicker;
   QColor _color;
-  bool _clickable;
+  bool _selected;
+
+signals:
+  void clicked();
+  void doubleClicked();
 };
 
 class ColorPicker : public QDialog {
@@ -111,23 +156,15 @@ public:
 
   void closeEvent(QCloseEvent*) { hide(); }
 
-  void colorSelected(ColorWidget* widget);
-
 public slots:
   void on_cancelButton_clicked();
   void on_closeButton_clicked();
+  void colorSelected();
 
 private:
   QPushButton* cancelButton;
   QPushButton* closeButton;
 };
-
-//include these so we only have to include dialogs.h
-#include "ContourDialog.h"
-#include "FidDialog.h"
-#include "FileDialog.h"
-#include "ImageControlDialog.h"
-#include "ScaleDialog.h"
 
 
 #endif

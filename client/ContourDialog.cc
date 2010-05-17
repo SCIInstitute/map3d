@@ -8,6 +8,8 @@
 #include "eventdata.h"
 #include <math.h>
 
+#include <QCheckBox>
+#include <QDoubleSpinBox>
 #include <QDebug>
 
 extern Map3d_Info map3d_info;

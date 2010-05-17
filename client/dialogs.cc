@@ -28,12 +28,16 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPainter>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QLabel>
+#include <QPushButton>
 
 // dialog globals
 GtkWidget *quitwindow = NULL;
 ColorPicker *cp = NULL;
 SizePicker *sp = NULL;
-extern FileDialog *filedialog;
 extern int fstep;
 extern FileCache file_cache;
 
@@ -233,8 +237,8 @@ void ColorPicker::on_closeButton_clicked()
   hide();
 }
 
-ColorWidget::ColorWidget(ColorPicker* parent, QColor color, bool clickable) : 
-  QFrame(parent), _colorPicker(parent), _color(color), _clickable(clickable)
+ColorWidget::ColorWidget(QWidget* parent, QColor color) : 
+  QWidget(parent), _color(color), _selected(false)
 {
 }
 
@@ -247,7 +251,7 @@ void ColorWidget::paintEvent ( QPaintEvent* )
 
   painter.setBrush(brush);
 
-  if (_colorPicker->selected_color_widget == this)
+  if (_selected)
     painter.setPen(pen);
 
   painter.drawRect(0, 0, width(), height());
@@ -255,14 +259,18 @@ void ColorWidget::paintEvent ( QPaintEvent* )
 
 void ColorWidget::mousePressEvent ( QMouseEvent * )
 {
-  if (_clickable)
-    _colorPicker->colorSelected(this);
+  emit clicked();
 }
 
+void ColorWidget::mouseDoubleClickEvent ( QMouseEvent *)
+{
+  emit doubleClicked();
+}
 
 ColorPicker::ColorPicker()
 {
   post_change = false;
+  selected_color_widget = NULL;
   
   // create the window and set window parameters
   setWindowTitle("Select Color");
@@ -284,7 +292,7 @@ ColorPicker::ColorPicker()
   
   QLabel* label = new QLabel("Original:", buttonFrame);
   buttonLayout->addWidget(label);
-  orig_color_widget = new ColorWidget(this, QColor(), false);
+  orig_color_widget = new ColorWidget(this, QColor());
   orig_color_widget->setMinimumSize(20, 15);
   buttonLayout->addWidget(orig_color_widget);
 
@@ -324,15 +332,22 @@ ColorPicker::ColorPicker()
     }
 
     QColor color(r*255, g*255, b*255);
-    ColorWidget* frame = new ColorWidget(this, color, true);
+    ColorWidget* frame = new ColorWidget(this, color);
+    connect(frame, SIGNAL(clicked()), this, SLOT(colorSelected()));
     frame->setMinimumSize(20, 20);
     gridLayout->addWidget(frame, i/(numcolors/2), i % (numcolors/2));    
   }
 }
 
-void ColorPicker::colorSelected(ColorWidget* widget)
+void ColorPicker::colorSelected()
 {
+  ColorWidget* widget = dynamic_cast<ColorWidget*>(sender());
+
+  if (selected_color_widget)
+    selected_color_widget->_selected = false;
+
   selected_color_widget = widget;
+  widget->_selected = true;
   QColor color = widget->_color;
   for (unsigned int i = 0; i < cp->cs_float.size(); i++) {
     cp->cs_float[i][0] = color.redF();
@@ -380,114 +395,162 @@ void PickColor(float *storage)
   color.setBlueF(cp->cs_float[0][2]);
 
   cp->orig_color_widget->_color = color;
-  cp->update();
-  // FIX gtk_widget_modify_bg(cp->selected_color_widget, GTK_STATE_NORMAL, &color);
-  // FIX gtk_widget_modify_bg(cp->orig_color_widget, GTK_STATE_NORMAL, &color);
-  
+  cp->update();  
 }
 
-#if 0
-
-void SizePickerCancel(GtkWidget*)
+void SizePicker::on_cancelButton_clicked()
 {
   for (unsigned int i = 0; i < sp->ss_float.size(); i++) {
-    *sp->ss_float[i] = sp->ss_orig_vals[i];
+    *(sp->ss_float[i]) = *(sp->ss_orig_vals[i]);
+    delete sp->ss_orig_vals[i];  // they were allocated in PickColor, and there should be one of them per ss_float
   }
   sp->ss_float.clear();
   sp->ss_orig_vals.clear();
-  gtk_widget_hide(sp->sizepicker);
+  hide();
   Broadcast(MAP3D_REPAINT_ALL, 0);
 }
 
-void SizePickerPreview(GtkWidget*)
+void SizePicker::on_closeButton_clicked()
 {
-  
   for (unsigned int i = 0; i < sp->ss_float.size(); i++) {
-    *sp->ss_float[i] = (float) gtk_range_get_value(GTK_RANGE(sp->size_slider)) * (sp->factor/10);
+    delete sp->ss_orig_vals[i];  // they were allocated in PickColor, and there should be one of them per ss_float
   }
-  Broadcast(MAP3D_REPAINT_ALL, 0);
-}
-
-void SizePickerOkay(GtkWidget* widget)
-{
-  SizePickerPreview(widget);
-  
   sp->ss_float.clear();
   sp->ss_orig_vals.clear();
-  gtk_widget_hide(sp->sizepicker);
+  hide();
 }
 
-void SizePickerCreate()
+SizeWidget::SizeWidget(QWidget* parent, int size) : 
+  QWidget(parent), _size(size), _selected(false)
 {
-  if (sp == NULL)
-    sp = new SizePicker;
-  
-  sp->post_change = false;
+}
 
-  // create the window and set window parameters
-  sp->sizepicker = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title(GTK_WINDOW(sp->sizepicker), "Select size");
-  gtk_window_set_resizable(GTK_WINDOW(sp->sizepicker), false);
-  g_signal_connect(G_OBJECT(sp->sizepicker), "delete_event", G_CALLBACK(gtk_widget_hide),
-                   NULL);
+void SizeWidget::paintEvent ( QPaintEvent* )
+{
+  QPainter painter(this);
+  QPen pen(Qt::black);
+
+  if (_selected)
+  {
+    pen.setWidth(3);
+    painter.setPen(pen);
+    painter.drawRect(0, 0, width(), height());
+  }
+
+  pen.setWidth(1);
+  painter.setPen(pen);
+  QBrush brush(Qt::black);
+  painter.setBrush(brush);
+  painter.drawRect(4, height()/2.0f - _size/2.0f, width()-8, _size);
+
+}
+
+void SizeWidget::mousePressEvent ( QMouseEvent * )
+{
+  emit clicked();
+}
+
+void SizeWidget::mouseDoubleClickEvent ( QMouseEvent * )
+{
+  emit doubleClicked();
+}
+
+SizePicker::SizePicker()
+{
+  post_change = false;
+  selected_size_widget = NULL;
   
   // add sub-boxes
-  GtkWidget* vbox = gtk_vbox_new(FALSE, 5);
-  gtk_container_add(GTK_CONTAINER(sp->sizepicker), vbox);
+  QVBoxLayout* layout = new QVBoxLayout(this);
+  QFrame* colorsFrame = new QFrame(this);
+  layout->addWidget(colorsFrame);
+
+  QFrame* buttonFrame = new QFrame(this);
+  layout->addWidget(buttonFrame);
+
+
+  QGridLayout* gridLayout = new QGridLayout(colorsFrame);
+  gridLayout->setContentsMargins(0,0,0,0);
+  QHBoxLayout* buttonLayout = new QHBoxLayout(buttonFrame);
+  buttonLayout->setContentsMargins(0,0,0,0);
   
-  GtkObject* adj = gtk_adjustment_new(5,1,11,1,1,1);
-  sp->size_slider = gtk_hscale_new((GtkAdjustment*)adj);
-  gtk_box_pack_start(GTK_BOX(vbox), sp->size_slider, FALSE, FALSE, 2);
   
+  QLabel* label = new QLabel("Original:", buttonFrame);
+  buttonLayout->addWidget(label);
+  orig_size_widget = new SizeWidget(this, 1);
+  orig_size_widget->setMinimumSize(50, 50);
+  buttonLayout->addWidget(orig_size_widget);
+
+  // add last row and selected color box into it.
+  buttonLayout->addStretch(10);
+
+  cancelButton = new QPushButton("Cancel", buttonFrame);
+  buttonLayout->addWidget(cancelButton);
+  closeButton = new QPushButton("Close", buttonFrame);
+  buttonLayout->addWidget(closeButton);
+
+  connect(cancelButton, SIGNAL(clicked()), this, SLOT(on_cancelButton_clicked()));
+  connect(closeButton, SIGNAL(clicked()), this, SLOT(on_closeButton_clicked()));
   
-  // add last row and selected size box into it.
-  GtkWidget* hbox = gtk_hbox_new(TRUE, 10);
-  gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 2);
-  
-  GtkWidget *preview, *cancel, *okay;
-  preview = gtk_button_new_with_label("Preview");
-  cancel = gtk_button_new_with_label("Cancel");
-  okay = gtk_button_new_with_label("OK");
-  
-  gtk_box_pack_start(GTK_BOX(hbox), preview, TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(hbox), cancel, TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(hbox), okay, TRUE, TRUE, 0);
-  
-  g_signal_connect(G_OBJECT(cancel), "clicked", G_CALLBACK(SizePickerCancel), NULL);
-  g_signal_connect(G_OBJECT(okay), "clicked", G_CALLBACK(SizePickerOkay), NULL);
-  g_signal_connect(G_OBJECT(preview), "clicked", G_CALLBACK(SizePickerPreview), NULL);
-  
-  gtk_widget_show_all(sp->sizepicker);
+  int numsizes = 10;
+  // add colors
+  for (int i = 1; i <= numsizes; i++) {
+    
+    SizeWidget* frame = new SizeWidget(this, i);
+    connect(frame, SIGNAL(clicked()), this, SLOT(sizeSelected()));
+    frame->setMinimumSize(50, 50);
+    gridLayout->addWidget(frame, i, 1);    
+  }
 }
 
-// the value of f is the maximum size you can get.  You will
-// always get x*f/10, where x is [1,10] based on the size you pick
-// value returned in storage
-void PickSize(float *storage, float f, char* string)
+void SizePicker::sizeSelected()
 {
+  SizeWidget* widget = dynamic_cast<SizeWidget*>(sender());
+
+  if (selected_size_widget)
+    selected_size_widget->_selected = false;
+
+  selected_size_widget = widget;
+  widget->_selected = true;
+  int size = widget->_size;
+  for (unsigned int i = 0; i < sp->ss_float.size(); i++) {
+    *(sp->ss_float[i]) = (size*10)/factor;
+  }
+  Broadcast(MAP3D_REPAINT_ALL, 0);
+  update();
+}
+
+void PickSize(float *storage, float factor, char* str)
+{
+  float *orig = new float;
+  *orig = *storage;
+  
   if (!sp)
-    SizePickerCreate();
-  else
-    gtk_widget_show(sp->sizepicker);
-  
-  gtk_window_set_title(GTK_WINDOW(sp->sizepicker), string);
-  
+    sp = new SizePicker();
+
+  sp->selected_size_widget = 0;
+  sp->show();
+
   // clear out the values for the next selection (set in GeomWindowMenu)
   if (sp->post_change) {
     sp->ss_float.clear();
+    for (unsigned i = 0; i < sp->ss_orig_vals.size(); i++) {
+      delete sp->ss_orig_vals[i];  // they were allocated in PickColor, and there should be one of them per cs_float
+    }
     sp->ss_orig_vals.clear();
 
     sp->post_change = false;
   }
 
+  sp->setWindowTitle(QString("Select ") + str);
   sp->ss_float.push_back(storage);
-  sp->ss_orig_vals.push_back(*storage);
+  sp->ss_orig_vals.push_back(orig);
   
-  sp->factor = f;
+  sp->selected_size = *sp->ss_float[0];
   
-  gtk_range_set_value(GTK_RANGE(sp->size_slider), (int)(*storage * f/10));
-  //gtk_widget_set_default_size(sp->selected_size_widget, *storage * f/10, 25);
-  
+  sp->orig_size_widget->_size = sp->selected_size;
+  sp->factor = factor;
+  sp->update();
 }
 
 // storage is a pointer to the value to change,
@@ -507,4 +570,3 @@ void incrSize(float *storage, float maxChange, float midpoint, float inc)
   *storage = s;
 }
 
-#endif

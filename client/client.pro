@@ -41,6 +41,7 @@ include (../options.pri)
 
 FORMS += forms/FileDialog.ui \
          forms/FileDialogWidget.ui \
+         forms/FidDialog.ui \
          forms/ContourDialog.ui \
          forms/ImageControlDialog.ui \
          forms/ScaleDialog.ui \
@@ -54,6 +55,7 @@ macx {
 HEADERS += GeomWindow.h \
            ContourDialog.h \
            FileDialog.h \
+           FidDialog.h \
            ImageControlDialog.h \
            ScaleDialog.h \
            regressiontest.h \
@@ -69,7 +71,7 @@ SOURCES += Ball.cc \
            dialogs.cc \
            dot.cc \
            drawlandmarks.cc \
-#           FidDialog.cc \
+           FidDialog.cc \
            FileDialog.cc \
            GenericWindow.cc \
            GeomWindow.cc \
@@ -100,6 +102,4 @@ SOURCES += Ball.cc \
            Transforms.cc \
            usage.cc \
            WindowManager.cc
-           
-           
            

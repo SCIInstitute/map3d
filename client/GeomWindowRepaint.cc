@@ -123,7 +123,7 @@ void GeomWindow::paintGL()
       if(curmesh->fidmapindex > 0){
         if (curmesh->fidshadingmodel != SHADE_NONE ){
           glEnable(GL_POLYGON_OFFSET_FILL);
-          DrawFidMapSurf(curmesh,curmesh->fidMaps[curmesh->fidmapindex -1]);
+          DrawFidMapSurf(curmesh,curmesh->fidMap);
           glDisable(GL_POLYGON_OFFSET_FILL);
         }
       }
@@ -165,7 +165,7 @@ void GeomWindow::paintGL()
       }
       if(curmesh->fidmapindex > 0){
         if (curmesh->fidshadingmodel == SHADE_NONE ){
-          DrawFidMapCont(curmesh,curmesh->fidMaps[curmesh->fidmapindex -1]);
+          DrawFidMapCont(curmesh,curmesh->fidMap);
         }
       }
     }
