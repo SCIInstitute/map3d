@@ -49,8 +49,8 @@ QString PickFile(QWidget* parent, bool save);
 
 void QStringToCharPtr(QString in, char* out, int size);
 
-void PickColor(float *);
-void PickSize(float *storage, float factor, char* str);
+void PickColor(float *, bool modal = false);
+void PickSize(float *storage, float factor, char* str, bool modal = false);
 void incrSize(float *storage, float maxChange, float midpoint, float inc);
 
 // --------------------------- //
@@ -62,13 +62,13 @@ class SizeWidget : public QWidget {
 public:
   SizeWidget(QWidget* parent, int size);
 
-  void setSize(int size) { _size = size; }
+  void setSize(float size) { _size = size; }
 
   virtual void mousePressEvent ( QMouseEvent * event );
   virtual void mouseDoubleClickEvent ( QMouseEvent * event );
   virtual void paintEvent ( QPaintEvent * event );
 
-  int _size;
+  float _size;
   bool _selected;
 
 signals:
@@ -81,6 +81,7 @@ class SizePicker : public QDialog {
 public:
 
   SizePicker();
+  ~SizePicker();
 
   // public interface to everything to minimize reworking of legacy code
 
@@ -93,12 +94,6 @@ public:
 
   vector < float *> ss_float;
   vector < float *> ss_orig_vals;
-
-  // this is so we can clear the storage on a subsequent call to PickColor
-  // right now, kind of hacky, it is set at the end of GeomWindowMenu
-  bool post_change;
-
-  void closeEvent(QCloseEvent*) { hide(); }
 
 public slots:
   void on_cancelButton_clicked();
@@ -120,13 +115,16 @@ class ColorWidget : public QWidget {
 public:
   ColorWidget(QWidget* parent, QColor color);
 
-  void setColor(QColor color) { _color = color; }
+  void setColor(QColor color) { _color[0] = color.redF(); _color[1] = color.greenF(); _color[2] = color.blueF();}
+  QColor colorAsQColor() { return QColor(_color[0]*255, _color[1]*255, _color[2]*255); }
 
   virtual void mousePressEvent ( QMouseEvent * event );
   virtual void mouseDoubleClickEvent ( QMouseEvent * event );
   virtual void paintEvent ( QPaintEvent * event );
 
-  QColor _color;
+  // store as float and not QColor so that we can use a ColorPicker to change it!
+  //  (See FidDialog)
+  float _color[3];
   bool _selected;
 
 signals:
@@ -139,6 +137,7 @@ class ColorPicker : public QDialog {
 public:
 
   ColorPicker();
+  ~ColorPicker();
 
   // public interface to everything to minimize reworking of legacy code
 
@@ -153,8 +152,6 @@ public:
   // this is so we can clear the storage on a subsequent call to PickColor
   // right now, kind of hacky, it is set at the end of GeomWindowMenu
   bool post_change;
-
-  void closeEvent(QCloseEvent*) { hide(); }
 
 public slots:
   void on_cancelButton_clicked();

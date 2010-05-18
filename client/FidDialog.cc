@@ -84,6 +84,11 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
 
             ColorWidget* cw = new ColorWidget(this, QColor(_currentMesh->fidConts[row-1]->fidcolor));
             gridLayout->addWidget(cw, row, ContColor, 1, 1);
+			connect(cw, SIGNAL(doubleClicked()), this, SLOT(pickColor()));
+
+            SizeWidget* sw = new SizeWidget(this, _currentMesh->fidConts[row-1]->fidContSize);
+            gridLayout->addWidget(sw, row, ContSize, 1, 1);
+			connect(sw, SIGNAL(doubleClicked()), this, SLOT(pickSize()));
 
             QRadioButton* rb = new QRadioButton(this);
             _fiducialMapRadio.append(rb);
@@ -114,6 +119,22 @@ void FidDialog::on_applyButton_clicked()
 void FidDialog::on_cancelButton_clicked()
 {
   close();
+}
+
+void FidDialog::pickColor()
+{
+	ColorWidget* cw = dynamic_cast<ColorWidget*>(sender());
+	Q_ASSERT(cw);
+
+	PickColor(cw->_color, true);
+}
+
+void FidDialog::pickSize()
+{
+	SizeWidget* sw = dynamic_cast<SizeWidget*>(sender());
+	Q_ASSERT(sw);
+
+	PickSize(&sw->_size, 10, "Fiducial Contour Size", true);
 }
 
 #if 0

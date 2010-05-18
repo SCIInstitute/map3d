@@ -93,13 +93,6 @@ void GeomWindow::MenuEvent(int menu)
   if (map3d_info.saving_animations) {
     SaveScreen();
   } 
-
-  // reset the entries in ColorPicker and SizePicker so the next call to PickColor or Size doesn't just
-  // append to the list of colors/sizes.  This is the best place, as it can be broadcasted.
-  if (cp) 
-    cp->post_change = true;
-  if (sp) 
-    sp->post_change = true;
 }
 
 

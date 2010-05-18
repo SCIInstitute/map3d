@@ -223,7 +223,7 @@ void ColorPicker::on_cancelButton_clicked()
   }
   cp->cs_float.clear();
   cp->cs_orig_vals.clear();
-  hide();
+  close();
   Broadcast(MAP3D_REPAINT_ALL, 0);
 }
 
@@ -234,18 +234,19 @@ void ColorPicker::on_closeButton_clicked()
   }
   cp->cs_float.clear();
   cp->cs_orig_vals.clear();
-  hide();
+  close();
 }
 
 ColorWidget::ColorWidget(QWidget* parent, QColor color) : 
-  QWidget(parent), _color(color), _selected(false)
+  QWidget(parent), _selected(false)
 {
+	setColor(color);
 }
 
 void ColorWidget::paintEvent ( QPaintEvent* )
 {
   QPainter painter(this);
-  QBrush brush(_color);
+  QBrush brush(colorAsQColor());
   QPen pen(Qt::black);
   pen.setWidth(3);
 
@@ -269,7 +270,6 @@ void ColorWidget::mouseDoubleClickEvent ( QMouseEvent *)
 
 ColorPicker::ColorPicker()
 {
-  post_change = false;
   selected_color_widget = NULL;
   
   // create the window and set window parameters
@@ -339,6 +339,18 @@ ColorPicker::ColorPicker()
   }
 }
 
+ColorPicker::~ColorPicker()
+{
+  // clear out the values for the next selection (set in GeomWindowMenu)
+  cp->cs_float.clear();
+  for (unsigned i = 0; i < cp->cs_orig_vals.size(); i++) {
+    delete cp->cs_orig_vals[i];  // they were allocated in PickColor, and there should be one of them per cs_float
+  }
+  cp->cs_orig_vals.clear();
+
+  cp = NULL;
+}
+
 void ColorPicker::colorSelected()
 {
   ColorWidget* widget = dynamic_cast<ColorWidget*>(sender());
@@ -348,17 +360,17 @@ void ColorPicker::colorSelected()
 
   selected_color_widget = widget;
   widget->_selected = true;
-  QColor color = widget->_color;
+
   for (unsigned int i = 0; i < cp->cs_float.size(); i++) {
-    cp->cs_float[i][0] = color.redF();
-    cp->cs_float[i][1] = color.greenF();
-    cp->cs_float[i][2] = color.blueF();
+    cp->cs_float[i][0] = widget->_color[0];
+    cp->cs_float[i][1] = widget->_color[1];
+    cp->cs_float[i][2] = widget->_color[2];
   }
   Broadcast(MAP3D_REPAINT_ALL, 0);
   update();
 }
 
-void PickColor(float *storage)
+void PickColor(float *storage, bool modal)
 {
   float *orig = new float[3];
   orig[0] = storage[0];
@@ -368,19 +380,11 @@ void PickColor(float *storage)
   if (!cp)
     cp = new ColorPicker();
 
+  if (modal)
+    cp->setModal(true);
+  cp->setAttribute(Qt::WA_DeleteOnClose);
+
   cp->selected_color_widget = 0;
-  cp->show();
-
-  // clear out the values for the next selection (set in GeomWindowMenu)
-  if (cp->post_change) {
-    cp->cs_float.clear();
-    for (unsigned i = 0; i < cp->cs_orig_vals.size(); i++) {
-      delete cp->cs_orig_vals[i];  // they were allocated in PickColor, and there should be one of them per cs_float
-    }
-    cp->cs_orig_vals.clear();
-
-    cp->post_change = false;
-  }
 
   cp->cs_float.push_back(storage);
   cp->cs_orig_vals.push_back(orig);
@@ -394,7 +398,8 @@ void PickColor(float *storage)
   color.setGreenF(cp->cs_float[0][1]);
   color.setBlueF(cp->cs_float[0][2]);
 
-  cp->orig_color_widget->_color = color;
+  cp->orig_color_widget->setColor(color);
+  cp->show();
   cp->update();  
 }
 
@@ -406,7 +411,7 @@ void SizePicker::on_cancelButton_clicked()
   }
   sp->ss_float.clear();
   sp->ss_orig_vals.clear();
-  hide();
+  close();
   Broadcast(MAP3D_REPAINT_ALL, 0);
 }
 
@@ -417,7 +422,7 @@ void SizePicker::on_closeButton_clicked()
   }
   sp->ss_float.clear();
   sp->ss_orig_vals.clear();
-  hide();
+  close();
 }
 
 SizeWidget::SizeWidget(QWidget* parent, int size) : 
@@ -457,7 +462,6 @@ void SizeWidget::mouseDoubleClickEvent ( QMouseEvent * )
 
 SizePicker::SizePicker()
 {
-  post_change = false;
   selected_size_widget = NULL;
   
   // add sub-boxes
@@ -478,7 +482,7 @@ SizePicker::SizePicker()
   QLabel* label = new QLabel("Original:", buttonFrame);
   buttonLayout->addWidget(label);
   orig_size_widget = new SizeWidget(this, 1);
-  orig_size_widget->setMinimumSize(50, 50);
+  orig_size_widget->setMinimumSize(50, 25);
   buttonLayout->addWidget(orig_size_widget);
 
   // add last row and selected color box into it.
@@ -498,9 +502,19 @@ SizePicker::SizePicker()
     
     SizeWidget* frame = new SizeWidget(this, i);
     connect(frame, SIGNAL(clicked()), this, SLOT(sizeSelected()));
-    frame->setMinimumSize(50, 50);
+    frame->setMinimumSize(50, 25);
     gridLayout->addWidget(frame, i, 1);    
   }
+}
+
+SizePicker::~SizePicker()
+{
+  sp->ss_float.clear();
+  for (unsigned i = 0; i < sp->ss_orig_vals.size(); i++) {
+    delete sp->ss_orig_vals[i];  // they were allocated in PickColor, and there should be one of them per cs_float
+  }
+  sp->ss_orig_vals.clear();
+  sp = NULL;
 }
 
 void SizePicker::sizeSelected()
@@ -520,7 +534,7 @@ void SizePicker::sizeSelected()
   update();
 }
 
-void PickSize(float *storage, float factor, char* str)
+void PickSize(float *storage, float factor, char* str, bool modal)
 {
   float *orig = new float;
   *orig = *storage;
@@ -529,18 +543,10 @@ void PickSize(float *storage, float factor, char* str)
     sp = new SizePicker();
 
   sp->selected_size_widget = 0;
-  sp->show();
+  sp->setAttribute(Qt::WA_DeleteOnClose);
+  if (modal)
+    sp->setModal(true);
 
-  // clear out the values for the next selection (set in GeomWindowMenu)
-  if (sp->post_change) {
-    sp->ss_float.clear();
-    for (unsigned i = 0; i < sp->ss_orig_vals.size(); i++) {
-      delete sp->ss_orig_vals[i];  // they were allocated in PickColor, and there should be one of them per cs_float
-    }
-    sp->ss_orig_vals.clear();
-
-    sp->post_change = false;
-  }
 
   sp->setWindowTitle(QString("Select ") + str);
   sp->ss_float.push_back(storage);
@@ -551,6 +557,7 @@ void PickSize(float *storage, float factor, char* str)
   sp->orig_size_widget->_size = sp->selected_size;
   sp->factor = factor;
   sp->update();
+  sp->show();
 }
 
 // storage is a pointer to the value to change,

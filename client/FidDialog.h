@@ -17,6 +17,9 @@ public slots:
   void on_applyButton_clicked();
   void on_cancelButton_clicked();
   void on_surfComboBox_currentIndexChanged(int index);
+
+  void pickColor();
+  void pickSize();
 private:
   Mesh_Info* _currentMesh;
 
