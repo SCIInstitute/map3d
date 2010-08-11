@@ -202,8 +202,8 @@ void Broadcast(int message, Map3dGLWidget* widget, QEvent * event, int data)
 	  float xn, yn;
 	  GeomWindow *priv = GeomWindows[loop];
 	  QMouseEvent *m_event = (QMouseEvent *) event;
-	  xn = (float)m_event->x() / priv->width();
-	  yn = (float)m_event->y() / priv->height();
+	  xn = (float)m_event->x() / widget->width();
+	  yn = (float)m_event->y() / widget->height();
 	  priv->HandleMouseMotion(m_event, xn, yn);
 	}
       }
@@ -215,8 +215,8 @@ void Broadcast(int message, Map3dGLWidget* widget, QEvent * event, int data)
 	  float xn, yn;
 	  GeomWindow *priv = GeomWindows[loop];
 	  QMouseEvent *m_event = (QMouseEvent *) event;
-	  xn = (float)m_event->x() / priv->width();
-	  yn = (float)m_event->y() / priv->height();
+	  xn = (float)m_event->x() / widget->width();
+	  yn = (float)m_event->y() / widget->height();
 	  priv->HandleButtonPress(m_event, xn, yn);
 	}
       }
@@ -227,8 +227,8 @@ void Broadcast(int message, Map3dGLWidget* widget, QEvent * event, int data)
 	  float xn, yn;
 	  GeomWindow *priv = GeomWindows[loop];
 	  QMouseEvent *m_event = (QMouseEvent *) event;
-	  xn = (float)m_event->x() / priv->width();
-	  yn = (float)m_event->y() / priv->height();
+	  xn = (float)m_event->x() / widget->width();
+	  yn = (float)m_event->y() / widget->height();
 	  priv->HandleButtonRelease(m_event, xn, yn);
 	}
       }
