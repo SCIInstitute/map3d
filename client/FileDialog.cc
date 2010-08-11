@@ -127,7 +127,6 @@ void FileDialogWidget::on_endFrameSpinBox_valueChanged ( int i )
 void FileDialogWidget::on_geomBrowseButton_clicked ()
 {
   QString newFile = QFileDialog::getOpenFileName(parentWidget(), "Select geometry file");
-    qDebug() << __FUNCTION__ << newFile;
 
   geomLineEdit->setText(newFile);
   on_geomLineEdit_editingFinished();
@@ -787,6 +786,7 @@ bool FileDialogWidget::updateFiles()
       delete mesh->mysurf;
       mesh->mysurf = 0;
     }
+    return true;  // we don't need to (and shouldn't) go through the reload section
   }
   
   
