@@ -688,9 +688,7 @@ bool FileDialogWidget::updateFiles()
   char lm[256];
   char fi[256];
 
-  qDebug() << "Geom:" << geomLineEdit->text() << geomLineEdit->text().toAscii().data();
   strncpy(geom, geomLineEdit->text().toAscii().data(), 256);
-  qDebug() << "Geom post:" << geomLineEdit->text() << geomLineEdit->text().toAscii().data() << geom;
   
   // gs should be 0 if the * was selected in a multisurf case, which is what we want 
   int gs = geomIndexComboBox->currentIndex();
