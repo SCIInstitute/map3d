@@ -813,8 +813,9 @@ void GeomWindow::HandleMenu(int menu_data)
           break;
       case window_lwindow_hide:
         mesh->showlegend = false;
-        mesh->legendwin->setVisible(false);
-          break;
+        if (mesh->legendwin)
+          mesh->legendwin->setVisible(false);
+        break;
       case window_save:
       {
         SaveGeomToDisk(mesh, false);
