@@ -45,13 +45,13 @@ extern FileCache file_cache;
 // will bring up a dialog and either quit or do nothing
 void map3d_quit(QWidget* parentWindow)
 {
-  if (QMessageBox::question(parentWindow, "Map3d", "Really Quit?") == QMessageBox::Ok)
+  if (QMessageBox::question(parentWindow, "Map3d", "Really Quit?", QMessageBox::Ok|QMessageBox::Cancel) == QMessageBox::Ok)
     exit(0);
 }
 
 bool prompt_overwrite(QWidget* parentWindow, QString filename)
 {
-  return QMessageBox::question(parentWindow, "Map3d", "Overwrite " + filename + "?") == QMessageBox::Ok;
+  return QMessageBox::question(parentWindow, "Map3d", "Overwrite " + filename + "?", QMessageBox::Ok|QMessageBox::Cancel) == QMessageBox::Ok;
 }
 
 QString PickFile(QWidget* parentWindow, bool save)
@@ -389,9 +389,9 @@ void PickColor(float *storage, bool modal)
   cp->cs_float.push_back(storage);
   cp->cs_orig_vals.push_back(orig);
   
-  cp->selected_color[0] = cp->cs_float[0][0];
-  cp->selected_color[1] = cp->cs_float[0][1];
-  cp->selected_color[2] = cp->cs_float[0][2];
+  cp->selected_color[0] = storage[0];
+  cp->selected_color[1] = storage[1];
+  cp->selected_color[2] = storage[2];
   
   QColor color;
   color.setRedF(cp->cs_float[0][0]);
@@ -399,8 +399,14 @@ void PickColor(float *storage, bool modal)
   color.setBlueF(cp->cs_float[0][2]);
 
   cp->orig_color_widget->setColor(color);
-  cp->show();
-  cp->update();  
+
+  if (modal)
+    cp->exec();
+  else 
+  {
+    cp->show();
+    cp->update();  
+  }
 }
 
 void SizePicker::on_cancelButton_clicked()

@@ -261,7 +261,7 @@ int ProcessCommandLineOptions(Global_Input & g)
   GlobalMinMax();
 
   if (g.bgimage)
-    map3d_info.bg_texture = 0 ; // FIX readImage(g.bgimage);
+    map3d_info.bg_texture = readImage(g.bgimage);
 
   Broadcast(MAP3D_UPDATE);
 

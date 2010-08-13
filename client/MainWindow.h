@@ -7,6 +7,7 @@
 
 class QLabel;
 class QFrame;
+class QContextMenuEvent;
 
 class MainWindow : public QMainWindow
 {
@@ -20,8 +21,11 @@ public:
   QLabel* label;
   QWidget* childrenFrame;
 
+  virtual void contextMenuEvent(QContextMenuEvent* event);
 public slots:
   void updateLabel();
+  void updateBGColor(QColor color);
+  void updateFGColor(QColor color);
 };
 
 enum Menu_item

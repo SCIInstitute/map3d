@@ -27,6 +27,8 @@
 #include <QColor>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 MainWindow *masterWindow = NULL;
 
@@ -77,72 +79,6 @@ void MainWindow::updateLabel()
   label->setText(text);
 }
 
-void MainWindowRepaint(GtkWidget *, GdkEvent *, void* /*data*/)
-{
-/*  FIX MainWindow *priv = (MainWindow *) data;
-
-  if (!gdk_gl_drawable_gl_begin(priv->gldrawable, priv->glcontext)) {
-    printf("Can't find where I should be drawing!\n");
-    return;
-  }
-
-  glClearColor(priv->bgcolor[0], priv->bgcolor[1], priv->bgcolor[2], 1);
-  glClear(GL_COLOR_BUFFER_BIT);
-  if (priv->showinfotext)
-    for (int i = 0; i < priv->textLines; i++) {
-      glColor3fv(priv->fgcolor);
-      renderString3f(priv->width / 2 - strlen(priv->mainWindowText[i]) / 2 * getFontWidth((int)map3d_info.large_font),
-                     priv->height - (25 * i + 25), 0, (int)map3d_info.large_font, priv->mainWindowText[i]);
-    }
-
-  if (gdk_gl_drawable_is_double_buffered(priv->gldrawable))
-    gdk_gl_drawable_swap_buffers(priv->gldrawable);
-  else
-    glFlush();
-  gdk_gl_drawable_gl_end(priv->gldrawable);
-  */
-}
-
-void MainWindowMenu(menu_data * data)
-{
-#if 0
-  MainWindow *priv = (MainWindow *) data->priv;
-  int menu = data->data;
-
-  if (menu == quit)
-    map3d_quit(masterWindow->window);
-  else if (menu == back_color) {
-    /*GdkColor *color;
-    color = PickColor();
-    if (color != NULL) {
-      priv->bgcolor[0] = color->red / 65535.;
-      priv->bgcolor[1] = color->green / 65535.;
-      priv->bgcolor[2] = color->blue / 65535.;
-      gtk_widget_modify_bg(masterWindow->window, GTK_STATE_NORMAL, color);
-      gtk_widget_hide(masterWindow->window);
-      gtk_widget_show(masterWindow->window);
-      gtk_widget_queue_draw(masterWindow->drawarea);
-      delete color;
-    }*/
-    PickColor(priv->bgcolor);
-  }
-  else if (menu == fore_color) {
-    PickColor(priv->fgcolor);
-  }
-  else if (menu == info)
-    priv->showinfotext = !priv->showinfotext;
-  //gtk_widget_queue_draw(priv->drawarea);
-#endif
-}
-
-//void MainWindow::buildMenus()
-//{
-//  AddMenuEntry(menu, "Set Background Color", back_color, this, MainWindowMenu);
-//  AddMenuEntry(menu, "Set Foreground Color", fore_color, this, MainWindowMenu);
-//  AddMenuEntry(menu, "Show Info", info, this, MainWindowMenu);
-//  AddMenuEntry(menu, "Quit Map3d", quit, this, MainWindowMenu);
-//}
-
 void MainWindow::adjustSize()
 {
   int width = 0, height = 0;
@@ -160,4 +96,65 @@ void MainWindow::adjustSize()
   childrenFrame->setMinimumSize(width, height);
   childrenFrame->setMaximumSize(width, height);
   this->setMaximumSize(qMax(width, label->minimumSize().width()), label->minimumSize().height() + height);
+  resize(1,1);
+  update();
+}
+
+void MainWindow::contextMenuEvent(QContextMenuEvent* event)
+{
+  QMenu menu;
+  QAction* bgAction = menu.addAction("Set Background Color");
+  QAction* fgAction = menu.addAction("Set Foreground Color");
+  QAction* infoAction = menu.addAction("Show Info");
+  infoAction->setCheckable(true);
+  infoAction->setChecked(label->isVisible());
+  QAction* quitAction = menu.addAction("Quit Map3d");
+
+  QAction* selectedAction = menu.exec(event->globalPos());
+
+  if (bgAction == selectedAction)
+  {
+    QColor color = palette().color(backgroundRole());
+
+    float c[3]; c[0] = color.redF(); c[1] = color.greenF(); c[2] = color.blueF();
+    PickColor(c, true);
+    color.setRedF(c[0]); color.setGreenF(c[1]); color.setBlueF(c[2]);
+
+    QPalette palette;
+    palette.setColor(backgroundRole(), color);
+    palette.setColor(foregroundRole(), this->palette().color(foregroundRole()));
+    setPalette(palette);
+  }
+  else if (fgAction == selectedAction)
+  {
+    QColor color = palette().color(foregroundRole());
+
+    float c[3]; c[0] = color.redF(); c[1] = color.greenF(); c[2] = color.blueF();
+    PickColor(c, true);
+    color.setRedF(c[0]); color.setGreenF(c[1]); color.setBlueF(c[2]);
+
+    QPalette palette;
+    palette.setColor(foregroundRole(), color);
+    palette.setColor(backgroundRole(), this->palette().color(backgroundRole()));
+    setPalette(palette);
+  }
+  else if (infoAction == selectedAction)
+  {
+    label->setVisible(!label->isVisible());
+    adjustSize();
+  }
+  else if (quitAction == selectedAction)
+  {
+    map3d_quit(this);
+  }
+}
+
+void MainWindow::updateBGColor(QColor color)
+{
+
+}
+
+void MainWindow::updateFGColor(QColor color)
+{
+
 }
