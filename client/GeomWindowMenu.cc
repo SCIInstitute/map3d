@@ -350,12 +350,6 @@ void GeomWindow::HandleMenu(int menu_data)
         }
           numconts = 50;
         break;
-      case contour_dialog:
-      {
-        ContourDialog dialog;
-        dialog.exec();
-        break;
-      }
       case contour_style_dashed:
         mesh->negcontdashed = 1;
         mesh->drawcont = 1;
@@ -943,6 +937,12 @@ bool GeomWindow::MenuGlobalOptions(int menu)
   
   // values to be set *once*
   switch (menu) {
+    case contour_dialog:
+    {
+      ContourDialog dialog;
+      dialog.exec();
+      break;
+    }
     case frame_align:
       //set frame number to align to
       if (dominantsurf != -1) {

@@ -68,7 +68,7 @@ ContourDialog::ContourDialog()
     float cs_min = (surfmax-surfmin)/1000;  // 1000 because local windows can often be a small subset of the data range
     float high = MAX(fabs(surfmax), fabs(surfmin));
 
-    QLabel* label = new QLabel(QString::number(mesh->geom->surfnum+1), this);
+    QLabel* label = new QLabel(QString::number(mesh->geom->surfnum), this);
     gridLayout->addWidget(label, row, SurfNum);
 
     QDoubleSpinBox* spacing = new QDoubleSpinBox(this);
@@ -86,6 +86,9 @@ ContourDialog::ContourDialog()
     conts->setProperty(MeshProperty, index);
     numContBoxes << conts;  
     gridLayout->addWidget(conts, row, NumConts);
+
+    conts->setEnabled(!map3d_info.use_spacing);
+    spacing->setEnabled(map3d_info.use_spacing);
 
     QCheckBox* fixed = new QCheckBox(this);
     fixed->setChecked(origFixed);
@@ -124,8 +127,12 @@ ContourDialog::ContourDialog()
     connect(occlusion, SIGNAL(valueChanged(double)), this, SLOT(contourCallback()));
     connect(fixed, SIGNAL(toggled(bool)), this, SLOT(contourCallback()));
   }
+
   connect(contSpacingRadioButton, SIGNAL(toggled(bool)), this, SLOT(contourCallback()));
   connect(numContsRadioButton, SIGNAL(toggled(bool)), this, SLOT(contourCallback()));
+
+  contSpacingRadioButton->setChecked(!map3d_info.use_spacing);
+  numContsRadioButton->setChecked(map3d_info.use_spacing);
 }
 
 void ContourDialog::on_cancelButton_clicked()
@@ -158,17 +165,29 @@ void ContourDialog::on_applyButton_clicked()
 }
 
 
-// called from cancel or preview
+// called from adjusting the fields in a row
 void ContourDialog::contourCallback()
 {
-  int numconts;
-  map3d_info.use_spacing = contSpacingRadioButton->isChecked();
+  // the radio button represents which field to adjust.  If we're adjusting
+  //   the contour spacing, that means the primary field we care about is
+  //   the number of contours
+  map3d_info.use_spacing = !contSpacingRadioButton->isChecked();
 
   Q_ASSERT(sender());
 
   QVariant rowProp = sender()->property(MeshProperty);
   if (!rowProp.isValid())
-    return; // was a global radio button or something
+  {
+    // was a global radio button or something
+
+    for (int i = 0; i < spacingBoxes.size(); i++)
+    {
+      numContBoxes[i]->setEnabled(!map3d_info.use_spacing);
+      spacingBoxes[i]->setEnabled(map3d_info.use_spacing);
+    }
+
+    return; 
+  }
 
   int row = rowProp.toInt();
 
@@ -186,16 +205,25 @@ void ContourDialog::contourCallback()
     mesh->data->userpotmax = (float) maxBoxes[row]->value();
 
 
+    mesh->cont->occlusion_gradient = (float) occlusionBoxes[row]->value();
+
     if (map3d_info.use_spacing) {
       mesh->contourspacing = (float) spacingBoxes[row]->value();
-      numconts = mesh->cont->buildContours();
     }
     else {
-      numconts = numContBoxes[row]->value();
+      int numconts = numContBoxes[row]->value();
       if (mesh->data)
         mesh->data->numconts = numconts;
+
+      float min = 0, max = 0;
+      mesh->data->get_minmax(min, max);
+      spacingBoxes[row]->setValue((max-min)/(numconts+1));
     }
-    mesh->cont->occlusion_gradient = (float) occlusionBoxes[row]->value();
+
+    int numconts = mesh->cont->buildContours();
+    if (map3d_info.use_spacing) {
+      numContBoxes[row]->setValue(numconts);
+    }
 
   }
   Broadcast(MAP3D_UPDATE);

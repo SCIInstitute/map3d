@@ -238,7 +238,7 @@ void Surf_Data::get_minmax(float &min, float &max)
 
   // enable the user to use user-scaling on 1 surf while the rest are using whatever
   // scaling is selected.
-  if (user_scaling && userpotmin != userpotmax && userpotmax != 0) {
+  if (user_scaling && userpotmin < userpotmax) {
     min = userpotmin;
     max = userpotmax;
     return;
