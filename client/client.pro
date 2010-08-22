@@ -24,8 +24,24 @@ win32 {
     LIB_DIR=/release
     debug {
         LIB_DIR=/debug
-        }
+    }
+    PRE_TARGETDEPS *= ../thirdparty/fids$$LIB_DIR/fids.lib
+    PRE_TARGETDEPS *= ../thirdparty/fi$$LIB_DIR/fi.lib
+    PRE_TARGETDEPS *= ../thirdparty/tsdflib$$LIB_DIR/tsdflib.lib
+    PRE_TARGETDEPS *= ../thirdparty/gfilelib$$LIB_DIR/gfilelib.lib
+    PRE_TARGETDEPS *= ../thirdparty/graphicsio$$LIB_DIR/graphicsio.lib
+    PRE_TARGETDEPS *= ../thirdparty/gdbmp$$LIB_DIR/gdbmp.lib
+    PRE_TARGETDEPS *= ../thirdparty/cutil$$LIB_DIR/cutil.lib
+} else {
+    PRE_TARGETDEPS *= ../thirdparty/fids/libfids.a
+    PRE_TARGETDEPS *= ../thirdparty/fi/libfi.a
+    PRE_TARGETDEPS *= ../thirdparty/tsdflib/libtsdflib.a
+    PRE_TARGETDEPS *= ../thirdparty/gfilelib/libgfilelib.a
+    PRE_TARGETDEPS *= ../thirdparty/graphicsio/libgraphicsio.a
+    PRE_TARGETDEPS *= ../thirdparty/gdbmp/libgdbmp.a
+    PRE_TARGETDEPS *= ../thirdparty/cutil/libcutil.a
 }
+
 
 LIBPATH += ../thirdparty/cutil$$LIB_DIR
 LIBPATH += ../thirdparty/fi$$LIB_DIR
