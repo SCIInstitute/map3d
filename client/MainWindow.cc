@@ -44,7 +44,7 @@ MainWindow::MainWindow()
   layout->setSpacing(0);
   frame->setLayout(layout);
 
-  label = new QLabel("blah", frame);
+  label = new QLabel("", frame);
   QFont font = label->font();
   font.setPointSize(18);
   label->setFont(font);
