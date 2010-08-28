@@ -37,24 +37,22 @@ MainWindow::MainWindow()
   textLines = 0;
   startHidden = false;
 
-  QFrame* frame = new QFrame(this);
-  setCentralWidget(frame);
+  setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   QVBoxLayout* layout = new QVBoxLayout();
   layout->setMargin(0);
   layout->setSpacing(0);
-  frame->setLayout(layout);
+  setLayout(layout);
 
-  label = new QLabel("", frame);
+  label = new QLabel("");
   QFont font = label->font();
   font.setPointSize(18);
   label->setFont(font);
   label->setAlignment(Qt::AlignHCenter);
+  label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
   layout->addWidget(label);
-  childrenFrame = new QWidget(frame);
+  childrenFrame = new QWidget();
+  childrenFrame->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
   layout->addWidget(childrenFrame);
-  layout->addStretch();
-
-
 }
 
 void MainWindow::updateLabel()
@@ -77,6 +75,8 @@ void MainWindow::updateLabel()
   }
 
   label->setText(text);
+  label->repaint();
+  QTimer::singleShot(0, this, SLOT(adjustSize()));
 }
 
 void MainWindow::adjustSize()
@@ -95,8 +95,21 @@ void MainWindow::adjustSize()
   }
   childrenFrame->setMinimumSize(width, height);
   childrenFrame->setMaximumSize(width, height);
-  this->setMaximumSize(qMax(width, label->minimumSize().width()), label->minimumSize().height() + height);
+
+  if (!label->isVisible())
+  {
+    setMaximumSize(width, height);
+    setMinimumSize(width, height);
+  }
+  else
+  {
+    setMaximumSize(width, height + label->height());
+    setMinimumSize(width, height + label->height());
+  }
   resize(1,1);
+  childrenFrame->updateGeometry();
+  updateGeometry();
+
   update();
 }
 

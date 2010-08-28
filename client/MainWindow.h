@@ -9,23 +9,25 @@ class QLabel;
 class QFrame;
 class QContextMenuEvent;
 
-class MainWindow : public QMainWindow
+class MainWindow : public QWidget
 {
+  Q_OBJECT;
 public:
   MainWindow();
   char mainWindowText[7][257];
   int textLines;
   bool startHidden;
-  void adjustSize();  // to be called after setting size/pos of child widget
 
   QLabel* label;
   QWidget* childrenFrame;
+  QWidget* mainFrame;
 
   virtual void contextMenuEvent(QContextMenuEvent* event);
 public slots:
   void updateLabel();
   void updateBGColor(QColor color);
   void updateFGColor(QColor color);
+  void adjustSize();  // to be called after setting size/pos of child widget and label
 };
 
 enum Menu_item

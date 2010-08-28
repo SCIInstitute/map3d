@@ -69,6 +69,7 @@ macx {
 
 # files that need to be moc'ed
 HEADERS += GeomWindow.h \
+           MainWindow.h \
            ContourDialog.h \
            FileDialog.h \
            FidDialog.h \
