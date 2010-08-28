@@ -119,10 +119,6 @@ int ProcessCommandLineOptions(Global_Input & g)
   map3d_info.same_scale = g.same_scale;
   fstep = g.framestep;
 
-  // create dialogs as necessary
-  // FIX scaleDialogCreate();
-  // FIX FilePickerCreate();
-
   /* if -b was indicated then create a main (composition) window */
   if (g.qnoborders) {
     map3d_info.posx = map3d_info.posy = 0;
@@ -245,10 +241,6 @@ int ProcessCommandLineOptions(Global_Input & g)
     }
   }
 
-  // create the files dialog if not already (and have it hidden)
-  // FIX if (!filedialog) 
-  //   filesDialogCreate(false);
-  
   /* clean un needed memory */
   delete meshes;
 
