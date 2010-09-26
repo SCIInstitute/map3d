@@ -185,9 +185,9 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
 
   QFont f = font();
   f.setPointSize(font_size[sizeindex]);
-  setFont(f);
+  //setFont(f);
 
-  renderText(x, y, z, string);
+  renderText(x, y, z, string, f);
 }
 
 
