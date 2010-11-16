@@ -421,11 +421,11 @@ void PickWindow::mouseMoveEvent(QMouseEvent* event)
         }
         // it affects at least one other surface...
         else {
-          Broadcast(MAP3D_UPDATE, this, event, deltaFrames);
+          Broadcast(MAP3D_UPDATE, this, event);
         }
       }
       else {
-        Broadcast(MAP3D_PICK_FRAMES, this, event);
+        Broadcast(MAP3D_PICK_FRAMES, this, event, deltaFrames);
         Broadcast(MAP3D_UPDATE, this, event);
       }
       
