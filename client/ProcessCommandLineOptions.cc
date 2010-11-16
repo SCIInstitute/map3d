@@ -244,9 +244,6 @@ int ProcessCommandLineOptions(Global_Input & g)
   /* clean un needed memory */
   delete meshes;
 
-  for (unsigned i = 0; i < numGeomWindows(); i++)
-    GetGeomWindow(i)->setInitialMenuChecks();
-
   for (unsigned i = 0; i < surf_group.size(); i++)
     recalcGroup(i);
   assignMasters(&g);

@@ -39,8 +39,6 @@ enum { vertical, horizontal, cont_match, cont_0, cont_1, cont_2, cont_3, cont_4,
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
 
-extern bool menulock;
-
 #define FONT_ADJUST 1.75
 #define CHAR_WIDTH .07 * FONT_ADJUST
 #define CHAR_HEIGHT .07 * FONT_ADJUST

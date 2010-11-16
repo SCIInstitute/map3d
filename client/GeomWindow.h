@@ -59,7 +59,6 @@ public:
   void removeMesh(Mesh_Info* mesh);
   Mesh_List findMeshesFromSameInput(Mesh_Info* mesh);
   void recalcMinMax();
-  void setInitialMenuChecks();
   float vfov;                   /* vertical field of view */
   Mesh_List meshes;             /* info for all the meshes in this 
                                    window: geom, data, contours, colormaps,... */
@@ -72,6 +71,7 @@ public:
   float fog1,fog2;
 
   float light_position[4];
+  int lighting_direction;        /* indicates above, below, front, etc. light direction - for menu check mark*/
 
 
   Clip_Planes *clip;

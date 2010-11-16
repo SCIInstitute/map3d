@@ -118,12 +118,13 @@ void GeomWindow::initializeGL()
   this->light_position[2] = 0.f;
   this->light_position[3] = 1.f;
 
+  lighting_direction = graphics_light_above; // see Menu for which is which
+
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glShadeModel(GL_FLAT);
 
   glFogfv(GL_FOG_COLOR, this->bgcolor);
   glFogi(GL_FOG_MODE, GL_LINEAR);
-  glLightfv(GL_LIGHT0, GL_POSITION, this->light_position);
   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
   glEnable(GL_LIGHT0);
   glEnable(GL_DEPTH_TEST);
@@ -951,54 +952,6 @@ void SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
       }
     }
   }
-}
-
-void GeomWindow::setInitialMenuChecks()
-{
-#if 0
-  // some of the Gtk functions can do infinite callbackss
-  static bool menulock = false;
-
-  if (menulock) return;
-
-  picking.setActive(map3d_info.pickmode);
-  scaling_range.setActive(map3d_info.scale_scope);
-  scaling_function.setActive(map3d_info.scale_model);
-  scaling_map.setActive(map3d_info.scale_mapping);
-
-  menulock = true;
-  surf_color.setActive(surface_color);
-  surf_render.setActive(surface_render);
-  mesh_render.setActive(draw_mesh);
-  cont_num.setActive(contour_num);
-  cont_draw_style.setActive(draw_contours);
-  surf_invert.setValue(0, invert);
-
-  node_all_sphere.setValue(0, all_node_sphere);
-  node_all_sphere.setValue(1, all_value);
-  node_ext_sphere.setValue(0, ext_node_sphere);
-  node_pick_sphere.setValue(0, pick_node_sphere);
-  node_lead_sphere.setValue(0, lead_node_sphere);
- 
-  draw_fid.setValue(0, draw_fids);
-
-  if (all_node_num > 0) node_all.setActive(all_node_num-1);
-  if (ext_node_num > 0) node_ext.setActive(ext_node_num-1);
-  if (pick_node_num > 0) node_pick.setActive(pick_node_num-1);
-  if (lead_node_num > 0) node_lead.setActive(lead_node_num-1);
-
-
-  int frame_step = 0;
-  if (fstep == 1) frame_step = 1;
-  if (fstep == 2) frame_step = 2;
-  if (fstep == 4) frame_step = 3;
-  if (fstep == 5) frame_step = 4;
-  if (fstep == 10) frame_step = 5;
-  if (fstep == 45) frame_step = 6;
-  if (fstep == 90) frame_step = 7;
-  frame_num.setActive(frame_step);
-  menulock = false;
-#endif
 }
 
 Mesh_List GeomWindow::findMeshesFromSameInput(Mesh_Info* mesh)

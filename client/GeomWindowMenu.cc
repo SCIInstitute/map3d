@@ -47,8 +47,6 @@ extern vector<Surface_Group> surf_group;
 extern MainWindow* masterWindow;
 extern int fstep;
 
-bool menulock = false;
-
 void GeomWindow::HandleMenu(int menu_data)
 {
   LegendWindow *lpriv = 0;
@@ -108,7 +106,6 @@ void GeomWindow::HandleMenu(int menu_data)
         if (lpriv) {
           lpriv->update();
         }
-        menulock = true;
         break;
       }
       case surface_color_jet:
@@ -117,7 +114,6 @@ void GeomWindow::HandleMenu(int menu_data)
         if (lpriv) {
           lpriv->update();
         }
-        menulock = true;
         break;
       }
       case surface_color_invert:
@@ -178,52 +174,30 @@ void GeomWindow::HandleMenu(int menu_data)
       case no_fid_cont:
         mesh->drawactcont = false;
         mesh->drawreccont = false;
-        menulock = true;
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(actFidCont), 0);
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(recFidCont), 0);
-        menulock = false;
         break;
       case act_fid_cont:
         mesh->drawactcont = true;
-        menulock = true;
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(noFidCont), 0);
-        menulock = false;
         break;
       case rec_fid_cont:
         mesh->drawreccont = true;
-        menulock = true;
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(noFidCont), 0);
-        menulock = false;
         break;
       case no_fid_map:
         mesh->drawfidmapcont = -1;
         //       mesh->drawactmapcont = false;
         //       mesh->drawrecmapcont = false;
         mesh->drawcont = true;
-        menulock = true;
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(actFidMap), 0);
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(recFidMap), 0);
-        menulock = false;
         break;
       case act_fid_map:
         mesh->drawfidmapcont = 10;
         //       mesh->drawactmapcont = true;
         //       mesh->drawrecmapcont = false;
         mesh->drawcont = false;
-        menulock = true;
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(noFidMap), 0);
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(recFidMap), 0);
-        menulock = false;
         break;
       case rec_fid_map:
         mesh->drawfidmapcont = 13;
         //       mesh->drawrecmapcont = true;
         //       mesh->drawactmapcont = false;
         mesh->drawcont = false;
-        menulock = true;
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(noFidMap), 0);
-        // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(actFidMap), 0);
-        menulock = false;
         break;
       case fid_draw_fid:
         mesh->drawfids = !mesh->drawfids;
@@ -583,6 +557,7 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
       case graphics_light_above:
         mesh->lighting = 1;
+        lighting_direction = menu_data;
         light_position[0] = 0.f;
         light_position[1] = fabs(2 * l2norm);
         light_position[2] = 0.f;
@@ -590,6 +565,7 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
       case graphics_light_below:
         mesh->lighting = 1;
+        lighting_direction = menu_data;
         light_position[0] = 0.f;
         light_position[1] = -fabs(2 * l2norm);
         light_position[2] = 0.f;
@@ -597,6 +573,7 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
       case graphics_light_left:
         mesh->lighting = 1;
+        lighting_direction = menu_data;
         light_position[0] = -fabs(2 * l2norm);
         light_position[1] = 0.f;
         light_position[2] = 0.f;
@@ -604,6 +581,7 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
       case graphics_light_right:
         mesh->lighting = 1;
+        lighting_direction = menu_data;
         light_position[0] = fabs(2 * l2norm);
         light_position[1] = 0.f;
         light_position[2] = 0.f;
@@ -611,6 +589,7 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
       case graphics_light_front:
         mesh->lighting = 1;
+        lighting_direction = menu_data;
         light_position[0] = 0.f;
         light_position[1] = 0.f;
         light_position[2] = fabs(2 * l2norm);
@@ -618,6 +597,7 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
       case graphics_light_back:
         mesh->lighting = 1;
+        lighting_direction = menu_data;
         light_position[0] = 0.f;
         light_position[1] = 0.f;
         light_position[2] = -fabs(2 * l2norm);
@@ -877,9 +857,6 @@ void GeomWindow::HandleMenu(int menu_data)
   switch ((menu_data)) {
     case clip_front:
       MAP3D_WINDOW_LOCK_TOGGLE(map3d_info.lockgeneral, clip->front_enabled);
-      menulock = true;
-      // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(front_plane),clip->front_enabled );
-      menulock = false;
       
       if (clip->front_enabled) {
         clip->lock_with_object = true;
@@ -887,9 +864,6 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
     case clip_back:
       MAP3D_WINDOW_LOCK_TOGGLE(map3d_info.lockgeneral, clip->back_enabled);
-      menulock = true;
-      // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(back_plane), clip->back_enabled);
-      menulock = false;
       
       if (clip->back_enabled) {
         clip->lock_with_object = true;
@@ -897,15 +871,9 @@ void GeomWindow::HandleMenu(int menu_data)
         break;
     case clip_together:
       MAP3D_WINDOW_LOCK_TOGGLE(map3d_info.lockgeneral, clip->lock_together);
-      menulock = true;
-      // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(c_together),clip->lock_together );
-      menulock = false;
       break;
     case clip_with_object:
       MAP3D_WINDOW_LOCK_TOGGLE(map3d_info.lockgeneral, clip->lock_with_object);
-      menulock = true;
-      // FIX gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(c_with_object),clip->lock_with_object );
-      menulock = false;
       break;
     case window_locks:
       MAP3D_WINDOW_LOCK_TOGGLE(map3d_info.lockgeneral, showlocks);
@@ -1327,6 +1295,7 @@ int GeomWindow::OpenMenu(QPoint point)
   bool all_value = false;
   int all_node_num = 0, ext_node_num = 0, pick_node_num = 0, lead_node_num = 0;
   bool draw_fids = false;
+  bool lighting = false; 
   for (unsigned i = 0; i < meshes.size(); i++) {
     Mesh_Info* mesh = meshes[i];
     if (mesh->cmap == &Grayscale) surface_color = 2;
@@ -1344,6 +1313,7 @@ int GeomWindow::OpenMenu(QPoint point)
     if (mesh->mark_ts_sphere) pick_node_sphere = true;
     if (mesh->mark_lead_sphere) lead_node_sphere = true;
     if (mesh->drawfids) draw_fids = true;
+    if (mesh->lighting) lighting = mesh->lighting;
     all_node_num = mesh->mark_all_number;
     ext_node_num = mesh->mark_extrema_number;
     pick_node_num = mesh->mark_ts_number;
@@ -1428,19 +1398,19 @@ int GeomWindow::OpenMenu(QPoint point)
   submenu = menu.addMenu("Graphics");
   subsubmenu = submenu->addMenu("Light source (l)");
   action = subsubmenu->addAction("From above");
-  action->setData(graphics_light_above); action->setCheckable(true); action->setChecked(false);
+  action->setData(graphics_light_above); action->setCheckable(true); action->setChecked(lighting && lighting_direction == graphics_light_above);
   action = subsubmenu->addAction("From below");
-  action->setData(graphics_light_below); action->setCheckable(true); action->setChecked(false);
+  action->setData(graphics_light_below); action->setCheckable(true); action->setChecked(lighting && lighting_direction == graphics_light_below);
   action = subsubmenu->addAction("From left");
-  action->setData(graphics_light_left); action->setCheckable(true); action->setChecked(false);
+  action->setData(graphics_light_left); action->setCheckable(true); action->setChecked(lighting && lighting_direction == graphics_light_left);
   action = subsubmenu->addAction("From right");
-  action->setData(graphics_light_right); action->setCheckable(true); action->setChecked(false);
+  action->setData(graphics_light_right); action->setCheckable(true); action->setChecked(lighting && lighting_direction == graphics_light_right);
   action = subsubmenu->addAction("From front");
-  action->setData(graphics_light_front); action->setCheckable(true); action->setChecked(false);
+  action->setData(graphics_light_front); action->setCheckable(true); action->setChecked(lighting && lighting_direction == graphics_light_front);
   action = subsubmenu->addAction("From back");
-  action->setData(graphics_light_back); action->setCheckable(true); action->setChecked(false);
+  action->setData(graphics_light_back); action->setCheckable(true); action->setChecked(lighting && lighting_direction == graphics_light_back);
   action = subsubmenu->addAction("None");
-  action->setData(graphics_light_none); action->setCheckable(true); action->setChecked(false);
+  action->setData(graphics_light_none); action->setCheckable(true); action->setChecked(lighting == false);
 
   subsubmenu = menu.addMenu("Toggle Clipping");
   subsubmenu->addAction("Toggle depth cue (d)")->setData(graphics_fog);
@@ -1699,26 +1669,26 @@ int GeomWindow::OpenMenu(QPoint point)
   // 
   submenu = menu.addMenu("Surface Data");
   subsubmenu = submenu->addMenu("Color              (a)");
-  action = submenu->addAction("Rainbow");
+  action = subsubmenu->addAction("Rainbow");
   action->setData(surface_color_rainbow); action->setCheckable(true); action->setChecked(surface_color == 0);
-  action = submenu->addAction("Green to Red");
+  action = subsubmenu->addAction("Green to Red");
   action->setData(surface_color_red2green); action->setCheckable(true); action->setChecked(surface_color == 1);
-  action = submenu->addAction("White to Black");
+  action = subsubmenu->addAction("White to Black");
   action->setData(surface_color_grayscale); action->setCheckable(true); action->setChecked(surface_color == 2);
-  action = submenu->addAction("Jet (Matlab)");
+  action = subsubmenu->addAction("Jet (Matlab)");
   action->setData(surface_color_jet); action->setCheckable(true); action->setChecked(surface_color == 3);
   subsubmenu->addSeparator();
-  action = submenu->addAction("Invert (i)");
+  action = subsubmenu->addAction("Invert (i)");
   action->setData(surface_color_invert); action->setCheckable(true); action->setChecked(invert);
 
   subsubmenu = submenu->addMenu("Render style (s)");
-  action = submenu->addAction("None");
+  action = subsubmenu->addAction("None");
   action->setData(surface_render_none); action->setCheckable(true); action->setChecked(surface_render == 0);
-  action = submenu->addAction("Flat");
+  action = subsubmenu->addAction("Flat");
   action->setData(surface_render_flat); action->setCheckable(true); action->setChecked(surface_render == 1);
-  action = submenu->addAction("Gouraud");
+  action = subsubmenu->addAction("Gouraud");
   action->setData(surface_render_gouraud); action->setCheckable(true); action->setChecked(surface_render == 2);
-  action = submenu->addAction("Banded");
+  action = subsubmenu->addAction("Banded");
   action->setData(surface_render_banded); action->setCheckable(true); action->setChecked(surface_render == 3);
   
   // Use +/- to select from main root menu

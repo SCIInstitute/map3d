@@ -58,20 +58,12 @@ extern int fstep;
 int key_pressed = 0;            //indicate whether (and which) key is held down
 int idle_iteration = 0;
 
-extern bool menulock;
-
-
 // If it is something that needs
 // to happen once per mesh or once per window, we will call
 // HandleMenu either directly or via Broadcast.
 // Otherwise, we will handle it here.
 void GeomWindow::MenuEvent(int menu)
 {
-  // menulock is for options, like changing status of menu check items,
-  // which would recursively call the menu callback
-  if (menulock) 
-    return;
-
   // check to see it we handle options that apply globally
   if (MenuGlobalOptions(menu))
     return;

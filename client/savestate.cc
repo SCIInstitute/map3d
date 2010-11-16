@@ -292,9 +292,13 @@ void SaveSettings(char* filename, bool map3drc, bool windows)
           // pick windows and coordinates
         }
         // legend window coordinates
-        if (mesh->legendwin)
+        if (mesh->legendwin) {
           mesh->legendwin->getCommandLineCoordinates(width, height, x, y);
-        fprintf(f, "-al %d %d %d %d ", x, x+width, y, y+height);
+          fprintf(f, "-al %d %d %d %d ", x, x+width, y, y+height);
+          if (mesh->legendwin->orientation == 0) // horizontal
+            fprintf(f, "-lh ", x, x+width, y, y+height);
+            
+        }
       }
       // output per-window info, that might also be useful in the .map3drc
       if (firstmesh || (!map3drc && newWindow)) {
