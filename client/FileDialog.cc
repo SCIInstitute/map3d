@@ -163,6 +163,22 @@ void FileDialogWidget::on_landmarksBrowseButton_clicked ()
   landmarksLineEdit->setText(newFile);
 }
 
+void FileDialogWidget::on_geomSaveButton_clicked ()
+{
+  QString newFile = QFileDialog::getSaveFileName(parentWidget(), "Select geometry file to save");
+  QByteArray fileUTF = newFile.toUtf8(); // so char* will be in scope for function call to saveMeshes
+
+  Mesh_List meshes = mesh->gpriv->findMeshesFromSameInput(mesh);
+  vector<bool> transforms(meshes.size(), false);
+  bool success = SaveMeshes(meshes, transforms, fileUTF.data());
+
+  if (success)
+  {
+    geomLineEdit->setText(newFile);
+    on_geomLineEdit_editingFinished();
+  }
+}
+  
 void FileDialogWidget::on_expandButton_clicked ()
 {
   bool visible = otherOptionsFrame->isVisible();
@@ -197,6 +213,8 @@ void FileDialog::addRow(Mesh_Info* mesh)
 
   FileDialogWidget* widget = new FileDialogWidget(surfaceScrollArea, mesh);
   widget->setProperty(surfPropName, surfnumber);
+  if (!empty_mesh)
+      widget->geomSaveButton->setEnabled(true);
   _widgets.append(widget);
 
   // insert because we want the spacer at the end
@@ -424,6 +442,7 @@ bool FileDialogWidget::updateFiles()
         geomwin = GetGeomWindow(win);
       for (unsigned i = 0; i < returnedMeshes.size(); i++)
         geomwin->addMesh(returnedMeshes[i]);
+
       map3d_info.lockgeneral = LOCK_FULL;
       geomwin->dominantsurf = -1;
       
@@ -488,10 +507,7 @@ bool FileDialogWidget::updateFiles()
     Mesh_List currentMeshes = mesh->gpriv->findMeshesFromSameInput(mesh);
     Mesh_List returnedMeshes = FindAndReadGeom(mesh->mysurf, currentMeshes, RELOAD_GEOM);
     if (returnedMeshes.size() > 0) {
-      // change the name of the surface in the save and contour dialogs
-      // FIX gtk_entry_set_text(GTK_ENTRY(rowdata->save_input_filename), shorten_filename(mesh->geom->basefilename));
-      // gtk_entry_set_text(GTK_ENTRY(rowdata->save_filename), mesh->geom->basefilename); 
-      // gtk_entry_set_text(GTK_ENTRY(rowdata->cont_surfname), shorten_filename(mesh->geom->basefilename)); 
+      // TODO - change the name of the surface in the save and contour dialogs
 
       if (meshNotLoaded) {
         mesh->gpriv->addMesh(mesh);
@@ -591,6 +607,15 @@ void FileDialog::on_newSurfaceButton_clicked()
 FileDialogWidget::FileDialogWidget(QWidget* parent, Mesh_Info* mesh) : QWidget(parent), mesh(mesh)
 {
   setupUi(this);
+  geomSaveButton->setIcon(style()->standardIcon(QStyle::SP_DriveFDIcon));
+  geomSaveButton->setToolTip("Save Geometry");
+  geomSaveButton->setEnabled(false);
+
+  // plan for the future
+  dataSaveButton->hide();
+  landmarksSaveButton->hide();
+  channelsSaveButton->hide();
+
   otherOptionsFrame->setVisible(false);
   reload_geom = 0;
   reload_data = 0;

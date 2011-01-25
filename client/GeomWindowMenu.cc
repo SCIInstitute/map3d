@@ -1159,7 +1159,7 @@ bool GeomWindow::MenuGlobalOptions(int menu)
       break;
     case save_script:
     {
-      QString filename = PickFile(0, true);
+      QString filename = PickFile(this, true);
       if (filename == "")
         break;
       char file[256];
@@ -1169,7 +1169,7 @@ bool GeomWindow::MenuGlobalOptions(int menu)
     }
     case save_batch:
     {
-      QString filename = PickFile(0, true);
+      QString filename = PickFile(this, true);
       if (filename == "")
         break;
       char file[256];

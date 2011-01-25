@@ -171,3 +171,9 @@ void MainWindow::updateFGColor(QColor color)
 {
 
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+  map3d_quit(this);
+  event->ignore();
+}

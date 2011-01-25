@@ -48,6 +48,8 @@ public slots:
   void on_fiducialBrowseButton_clicked ();
   void on_landmarksBrowseButton_clicked ();
 
+  void on_geomSaveButton_clicked();
+
   void on_expandButton_clicked ();
 
   // return true if a mesh was loaded successfully

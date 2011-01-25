@@ -142,7 +142,7 @@ extern "C"
   void DelNode(Mesh_Info * curmesh, int nodenum);
   void Triangulate(Mesh_Info * curmesh, int nodenum);
   void SaveGeomToDisk(Mesh_Info * mesh, bool trans);
-  void SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename);
+  bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename);
 #ifdef __cplusplus
 }
 #endif

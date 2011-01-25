@@ -517,6 +517,7 @@ bool GeomWindow::Pick(int meshnum, int x, int y, bool del /*= false*/ )
       curmesh->geom->elements[selection[4]][2] = (long)curmesh->geom->elements[selection[4]][1];
       curmesh->geom->elements[selection[4]][1] = (long)temp;
       ComputeTriNormals(curmesh->geom);
+      curmesh->geom->modified = true;
     }
     selection += selection[0] + 3;
   }
@@ -545,6 +546,7 @@ void DelTriangle(Mesh_Info * curmesh, int trinum)
   //preserve memory
   geom->elements[i] = deleted;
   geom->fcnormals[i] = deletednorm;
+  geom->modified = true;
 
 }
 
@@ -602,7 +604,7 @@ void DelNode(Mesh_Info * curmesh, int nodenum)
     // redraw legend window as well
     curmesh->legendwin->updateGL();
   }
-  
+  geom->modified = true;
 }
 
 
@@ -646,6 +648,7 @@ void Triangulate(Mesh_Info * curmesh, int nodenum)
     if (curmesh->fidMap)
       curmesh->fidMap->buildContours();
   }
+  geom->modified = true;
 }
 
 void GeneratePick(PickInfo * pick)
@@ -735,7 +738,8 @@ void SaveGeomToDisk(Mesh_Info * mesh, bool /*transform*/)
 
 // takes a meshlist, an array of transforms as long as meshlist, and one filename
 // should be called by SaveGeoms, a callback from the Save Dialog
-void SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
+// returns true on success
+bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
 {
   std::string ext;
   ext = GetExtension(filename);
@@ -748,16 +752,9 @@ void SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
   if (ext != ".geom" && ext != ".fac" && ext != ".pts" && ext != ".mat") 
   {
     QMessageBox::critical(filedialog, "Error", "You can only save to a .geom, .mat, .pts, or .fac file");
+    return false;
   }
-  // test for existence
-  if (QFile::exists(filename))
-  {
-    if (prompt_overwrite(filedialog, filename))
-      KillFile(filename);
-    else
-      return;
-  }
-  
+  // no need to test for existence since the QFile selector already prompts for overwrite  
 
   int loop, loop2;
   // we need to make a list of all meshes to save in one call
@@ -952,6 +949,7 @@ void SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
       }
     }
   }
+  return true;
 }
 
 Mesh_List GeomWindow::findMeshesFromSameInput(Mesh_Info* mesh)
