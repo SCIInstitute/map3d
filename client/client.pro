@@ -32,6 +32,7 @@ win32 {
     PRE_TARGETDEPS *= ../thirdparty/graphicsio$$LIB_DIR/graphicsio.lib
     PRE_TARGETDEPS *= ../thirdparty/gdbmp$$LIB_DIR/gdbmp.lib
     PRE_TARGETDEPS *= ../thirdparty/cutil$$LIB_DIR/cutil.lib
+    PRE_TARGETDEPS *= ../thirdparty/MatlabIO$$LIB_DIR/MatlabIO.lib
 } else {
     PRE_TARGETDEPS *= ../thirdparty/fids/libfids.a
     PRE_TARGETDEPS *= ../thirdparty/fi/libfi.a
@@ -40,6 +41,7 @@ win32 {
     PRE_TARGETDEPS *= ../thirdparty/graphicsio/libgraphicsio.a
     PRE_TARGETDEPS *= ../thirdparty/gdbmp/libgdbmp.a
     PRE_TARGETDEPS *= ../thirdparty/cutil/libcutil.a
+    PRE_TARGETDEPS *= ../thirdparty/MatlabIO/libMatlabIO.a
 }
 
 
