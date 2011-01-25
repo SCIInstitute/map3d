@@ -754,7 +754,12 @@ bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
     QMessageBox::critical(filedialog, "Error", "You can only save to a .geom, .mat, .pts, or .fac file");
     return false;
   }
-  // no need to test for existence since the QFile selector already prompts for overwrite  
+  if (QFile::exists(filename))
+  {
+    // no need prompt the user for overwrite since the QFile selector already prompts for overwrite
+    KillFile(filename);
+  }
+  
 
   int loop, loop2;
   // we need to make a list of all meshes to save in one call
