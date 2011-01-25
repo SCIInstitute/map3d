@@ -659,7 +659,7 @@ template<class T> void matfiledata::putandcast(T **dataptr,long dim1, long dim2 
 	case miUINT16: case miUTF16:
 	   { unsigned short *ptr = static_cast<unsigned short *>(databuffer());
 		 long p,q,s;
-	     s = 0; for(long p=0;p<dim2;p++) for(long q=0;q<dim1;q++) { ptr[s++] = static_cast<signed short>(dataptr[p][q]); }}
+	     s = 0; for(long p=0;p<dim2;p++) for(long q=0;q<dim1;q++) { ptr[s++] = static_cast<unsigned short>(dataptr[p][q]); }}
 	   break;   
 	case miINT32: 
 	   { int32_t *ptr = static_cast<int32_t *>(databuffer());
@@ -686,12 +686,12 @@ template<class T> void matfiledata::putandcast(T **dataptr,long dim1, long dim2 
 	case miSINGLE: 
 	   { float *ptr = static_cast<float *>(databuffer());
 		 long p,q,s;
-	     s = 0; for(long p=0;p<dim2;p++) for(long q=0;q<dim1;q++) { ptr[s++] = static_cast<signed char>(dataptr[p][q]); }}
+	     s = 0; for(long p=0;p<dim2;p++) for(long q=0;q<dim1;q++) { ptr[s++] = static_cast<float>(dataptr[p][q]); }}
 	   break;   	
 	case miDOUBLE: 
 	   { double *ptr = static_cast<double *>(databuffer());
 		 long p,q,s;
-	     s = 0; for(long p=0;p<dim2;p++) for(long q=0;q<dim1;q++) { ptr[s++] = static_cast<signed char>(dataptr[p][q]); }}
+	     s = 0; for(long p=0;p<dim2;p++) for(long q=0;q<dim1;q++) { ptr[s++] = static_cast<double>(dataptr[p][q]); }}
 	   break;	
         default:
            throw unknown_type();              
@@ -745,23 +745,23 @@ template<class T> void matfiledata::putandcast(T ***dataptr,long dim1, long dim2
 	case miINT64: 
 	   { int64 *ptr = static_cast<int64 *>(databuffer());
 		 long p,q,r,s;
-	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<signed char>(dataptr[p][q][r]); }}
+	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<int64>(dataptr[p][q][r]); }}
 	   break;   
 	case miUINT64: 
 	   { uint64 *ptr = static_cast<uint64 *>(databuffer());
 		 long p,q,r,s;
-	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<signed char>(dataptr[p][q][r]); }}
+	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<uint64>(dataptr[p][q][r]); }}
 	   break;	
 #endif	   
 	case miSINGLE: 
 	   { float *ptr = static_cast<float *>(databuffer());
 		 long p,q,r,s;
-	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<signed char>(dataptr[p][q][r]); }}
+	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<float>(dataptr[p][q][r]); }}
 	   break;   	
 	case miDOUBLE: 
 	   { double *ptr = static_cast<double *>(databuffer());
 		 long p,q,r,s;
-	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<signed char>(dataptr[p][q][r]); }}
+	     s = 0; for(long p=0;p<dim3;p++) for(long q=0;q<dim2;q++) for(long r=0;r<dim2;r++) { ptr[s++] = static_cast<double>(dataptr[p][q][r]); }}
 	   break;	
         default:
            throw unknown_type();              
