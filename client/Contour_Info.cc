@@ -9,6 +9,7 @@
 #include "map3d-struct.h"
 #include "geomlib.h"
 #include "geomutilsubs.h"
+#include "cutil.h"
 #include "map3dmath.h"
 
 #include <math.h>

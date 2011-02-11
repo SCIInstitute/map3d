@@ -63,7 +63,6 @@ Surf_Data::Surf_Data()
   referencelock = 0;
   numfs = 0;
   minmaxframes = 0;
-  gradframes = 0;
   //globalfids = 0;
   fids = 0;
   minmaxfids = 0;
@@ -85,8 +84,6 @@ Surf_Data::~Surf_Data()
     free(minmaxframes);
   if (minmaxfids)
     free(minmaxfids);
-  if (gradframes)
-    delete[]gradframes;         // we delete because its destructor frees its memory
   if (fids)                     // Series_Fids (defined in fids.h) doesn't have a destructor of its own
   {
     if (fids->fidtypes)
@@ -210,7 +207,6 @@ Surf_Data *Surf_Data::AddASurfData(Surf_Data * surfdata, long newsurfnum, long n
   surfdata[newsurfnum].usergradmax = 0.0;
   surfdata[newsurfnum].userfidmin = 0.0;
   surfdata[newsurfnum].userfidmax = 0.0;
-  surfdata[newsurfnum].gradframes = NULL;
   surfdata[newsurfnum].minmaxframes = NULL;
   surfdata[newsurfnum].fids = NULL;
   surfdata[newsurfnum].potfilename[0] = '\0';

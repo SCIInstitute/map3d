@@ -3,11 +3,8 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS = cutil      \
-          fi         \
           fids       \
-          gdbmp      \
+          fi         \
           gfilelib   \
-          graphicsio \
           MatlabIO   \
-          tsdflib    \  
 

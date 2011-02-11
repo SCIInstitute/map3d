@@ -34,7 +34,6 @@
 #include "readfiles.h"
 #include "scalesubs.h"
 #include "dialogs.h"
-#include "tsdfcio.h"
 #include "Transforms.h"
 #include "glprintf.h"
 #include "savescreen.h"
@@ -150,8 +149,6 @@ int ProcessCommandLineOptions(Global_Input & g)
       masterWindow->textLines++;
     }
   }
-
-  int win;
 
   /* load the data indicated in the global parse struct.
    * copy from g.SurfList[] to meshes.
@@ -415,50 +412,8 @@ Mesh_List FindAndReadGeom(Surf_Input * surf, Mesh_List currentMeshes, int reload
       break;
     case GEOM:
     {
-      sprintf(geomfilename, "%s.geom", filename);
-      num = GetNumGeoms(geomfilename);
-      int startsurf = 1; // geom surf is 1-based
-
-      if (surf->geomsurfnum > 0) {
-        num = 1;
-        startsurf = surf->geomsurfnum;
-      }
-      if (reload == LOAD_RMS_DATA) {
-        num = 1;
-        //startsurf = 1;
-      }
-
-      for (unsigned i = 0; i < num; i++) {
-        if (i > 0) {
-          if (i < currentMeshes.size())
-            m = currentMeshes[i];
-          else {
-            m = new Mesh_Info;
-            m->mysurf = surf;
-          }
-        }
-        g = m->geom;
-        sprintf(g->basefilename, "%s.geom", filename);
-        check = ReadMap3dGeomFile(m->geom, i+startsurf); 
-        if (check == 1 && m->geom->CheckPointValidity() != GEOM_ERROR) {
-          ComputeTriNormals(m->geom);
-          meshes.push_back(m);
-          if (num > 1)
-            m->geom->subsurf = i + 1;
-        }
-        else if (i == 0) {
-          // the first file in the multi-surf file needs to be a good surf 
-          badfile = true;
-          break;
-        }
-        else {
-          // the normal case is that loading the geom will work,
-          // but if it doesn't inside a multi-surf file, just delete it.
-          // if it is already in a window, remove it, if not, this call is harmless
-          m->gpriv->removeMesh(m);
-          delete m;
-        }
-      }
+      printf("MAP3D WARNING: map3d no longer supports .geom files\n");
+      badfile = true;
       break;
     }
     case MATLAB_FILE:
@@ -810,52 +765,11 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
   case GRAD_ONLY:
     break;
   case TSDFC_FILE:
-  {
-    sprintf(surf->potfilename, "%s.tsdfc", surf->potfilename); 
-    string containerFileName(surf->potfilename);
-    if (map3d_info.reportlevel)
-      fprintf(stderr, "Reading tsdfc file %s\n", containerFileName.c_str());
-    Container *c = file_cache.readContainerFile(containerFileName);
-    string fullname;
-    if(c){
-      fullname = string(get_path(surf->potfilename))+c->entryArray[surf->timeseries]->entryName;   
-      surf->tmpfilename = (char *)fullname.c_str();
-    }
-    else {
-      mesh->data = 0;
-      return;
-    }
-    
-    s = ReadDataFile(surf, s, 1, surf->timeseries);
-    if (s == NULL) {
-      printf("MAP3D WARNING: Unable to read data file: %s\n", surf->potfilename);
-      mesh->data = 0;
-      return;
-    }
-    mesh->data = s;
-    s->mesh = mesh;
-    s->fids = ReadTsdfcFile(surf->potfilename,
-                            surf->tmpfilename,
-                            surf->timeseries,&s->globalfids,
-                            s->fids,
-                            &s->numfs,
-                            &s->fidmin,
-                            &s->fidmax);
-    break;
-  }  
-
   case DATA_FILE:
   case TSDF_FILE:
-    sprintf(surf->potfilename, "%s.tsdf", surf->potfilename);
-    s = ReadDataFile(surf, s, 1, 0);
-    if (s == NULL) {
-      printf("MAP3D WARNING: Unable to read data file: %s\n", surf->potfilename);
-      mesh->data = 0;
-      return;
-    }
-    mesh->data = s;
-    s->mesh = mesh;
-    break;
+    printf("MAP3D WARNING: map3d no longer supports .tsdf, .tsdfc or .data files\n");
+    mesh->data = 0;
+    return;
   case MATLAB_FILE:
     sprintf(surf->potfilename, "%s.mat", surf->potfilename);
     try {
@@ -1526,10 +1440,6 @@ const char *GetExtension(const char *s)
 
 unsigned GetNumGeoms(char *s)
 {
-  FileInfoPtr luin;
-  Boolean qsettings;
-  long x, numgeoms;
-
   // if we're not a geom file or there is an opening problem...
   if (strcmp(GetExtension(s),".mat") == 0) {
     try {
@@ -1539,29 +1449,15 @@ unsigned GetNumGeoms(char *s)
       return 1;
     }
   }
-  else if (strcmp(GetExtension(s),".geom") == 0) {
-    if (openfile_(s, 0, &luin) < 0)
-      return 1;
-
-    getfileinfo_(luin, &x, &numgeoms, &x, &x, &qsettings);
-    closefile_(luin);
-  }
   else
     return (1);
-  return numgeoms;
 }
 
 unsigned GetNumTimeSeries(char *s)
 {
   // default - if a file read fails or if we know a file type only has 1
   long numseries = 1; 
-  if (strcmp(GetExtension(s),".tsdfc") == 0) {
-    Container *c = file_cache.readContainerFile(s);
-    if(c){
-      numseries = c->numEntries;
-    }
-  }
-  else if (strcmp(GetExtension(s),".mat") == 0) {
+  if (strcmp(GetExtension(s),".mat") == 0) {
     try {
       matlabfile mf(s, "r");
       matlabarray ma = mf.getmatlabarray(0);
@@ -1580,14 +1476,7 @@ void GetTimeSeriesLabel(char *s, int ds, char* name)
 {
   // default label - 
   sprintf(name, "%d", ds+1);
-  if (strcmp(GetExtension(s),".tsdfc") == 0) {
-    Container *c = file_cache.readContainerFile(s);
-    if(c){
-      if (ds < c->numEntries)
-        strcpy(name, c->entryArray[ds]->entryName.c_str());
-    }
-  }
-  else if (strcmp(GetExtension(s),".mat") == 0) {
+  if (strcmp(GetExtension(s),".mat") == 0) {
     try {
       matlabfile mf(s, "r");
       matlabarray ma = mf.getmatlabarray(0);
@@ -1611,36 +1500,13 @@ void GetTimeSeriesLabel(char *s, int ds, char* name)
 }
 unsigned GetNumFrames(char *s, int ds)
 {
-  FileInfoPtr luin;
-  long x, numframes = 1;
-  Boolean qsettings;
-  int error;
+  long numframes = 1;
   matlabarray temp;
   matlabarray cell;
 
 
   // if we're not a data file or there is an opening problem...
-  if (strcmp(GetExtension(s),".data") == 0 || strcmp(GetExtension(s),".tsdf") == 0) {
-    if (openfile_(s, 0, &luin) < 0)
-      return 1;
-
-    // we have to read/set some stuff before we get there...
-    getfileinfo_(luin, &x, &x, &x, &x, &qsettings);
-    settimeseriesindex_(luin, ds + 1);
-    gettimeseriesunits_(luin, &x);
-    error = gettimeseriesspecs_(luin, &x, &numframes);
-    if (error < 0)
-      return 1;
-    closefile_(luin);
-  }
-  else if (strcmp(GetExtension(s),".tsdfc") == 0) {
-    Container *c = file_cache.readContainerFile(s);
-    if (c){
-      string fullname = string(get_path(s))+c->entryArray[ds]->entryName;    
-      numframes =  GetNumFrames((char*)(fullname.c_str()),0);
-    }
-  }
-  else if (strcmp(GetExtension(s),".mat") == 0) {
+  if (strcmp(GetExtension(s),".mat") == 0) {
     try {
       matlabfile mf(s, "r");
       matlabarray ma = mf.getmatlabarray(0);

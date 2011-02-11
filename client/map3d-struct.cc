@@ -335,17 +335,6 @@ Bandpoly::~Bandpoly()
   }
 }
 
-Grad_Frame::~Grad_Frame()
-{
-  if (gradp)
-    free(gradp);
-  if (gradvec)
-    free(gradvec);
-  if (arrows)
-    free(arrows);
-}
-
-
 void Init_Surface_Group(Surface_Group * s)
 {
   s->potmin = FLT_MAX;

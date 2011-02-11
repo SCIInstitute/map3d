@@ -19,7 +19,6 @@
 #include "PickWindow.h"
 #include "pickinfo.h"
 #include "scalesubs.h"
-#include "tsdfcio.h"
 #include "readfiles.h"
 #include <math.h>
 #include <stdio.h>
@@ -39,7 +38,6 @@ GtkWidget *quitwindow = NULL;
 ColorPicker *cp = NULL;
 SizePicker *sp = NULL;
 extern int fstep;
-extern FileCache file_cache;
 
 
 // will bring up a dialog and either quit or do nothing

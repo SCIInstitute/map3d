@@ -744,14 +744,14 @@ bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
   std::string ext;
   ext = GetExtension(filename);
 
-  if (ml.size() > 1 && ext != ".geom" && ext != ".mat") 
+  if (ml.size() > 1 && ext != ".mat") 
   {
-    QMessageBox::critical(filedialog, "Error", "You can only save multiple surfaces to a .geom or .mat file");
+    QMessageBox::critical(filedialog, "Error", "You can only save multiple surfaces to a .mat file");
   }
 
-  if (ext != ".geom" && ext != ".fac" && ext != ".pts" && ext != ".mat") 
+  if (ext != ".fac" && ext != ".pts" && ext != ".mat") 
   {
-    QMessageBox::critical(filedialog, "Error", "You can only save to a .geom, .mat, .pts, or .fac file");
+    QMessageBox::critical(filedialog, "Error", "You can only save to a .mat, .pts, or .fac file");
     return false;
   }
   if (QFile::exists(filename))
@@ -800,7 +800,7 @@ bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
       MultMatrix16x16((float*)temp, (float *) centerM, (float*)product);
 
       // array to copy the points into for geom files
-      if (ext == ".geom" || ext == ".mat")
+      if (ext == ".mat")
         rotated_pts = Alloc_fmatrix(geom->numpts, 3);
     }
 
@@ -835,7 +835,7 @@ bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
 
       if (transforms[i]) {
         MultMatrix16x4(product, rhs, result);
-        if (ext == ".geom" || ext == ".mat") {
+        if (ext == ".mat") {
           rotated_pts[loop][0] = result[0];
           rotated_pts[loop][1] = result[1];
           rotated_pts[loop][2] = result[2];
@@ -867,8 +867,8 @@ bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
       printf("%s saved to disk\n", filename);
     }
 
-    //save .geom/mat file
-    if (ext == ".geom" || ext == ".mat") {
+    //save .mat file
+    if (ext == ".mat") {
 
       //save old geom points, and restore after save
       if (transforms[i]) {
@@ -939,11 +939,8 @@ bool SaveMeshes(Mesh_List& ml, vector<bool> transforms, char* filename)
   }
 
   // finally save the geom file...
-  if (ext == ".geom" || ext == ".mat") {
-    if (ext == ".geom")
-      WriteMap3dGeomFile(filename, geomlist);
-    else
-      WriteMatlabGeomFile(filename, geomlist);
+  if (ext == ".mat") {
+    WriteMatlabGeomFile(filename, geomlist);
     printf("%s saved to disk\n", filename);
   
     // put the geoms back to original pts

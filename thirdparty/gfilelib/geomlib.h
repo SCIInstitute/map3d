@@ -1,6 +1,5 @@
 #ifndef __GEOM_LIB__
 #define __GEOM_LIB__
-#include "graphicsio.h"
 
 #if DYNAMIC
 
@@ -54,16 +53,11 @@ GFILESHARE void FindNodeRange( float **nodes, long numpts,
 			       float maxpoint[3], float minpoint[3] );
 GFILESHARE long *GetSurfList( long surfnum, long numsurfs,
 				  long *numlistsurfs );
-GFILESHARE long OpenNewOutfile( FileInfoPtr *luout_p, char *outfilename, 
-			     long reportlevel );
 GFILESHARE Surf_Geom *ReadGeomFile (char *infilename, 
 				    long startsurfnum, long endsurfnum,
 				    long *numsurfsread, long reportlevel);
 GFILESHARE long **ReadLinksFile( char *infilename, long *numoflinks );
 GFILESHARE long ReadFacFile( Surf_Geom *onesurfgeom, long reportlevel );
-GFILESHARE long ReadOneSurf( FileInfoPtr luin, char *geomfilename, 
-		 long filesurfnum, Surf_Geom *onesurfgeom, 
-		  long reportlevel );
 GFILESHARE long ReadPtsFile( Surf_Geom *onesurfgeom, long reportlevel );
 GFILESHARE long RemoveAnElement( Surf_Geom *onesurfgeom, long elementnum );
 GFILESHARE long SetupSurfPoints( Surf_Geom *onesurfgeom, long numpts );
@@ -73,8 +67,6 @@ GFILESHARE long WriteGeomFile (char *outfilename, Surf_Geom *surfgeom,
 		    long startsurfnum, long endsurfnum, 
 		    long numsurfs, long reportlevel);
 GFILESHARE long WritePtsFile( Surf_Geom *surfgeom );
-GFILESHARE long WriteSurfGeomFile( Surf_Geom *onesurfgeom, FileInfoPtr luout, 
-		       long outsurfnum, long reportlevel );
 
 #ifdef __cplusplus
 }

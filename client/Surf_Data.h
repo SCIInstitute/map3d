@@ -76,7 +76,6 @@ public:
   
   Surf_Data *mastersurf;
   MinMax_Frame *minmaxframes; /*** Potential extrema for each frame ***/
-  Grad_Frame *gradframes; /*** Grad data and extrema for each frame ***/
   Lead_Fids globalfids; /*** Global fiducials, whatever that means! ***/
   Series_Fids *fids; /*** All lead by lead fiducials for this surface ***/
   MinMax_Fids *minmaxfids; /*** Min and max values for all the fids. ***/

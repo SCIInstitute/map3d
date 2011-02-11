@@ -7,11 +7,8 @@ QT += opengl
 INCLUDEPATH += ../thirdparty/cutil
 INCLUDEPATH += ../thirdparty/fi
 INCLUDEPATH += ../thirdparty/fids
-INCLUDEPATH += ../thirdparty/gdbmp
 INCLUDEPATH += ../thirdparty/gfilelib
-INCLUDEPATH += ../thirdparty/graphicsio
 INCLUDEPATH += ../thirdparty/MatlabIO
-INCLUDEPATH += ../thirdparty/tsdflib
 INCLUDEPATH += $$QMAKE_INCDIR_QT/../src/3rdparty/zlib
 
 CONFIG += console link_prl
@@ -19,7 +16,7 @@ CONFIG += console link_prl
 include (../options.pri)
 
 LIBS += -lMatlabIO
-LIBS += -lfids -lfi -ltsdflib -lgfilelib -lgraphicsio -lgdbmp -lcutil
+LIBS += -lfids -lfi -lgfilelib -lcutil
 win32 {
     LIB_DIR=/release
     debug {
@@ -27,33 +24,24 @@ win32 {
     }
     PRE_TARGETDEPS *= ../thirdparty/fids$$LIB_DIR/fids.lib
     PRE_TARGETDEPS *= ../thirdparty/fi$$LIB_DIR/fi.lib
-    PRE_TARGETDEPS *= ../thirdparty/tsdflib$$LIB_DIR/tsdflib.lib
     PRE_TARGETDEPS *= ../thirdparty/gfilelib$$LIB_DIR/gfilelib.lib
-    PRE_TARGETDEPS *= ../thirdparty/graphicsio$$LIB_DIR/graphicsio.lib
-    PRE_TARGETDEPS *= ../thirdparty/gdbmp$$LIB_DIR/gdbmp.lib
     PRE_TARGETDEPS *= ../thirdparty/cutil$$LIB_DIR/cutil.lib
     PRE_TARGETDEPS *= ../thirdparty/MatlabIO$$LIB_DIR/MatlabIO.lib
 } else {
     PRE_TARGETDEPS *= ../thirdparty/fids/libfids.a
     PRE_TARGETDEPS *= ../thirdparty/fi/libfi.a
-    PRE_TARGETDEPS *= ../thirdparty/tsdflib/libtsdflib.a
     PRE_TARGETDEPS *= ../thirdparty/gfilelib/libgfilelib.a
-    PRE_TARGETDEPS *= ../thirdparty/graphicsio/libgraphicsio.a
-    PRE_TARGETDEPS *= ../thirdparty/gdbmp/libgdbmp.a
     PRE_TARGETDEPS *= ../thirdparty/cutil/libcutil.a
     PRE_TARGETDEPS *= ../thirdparty/MatlabIO/libMatlabIO.a
 }
 
 
-LIBPATH += ../thirdparty/cutil$$LIB_DIR
-LIBPATH += ../thirdparty/fi$$LIB_DIR
-LIBPATH += ../thirdparty/fids$$LIB_DIR
-LIBPATH += ../thirdparty/gdbmp$$LIB_DIR
-LIBPATH += ../thirdparty/gfilelib$$LIB_DIR
-LIBPATH += ../thirdparty/graphicsio$$LIB_DIR
-LIBPATH += ../thirdparty/MatlabIO$$LIB_DIR
-LIBPATH += ../thirdparty/tsdflib$$LIB_DIR
-LIBPATH += $$QMAKE_INCDIR_QT/../src/3rdparty/zlib
+QMAKE_LIBDIR += ../thirdparty/cutil$$LIB_DIR
+QMAKE_LIBDIR += ../thirdparty/fi$$LIB_DIR
+QMAKE_LIBDIR += ../thirdparty/fids$$LIB_DIR
+QMAKE_LIBDIR += ../thirdparty/gfilelib$$LIB_DIR
+QMAKE_LIBDIR += ../thirdparty/MatlabIO$$LIB_DIR
+QMAKE_LIBDIR += $$QMAKE_INCDIR_QT/../src/3rdparty/zlib
 
 include (../options.pri)
 

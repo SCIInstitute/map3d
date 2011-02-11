@@ -13,8 +13,9 @@
 #include <windows.h>
 #endif
 
-
 #include "fids.h"
+
+
 #include <vector>
 #include <string>
 
@@ -246,20 +247,6 @@ struct Arrow
   float pbase[3]; /*** Point at the base of the arrow ***/
 };
 
-class Grad_Frame  /*** Information on grad extrema, one per frame. ***/
-{
-public:
-  ~Grad_Frame();
-  long framenum; /*** Frame number for this frame. ***/
-  long numgrads; /*** NUmber of gradients inthis frame. ***/
-  float gradmax; /*** Max gradient amplitude for all frames ***/
-  float gradmin; /*** min gradient amplitude for all frames***/
-  long gnodemax; /*** Node where max grad value accored for each frame ***/
-  long gnodemin; /*** Node where min grad value accored for each frame ***/
-  Vector *gradp, *gradvec; /*** Gradient anchor points and vectors ***/
-  Arrow *arrows; /*** Arrows for the gradients ***/
-};
-
 class MinMax_Frame  /*** Potential extrema, one per frame. ***/
 {
 public:
@@ -393,6 +380,10 @@ struct Clip_Planes
   float step;
   float frontmax, backmax;      //max values for clipping planes
 };
+
+enum DataUnits {UNIT_MVOLTS = 1, UNIT_UVOLTS, UNIT_MSECS, UNIT_VOLTS,
+	    	UNIT_MVOLTMSECS};
+
 
 
 #ifdef __cplusplus
