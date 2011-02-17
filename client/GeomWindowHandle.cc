@@ -140,7 +140,8 @@ void GeomWindow::keyPressEvent(QKeyEvent* event)
   //set up here so both Broadcast branches can access it.  Up/down/left/right won't need it
   int lock;
   if (keysym >= Qt::Key_Home && keysym <= Qt::Key_PageDown && 
-      (event->modifiers() & Qt::ControlModifier || event->modifiers() & Qt::AltModifier)) {
+      (matchesModifiers(event->modifiers(), Qt::ControlModifier, true) || 
+       matchesModifiers(event->modifiers(), Qt::AltModifier, true))) {
     lock = map3d_info.lockrotate;
   }
   else {
@@ -149,10 +150,12 @@ void GeomWindow::keyPressEvent(QKeyEvent* event)
   map3d_info.selected_group = (lock == LOCK_GROUP && meshes.size() > 0)
     ? meshes[0]->groupid : -1;
 
+      qDebug() << keysym << Qt::Key_Right << Qt::Key_Left;
+      
   // okay, the way frame advancing works, so that the window manager won't get bogged down, is
   // handle it directly once (for control), then loop while occasionally checking the event loop
   if ((keysym == Qt::Key_Left || keysym == Qt::Key_Right) &&
-      (event->modifiers() == Qt::NoModifier)) {
+      (matchesModifiers(event->modifiers(), Qt::NoModifier, true))) {
 
     key_pressed = keysym;
 
@@ -179,7 +182,7 @@ void GeomWindow::keyPressEvent(QKeyEvent* event)
   if (keysym == Qt::Key_Escape) {
     map3d_quit(masterWindow ? (QWidget*)masterWindow : (QWidget*)this);
   }
-  else if (keysym == Qt::Key_Up && event->modifiers() == Qt::NoModifier) {
+  else if (keysym == Qt::Key_Up && matchesModifiers(event->modifiers(), Qt::NoModifier, true)) {
     if (map3d_info.lockgeneral == LOCK_GROUP || (surf_group.size() == 1 && dominantsurf+1 >= (int) meshes.size())) {
       map3d_info.lockgeneral = LOCK_FULL;
     }
@@ -234,7 +237,7 @@ void GeomWindow::keyPressEvent(QKeyEvent* event)
 #endif
     Broadcast(MAP3D_REPAINT_ALL);
   }
-  else if (keysym == Qt::Key_Down && event->modifiers() == Qt::NoModifier) {
+  else if (keysym == Qt::Key_Down && matchesModifiers(event->modifiers(), Qt::NoModifier, true)) {
     if (map3d_info.lockgeneral == LOCK_FULL &&  surf_group.size() > 1) {
       // only turn on "group" lock - where we lock the groups together
       map3d_info.lockgeneral = LOCK_GROUP;
@@ -298,7 +301,8 @@ void GeomWindow::HandleKeyPress(QKeyEvent* event)
     // call keyboard transformations function - the keys between home and end
     // should be all the keys on the keypad
     if (keysym >= Qt::Key_Home && keysym <= Qt::Key_PageDown && 
-        (event->modifiers() & Qt::ControlModifier || event->modifiers() & Qt::AltModifier)) {
+        (matchesModifiers(event->modifiers(), Qt::ControlModifier, true) || 
+         matchesModifiers(event->modifiers(), Qt::AltModifier, true))) {
       TransformKeyboard(mesh, event);
       continue;
     }
@@ -741,8 +745,8 @@ void GeomWindow::mousePressEvent(QMouseEvent * event)
     if (menu_data >= 0)
       MenuEvent(menu_data);
   }
-  else if ((!map3d_info.lockrotate) || event->modifiers() == Qt::AltModifier ||
-           event->modifiers() == Qt::ControlModifier) {
+  else if ((!map3d_info.lockrotate) || matchesModifiers(event->modifiers(), Qt::AltModifier, true) ||
+           matchesModifiers(event->modifiers(), Qt::ControlModifier, true)) {
     HandleButtonPress(event, (float)event->x() / (float)width(), (float)event->y() / (float)height());
   }
   else {
@@ -759,8 +763,8 @@ void GeomWindow::mouseReleaseEvent(QMouseEvent * event)
 {
   // don't worry about the selected_group here.  Letting go doesn't change anything for non-selected groups
   
-  if ((!map3d_info.lockrotate) || event->modifiers() == Qt::AltModifier ||
-      event->modifiers() == Qt::ControlModifier)
+  if ((!map3d_info.lockrotate) || matchesModifiers(event->modifiers(), Qt::AltModifier, true) ||
+      matchesModifiers(event->modifiers(), Qt::ControlModifier, true))
     HandleButtonRelease(event, (float)event->x() / (float)width(),
                        (float)event->y() / (float)height());
   else {
@@ -773,8 +777,8 @@ void GeomWindow::mouseMoveEvent(QMouseEvent* event)
   map3d_info.selected_group = (map3d_info.lockrotate == LOCK_GROUP && meshes.size() > 0)
     ? meshes[0]->groupid : -1;
 
-  if ((!map3d_info.lockrotate) || event->modifiers() == Qt::AltModifier ||
-      event->modifiers() == Qt::ControlModifier)
+  if ((!map3d_info.lockrotate) || matchesModifiers(event->modifiers(), Qt::AltModifier, true) ||
+      matchesModifiers(event->modifiers(), Qt::ControlModifier, true))
     HandleMouseMotion(event, (float)event->x() / (float)width(), (float)event->y() / (float)height());
   else
     Broadcast(MAP3D_MOUSE_MOTION, this, event);
@@ -803,7 +807,7 @@ void GeomWindow::HandleButtonPress(QMouseEvent * event, float xn, float yn)
   for (loop = 0; loop < length; loop++) {
     tran = meshes[loop]->tran;
     // MIDDLE MOUSE DOWN + SHIFT = start rotate clipping planes
-    if (event->button() == Qt::MidButton && event->modifiers() == Qt::ShiftModifier) {
+    if (event->button() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
       if ((clip->back_enabled || clip->front_enabled) &&!clip->lock_with_object) {
         vNow.x = 2.0f * x / width() - 1;
         vNow.y = 2.0f * y / height() - 1;
@@ -822,13 +826,13 @@ void GeomWindow::HandleButtonPress(QMouseEvent * event, float xn, float yn)
 #endif
     }
     // LEFT MOUSE DOWN + CTRL = pick (not ctrl-shift - use that for mac for alt)
-    else if (event->button() == Qt::LeftButton && event->modifiers() == Qt::ControlModifier &&
+    else if (event->button() == Qt::LeftButton && matchesModifiers(event->modifiers(), Qt::ControlModifier, true) &&
 		((!map3d_info.lockgeneral && (dominantsurf == loop || length == 1)) || map3d_info.lockgeneral)) {
       if (keep_picking)
 		keep_picking = !Pick(loop, x, y);
   	}
     // MIDDLE MOUSE DOWN + CTRL = pick for DELETE TRIANGLE
-    else if (event->button() == Qt::RightButton && event->modifiers() == Qt::ControlModifier &&
+    else if (event->button() == Qt::RightButton && matchesModifiers(event->modifiers(), Qt::ControlModifier, true) &&
 		((!map3d_info.lockgeneral && (dominantsurf == loop || length == 1)) || map3d_info.lockgeneral)) {
 	  if (keep_picking)
 		keep_picking = !Pick(loop, x, y, true);
@@ -858,7 +862,7 @@ void GeomWindow::HandleButtonRelease(QMouseEvent * event, float /*xn*/, float /*
   for (loop = 0; loop < length; loop++) {
     tran = meshes[loop]->tran;
     // MIDDLE MOUSE UP + SHIFT = end rotate clipping planes
-    if (event->button() == Qt::MidButton && event->modifiers() == Qt::ShiftModifier) {
+    if (event->button() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
       if ((clip->back_enabled || clip->front_enabled) &&!clip->lock_with_object)
         Ball_EndDrag(&clip->bd);
 #ifdef ROTATING_LIGHT
@@ -904,12 +908,12 @@ void GeomWindow::HandleMouseMotion(QMouseEvent * event, float xn, float yn)
     tran = mesh->tran;
 
     /* CTRL = nothing */
-    if (event->modifiers() & Qt::ControlModifier) {
+    if (matchesModifiers(event->modifiers(), Qt::ControlModifier, true)) {
       return;
     }
 
     /* MIDDLE MOUSE DOWN + SHIFT = rotate clipping planes */
-    else if (event->buttons() == Qt::MidButton && event->modifiers() & Qt::ShiftModifier) {
+    else if (event->buttons() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
       if ((clip->back_enabled || clip->front_enabled) &&!clip->lock_with_object) {
         HVect vNow;
         vNow.x = 2.0f * x / width() - 1.0f;
@@ -932,15 +936,15 @@ void GeomWindow::HandleMouseMotion(QMouseEvent * event, float xn, float yn)
       }
     }
     // LEFT MOUSE DOWN + ALT = draw moving window 
-    else if (event->buttons() == Qt::LeftButton && event->modifiers() & Qt::AltModifier) {
+    else if (event->buttons() == Qt::LeftButton && matchesModifiers(event->modifiers(), Qt::AltModifier, true)) {
       moveEvent(event);
     }
     // MIDDLE MOUSE DOWN + ALT = draw reshaping window
-    else if (event->buttons() == Qt::MidButton && event->modifiers() & Qt::AltModifier) {
+    else if (event->buttons() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::AltModifier, true)) {
       sizeEvent(event);
     }
     // LEFT MOUSE DOWN + SHIFT = translate
-    else if (event->buttons() == Qt::LeftButton && event->modifiers() & Qt::ShiftModifier) {
+    else if (event->buttons() == Qt::LeftButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
       tran->tx += l2norm * (xn - last_xn)  * vfov / 29.f;
       tran->ty += l2norm * (last_yn - yn)  * vfov / 29.f;
       
@@ -1018,9 +1022,9 @@ void GeomWindow::TransformKeyboard(Mesh_Info * curmesh, QKeyEvent* event)
   float trans[4] = { 0, 0, 0, 0 };
 
   InvertMatrix16((float *)mNow, (float *)minv);
-
+  
   // prepare to rotate - CTRL + 1/3 are scale, CTRL + 2,4,6,7,8,9 are rotate 
-  if (key != Qt::Key_End && key != Qt::Key_PageDown && (event->modifiers() == Qt::ControlModifier)) {
+  if (key != Qt::Key_End && key != Qt::Key_PageDown && (matchesModifiers(event->modifiers(), Qt::ControlModifier, true))) {
     rotate = true;
     if (key == Qt::Key_Down || key == Qt::Key_Right || key == Qt::Key_PageUp) { // CCW rotations, positive angles 
       sin_angle = sin(map3d_info.rotincrement / 2);
@@ -1034,7 +1038,7 @@ void GeomWindow::TransformKeyboard(Mesh_Info * curmesh, QKeyEvent* event)
   }
   // check translation - if edit mode is on make sure we have the right mesh,
   //   if landmark edit mode then make sure we have a point selected
-  else if (key != Qt::Key_End && key != Qt::Key_PageDown && (event->modifiers() == Qt::AltModifier)) {
+  else if (key != Qt::Key_End && key != Qt::Key_PageDown && (matchesModifiers(event->modifiers(), Qt::AltModifier, true))) {
     translate = true;
     if (map3d_info.pickmode == EDIT_NODE_PICK_MODE) {
       if (curmesh->num_selected_pts > 0) {
