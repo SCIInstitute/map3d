@@ -1694,7 +1694,7 @@ void WriteMatlabGeomFile(char * filename, vector<Map3d_Geom *> geoms)
       cell.addfieldname("channels");
       matlabarray chan;
       chan.createdensearray(1, geom->numpts, matlabarray::miINT32);
-      chan.setnumericarray(geom->channels, geom->numpts);
+      chan.setnumericarray(offset, geom->numpts);
       cell.setfield(0, "channels", chan);
       delete [] offset;
     }
