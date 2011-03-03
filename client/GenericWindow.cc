@@ -250,27 +250,12 @@ bool Map3dGLWidget::matchesModifiers(int windowModifiers, int desiredModifiers, 
   
 #ifdef Q_OS_MAC
   // translate what Qt gives us for Mac into what we expect on windows
-  int newModifiers = 0;
-  
-  qDebug() << "shift=" << Qt::ShiftModifier << "ctrl=" << Qt::ControlModifier << "alt=" << Qt::AltModifier
-  << "Meta=" << Qt::MetaModifier << "keypad" << Qt::KeypadModifier << "group" << Qt::GroupSwitchModifier;
-	
-  if (windowModifiers & Qt::ShiftModifier) qDebug() << "shift";
-  if (windowModifiers & Qt::ControlModifier) qDebug() << "control";
-  if (windowModifiers & Qt::AltModifier) qDebug() << "shift";
-  if (windowModifiers & Qt::MetaModifier) qDebug() << "meta";
-  if (windowModifiers & Qt::KeypadModifier) qDebug() << "keypad";
-  
   int tmpMod = windowModifiers;
   if (windowModifiers & Qt::ShiftModifier) tmpMod -= Qt::ShiftModifier;
   if (windowModifiers & Qt::ControlModifier) tmpMod -= Qt::ControlModifier;
   if (windowModifiers & Qt::AltModifier) tmpMod -= Qt::AltModifier;
   if (windowModifiers & Qt::MetaModifier) tmpMod -= Qt::MetaModifier;
   if (windowModifiers & Qt::KeypadModifier) tmpMod -= Qt::KeypadModifier;
-  
-  qDebug() << "remainder: " << tmpMod;
-  
-  
 #endif
   if (exactMatch)
     return windowModifiers == desiredModifiers;
@@ -278,8 +263,21 @@ bool Map3dGLWidget::matchesModifiers(int windowModifiers, int desiredModifiers, 
     return (windowModifiers & desiredModifiers) == desiredModifiers;
 }
 
-bool Map3dGLWidget::isRightClick(QMouseEvent*)
+int Map3dGLWidget::mouseButtonOverride(QMouseEvent* event)
 {
-  return true;
+  int button = event->type() == QEvent::MouseMove ? event->buttons() : event->button();
+
+  // do this for psycho one-button mac mice
+#ifdef Q_OS_MAC
+  if (button == Qt::LeftButton)
+  {
+    // don't use matchesModifiers here, as that translates these away
+    //if (event->modifiers() == Qt::ControlModifier)
+      //return Qt::RightButton;
+    if (event->modifiers() == Qt::AltModifier)
+      return Qt::MidButton;
+  }
+#endif
+  return button;
 }
 

@@ -212,6 +212,8 @@ void FileDialog::addRow(Mesh_Info* mesh)
   }
 
   FileDialogWidget* widget = new FileDialogWidget(surfaceScrollArea, mesh);
+  widget->show();
+  surfaceScrollArea->show();
   widget->setProperty(surfPropName, surfnumber);
   if (!empty_mesh)
       widget->geomSaveButton->setEnabled(true);

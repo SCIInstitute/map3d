@@ -150,8 +150,6 @@ void GeomWindow::keyPressEvent(QKeyEvent* event)
   map3d_info.selected_group = (lock == LOCK_GROUP && meshes.size() > 0)
     ? meshes[0]->groupid : -1;
 
-      qDebug() << keysym << Qt::Key_Right << Qt::Key_Left;
-      
   // okay, the way frame advancing works, so that the window manager won't get bogged down, is
   // handle it directly once (for control), then loop while occasionally checking the event loop
   if ((keysym == Qt::Key_Left || keysym == Qt::Key_Right) &&
@@ -739,8 +737,9 @@ void GeomWindow::UpdateAndRedraw()
 void GeomWindow::mousePressEvent(QMouseEvent * event)
 {
   setMoveCoordinates(event);
-
-  if (event->button() == Qt::RightButton){       // right click
+  int button = mouseButtonOverride(event);
+  
+  if (button == Qt::RightButton){       // right click
     int menu_data = OpenMenu(mapToGlobal(event->pos()));
     if (menu_data >= 0)
       MenuEvent(menu_data);
@@ -791,6 +790,8 @@ void GeomWindow::mouseMoveEvent(QMouseEvent* event)
 
 void GeomWindow::HandleButtonPress(QMouseEvent * event, float xn, float yn)
 {
+  int button = mouseButtonOverride(event);
+  int newModifiers = button == event->buttons() ? event->modifiers() : Qt::NoModifier;
   int x = int (width() * xn);
   int y = int (height() - height() * yn);
 
@@ -807,7 +808,7 @@ void GeomWindow::HandleButtonPress(QMouseEvent * event, float xn, float yn)
   for (loop = 0; loop < length; loop++) {
     tran = meshes[loop]->tran;
     // MIDDLE MOUSE DOWN + SHIFT = start rotate clipping planes
-    if (event->button() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
+    if (button == Qt::MidButton && matchesModifiers(newModifiers, Qt::ShiftModifier, true)) {
       if ((clip->back_enabled || clip->front_enabled) &&!clip->lock_with_object) {
         vNow.x = 2.0f * x / width() - 1;
         vNow.y = 2.0f * y / height() - 1;
@@ -826,20 +827,20 @@ void GeomWindow::HandleButtonPress(QMouseEvent * event, float xn, float yn)
 #endif
     }
     // LEFT MOUSE DOWN + CTRL = pick (not ctrl-shift - use that for mac for alt)
-    else if (event->button() == Qt::LeftButton && matchesModifiers(event->modifiers(), Qt::ControlModifier, true) &&
+    else if (button == Qt::LeftButton && matchesModifiers(newModifiers, Qt::ControlModifier, true) &&
 		((!map3d_info.lockgeneral && (dominantsurf == loop || length == 1)) || map3d_info.lockgeneral)) {
       if (keep_picking)
 		keep_picking = !Pick(loop, x, y);
   	}
     // MIDDLE MOUSE DOWN + CTRL = pick for DELETE TRIANGLE
-    else if (event->button() == Qt::RightButton && matchesModifiers(event->modifiers(), Qt::ControlModifier, true) &&
+    else if (button == Qt::RightButton && matchesModifiers(newModifiers, Qt::ControlModifier, true) &&
 		((!map3d_info.lockgeneral && (dominantsurf == loop || length == 1)) || map3d_info.lockgeneral)) {
 	  if (keep_picking)
 		keep_picking = !Pick(loop, x, y, true);
 	  }
 
     // LEFT MOUSE DOWN = start rotate
-    else if (event->button() == Qt::LeftButton) {
+    else if (button == Qt::LeftButton) {
       vNow.x = 2.0f * x / width() - 1.0f;
       vNow.y = 2.0f * y / height() - 1.0f;
       Ball_Mouse(&tran->rotate, vNow);
@@ -855,6 +856,9 @@ void GeomWindow::HandleButtonPress(QMouseEvent * event, float xn, float yn)
 
 void GeomWindow::HandleButtonRelease(QMouseEvent * event, float /*xn*/, float /*yn*/)
 {
+  int button = mouseButtonOverride(event);
+  int newModifiers = button == event->button() ? event->modifiers() : Qt::NoModifier;
+  
   int length = meshes.size();
   int loop = 0;
   Transforms *tran = 0;
@@ -862,7 +866,7 @@ void GeomWindow::HandleButtonRelease(QMouseEvent * event, float /*xn*/, float /*
   for (loop = 0; loop < length; loop++) {
     tran = meshes[loop]->tran;
     // MIDDLE MOUSE UP + SHIFT = end rotate clipping planes
-    if (event->button() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
+    if (button == Qt::MidButton && matchesModifiers(newModifiers, Qt::ShiftModifier, true)) {
       if ((clip->back_enabled || clip->front_enabled) &&!clip->lock_with_object)
         Ball_EndDrag(&clip->bd);
 #ifdef ROTATING_LIGHT
@@ -872,7 +876,7 @@ void GeomWindow::HandleButtonRelease(QMouseEvent * event, float /*xn*/, float /*
       break;
     }
     // LEFT MOUSE UP = end rotate 
-    if (event->button() == Qt::LeftButton) {
+    if (button == Qt::LeftButton) {
       Ball_EndDrag(&tran->rotate);
       if (clip->lock_with_object)
         Ball_EndDrag(&clip->bd);
@@ -883,6 +887,8 @@ void GeomWindow::HandleButtonRelease(QMouseEvent * event, float /*xn*/, float /*
 
 void GeomWindow::HandleMouseMotion(QMouseEvent * event, float xn, float yn)
 {
+  int button = mouseButtonOverride(event);
+  int newModifiers = button == event->buttons() ? event->modifiers() : Qt::NoModifier;
   int x = int (width() * xn);
   int y = int (height() - height() * yn);
 
@@ -908,12 +914,12 @@ void GeomWindow::HandleMouseMotion(QMouseEvent * event, float xn, float yn)
     tran = mesh->tran;
 
     /* CTRL = nothing */
-    if (matchesModifiers(event->modifiers(), Qt::ControlModifier, true)) {
+    if (matchesModifiers(newModifiers, Qt::ControlModifier, true)) {
       return;
     }
 
     /* MIDDLE MOUSE DOWN + SHIFT = rotate clipping planes */
-    else if (event->buttons() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
+    else if (button == Qt::MidButton && matchesModifiers(newModifiers, Qt::ShiftModifier, true)) {
       if ((clip->back_enabled || clip->front_enabled) &&!clip->lock_with_object) {
         HVect vNow;
         vNow.x = 2.0f * x / width() - 1.0f;
@@ -936,15 +942,15 @@ void GeomWindow::HandleMouseMotion(QMouseEvent * event, float xn, float yn)
       }
     }
     // LEFT MOUSE DOWN + ALT = draw moving window 
-    else if (event->buttons() == Qt::LeftButton && matchesModifiers(event->modifiers(), Qt::AltModifier, true)) {
+    else if (button == Qt::LeftButton && matchesModifiers(newModifiers, Qt::AltModifier, true)) {
       moveEvent(event);
     }
     // MIDDLE MOUSE DOWN + ALT = draw reshaping window
-    else if (event->buttons() == Qt::MidButton && matchesModifiers(event->modifiers(), Qt::AltModifier, true)) {
+    else if (button == Qt::MidButton && matchesModifiers(newModifiers, Qt::AltModifier, true)) {
       sizeEvent(event);
     }
     // LEFT MOUSE DOWN + SHIFT = translate
-    else if (event->buttons() == Qt::LeftButton && matchesModifiers(event->modifiers(), Qt::ShiftModifier, true)) {
+    else if (button == Qt::LeftButton && matchesModifiers(newModifiers, Qt::ShiftModifier, true)) {
       tran->tx += l2norm * (xn - last_xn)  * vfov / 29.f;
       tran->ty += l2norm * (last_yn - yn)  * vfov / 29.f;
       
@@ -955,7 +961,7 @@ void GeomWindow::HandleMouseMotion(QMouseEvent * event, float xn, float yn)
 
     }
     // LEFT MOUSE DOWN = rotate
-    else if (event->buttons() == Qt::LeftButton) {
+    else if (button == Qt::LeftButton) {
       HVect vNow;
       vNow.x = 2.0f * x / width() - 1.0f;
       vNow.y = 2.0f * y / height() - 1.0f;
@@ -973,7 +979,7 @@ void GeomWindow::HandleMouseMotion(QMouseEvent * event, float xn, float yn)
     }
 
     /* MIDDLE MOUSE DOWN = zoom (scale) */
-    else if (event->buttons() == Qt::MidButton) {
+    else if (button == Qt::MidButton) {
       if (yn < last_yn)
         vfov -= vfov / 24.0f;
       else if (yn > last_yn)

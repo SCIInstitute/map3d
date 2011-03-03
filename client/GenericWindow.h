@@ -62,7 +62,7 @@ public:
   // these are for cross platform key bindings - Qt on Mac moves things around from
   //   our old key convention
   bool matchesModifiers(int windowModifiers, int desiredModifiers, bool exactMatch);
-  bool isRightClick(QMouseEvent*);
+  int mouseButtonOverride(QMouseEvent* event);
 	
 private:
   static Map3dGLWidget* sharedWidget;
