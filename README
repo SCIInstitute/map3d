@@ -14,4 +14,4 @@ Building on mac
 qmake -spec macx-g++ -r
 make
 ./buildOsxApp.sh
-Then run Disk Utility and create a Disk Image from client/map3d.app
+hdiutil create map3d.dmg -srcfolder client/map3d.app
