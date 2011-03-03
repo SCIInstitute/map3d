@@ -15,5 +15,5 @@ win32 {
 
 QT += core
 
-CONFIG -= release
-CONFIG += debug
+CONFIG += release
+CONFIG -= debug

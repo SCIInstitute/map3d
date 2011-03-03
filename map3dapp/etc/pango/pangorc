@@ -1,5 +1,0 @@
-[Pango]
-ModuleFiles = "${HOME}/Library/Application Support/map3d/pango.modules"
-
-[PangoX]
-AliasFiles = "${HOME}/Library/Application Support/map3d/pangox.aliases"

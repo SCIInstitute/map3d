@@ -1,0 +1,17 @@
+Building on windows
+Open a MS Visual Studio command prompt
+
+set QTDIR=C:\Qt\<version
+set PATH=%QTDIR%\path;%PATH;
+
+qmake -r
+nmake
+makensis installer.nsi
+
+
+
+Building on mac
+qmake -spec macx-g++ -r
+make
+./buildOsxApp.sh
+Then run Disk Utility and create a Disk Image from client/map3d.app

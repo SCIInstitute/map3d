@@ -54,7 +54,7 @@ FORMS += forms/FileDialog.ui \
 
 
 macx {
-  ICON = ../map3dapp/map3d-icon.icns
+  ICON = map3d-icon.icns
 }
 
 # files that need to be moc'ed
