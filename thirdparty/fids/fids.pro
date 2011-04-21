@@ -9,6 +9,5 @@ INCLUDEPATH += ../graphicsio
 INCLUDEPATH += ../fi
 INCLUDEPATH += ../cutil
 
-SOURCES += dfilefids.c \
-           fidfilesubs.c \
+SOURCES += fidfilesubs.c \
            fidsubs.c

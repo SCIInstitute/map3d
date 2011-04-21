@@ -1,5 +1,4 @@
 #include <math.h>
-#include "graphicsio.h"
 #include "cutil.h"
 /*======================================================================*/
 double NodeDistance( Node node1, Node node2 )

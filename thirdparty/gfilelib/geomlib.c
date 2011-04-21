@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "geomlib.h"
-#include "graphicsio.h"
 #include "cutil.h"
 #include "landmarks.h"
 /****************** Externals *****************************/
