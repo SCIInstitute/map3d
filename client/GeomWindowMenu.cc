@@ -171,34 +171,6 @@ void GeomWindow::HandleMenu(int menu_data)
             break;
         }
         break;
-      case no_fid_cont:
-        mesh->drawactcont = false;
-        mesh->drawreccont = false;
-        break;
-      case act_fid_cont:
-        mesh->drawactcont = true;
-        break;
-      case rec_fid_cont:
-        mesh->drawreccont = true;
-        break;
-      case no_fid_map:
-        mesh->drawfidmapcont = -1;
-        //       mesh->drawactmapcont = false;
-        //       mesh->drawrecmapcont = false;
-        mesh->drawcont = true;
-        break;
-      case act_fid_map:
-        mesh->drawfidmapcont = 10;
-        //       mesh->drawactmapcont = true;
-        //       mesh->drawrecmapcont = false;
-        mesh->drawcont = false;
-        break;
-      case rec_fid_map:
-        mesh->drawfidmapcont = 13;
-        //       mesh->drawrecmapcont = true;
-        //       mesh->drawactmapcont = false;
-        mesh->drawcont = false;
-        break;
       case fid_draw_fid:
         mesh->drawfids = !mesh->drawfids;
         break;
@@ -825,9 +797,8 @@ void GeomWindow::HandleMenu(int menu_data)
         mesh->cont->buildContours();
         for(unsigned i = 0; i<mesh->fidConts.size();i++){      
           mesh->fidConts[i]->buildContours();
+          mesh->fidMaps[i]->buildContours();
         }
-        if (mesh->fidMap)
-          mesh->fidMap->buildContours();
           
         break;
       case frame_zero:

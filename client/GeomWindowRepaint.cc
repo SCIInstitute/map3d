@@ -120,10 +120,10 @@ void GeomWindow::paintGL()
     
     /* draw fiducial map surface*/
     if (curmesh->data && curmesh->drawfids){
-      if(curmesh->fidmapindex > 0){
+      if(curmesh->drawfidmap < curmesh->fidMaps.size()){
         if (curmesh->fidshadingmodel != SHADE_NONE ){
           glEnable(GL_POLYGON_OFFSET_FILL);
-          DrawFidMapSurf(curmesh,curmesh->fidMap);
+          DrawFidMapSurf(curmesh,curmesh->fidMaps[curmesh->drawfidmap]);
           glDisable(GL_POLYGON_OFFSET_FILL);
         }
       }
@@ -164,9 +164,9 @@ void GeomWindow::paintGL()
         if (curmesh->drawFidConts[i])
           DrawFidCont(curmesh,curmesh->fidConts[i]);
       }
-      if(curmesh->fidmapindex > 0){
+      if(curmesh->drawfidmap < curmesh->fidMaps.size()){
         if (curmesh->fidshadingmodel == SHADE_NONE ){
-          DrawFidMapCont(curmesh,curmesh->fidMap);
+          DrawFidMapCont(curmesh,curmesh->fidMaps[curmesh->drawfidmap]);
         }
       }
     }

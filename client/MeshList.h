@@ -63,7 +63,8 @@ public:
   Contour_Info *cont;           /* contours lines and bands */
   vector < Contour_Info * > fidConts; /* fiducial contours lines and bands */
   vector <bool> drawFidConts;    /* whether to draw each individual fid contour */
-  Contour_Info *fidMap;          /* fiducial contours lines and bands - only store one, since only one can be drawn at a time*/
+  vector <Contour_Info *> fidMaps;          /* fiducial contours lines and bands */
+  int drawfidmap;
 
 //  Contour_Info *fidactcont;        /* fiducial contours lines and bands */
 //  Contour_Info *fidreccont;        /* fiducial contours lines and bands */
@@ -90,7 +91,6 @@ public:
   bool drawactcont;                /* indicates whether to render fiducial contour lines */
   bool drawreccont;                /* indicates whether to render fiducial contour lines */
   int drawfidmapcont;                /* indicates whether to render fiducial map contour lines */
-  int fidmapindex;
 
   bool drawisosurf;             /* indicates whether to render an isosurface */
   int colorMapIndex;            /* index into colormap menu switch statement */

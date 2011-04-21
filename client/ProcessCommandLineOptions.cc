@@ -854,6 +854,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
       for(int numfids = 0; numfids < mesh->data->fids[fidsets].numfidtypes; numfids++){
 //#if 0 
         
+        qDebug() << fidsets << numfids;
         //for new fid dialog
           mesh->fidConts.push_back(new Contour_Info(mesh));
           mesh->drawFidConts.push_back(true);
@@ -914,13 +915,11 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
               break;              
           }
 
-          if (mesh->fidMap == NULL)
-          {
-            mesh->fidMap = new Contour_Info(mesh);
-            mesh->fidMap->datatype = fids.fidtypes[numfids];
-            mesh->fidMap->fidset = fidsets;
-            mesh->fidMap->fidmap = 7;
-          }
+          mesh->drawfidmap = 0;
+          mesh->fidMaps.push_back(new Contour_Info(mesh));
+          mesh->fidMaps.back()->datatype = fids.fidtypes[numfids];
+          mesh->fidMaps.back()->fidset = fidsets;
+          mesh->fidMaps.back()->fidmap = 1;
 //#endif    
         //printf("fid %d - %d\n",numfids,mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids]);
 //        if((mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids] == 10)){

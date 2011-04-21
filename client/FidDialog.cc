@@ -77,8 +77,8 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
       else
       {
         int selectedMap = 0;
-        if (_currentMesh->fidmapindex > 0)
-          selectedMap = _currentMesh->fidmapindex - 1;
+        if (_currentMesh->drawfidmap > 0)
+          selectedMap = _currentMesh->drawfidmap;
 
         int row = 1;
         for (int i = 0; i < data->numfs; i++)
@@ -129,14 +129,12 @@ void FidDialog::on_applyButton_clicked()
     _currentMesh->fidConts[i]->fidContSize = (float) _fiducialSizes[i]->_size;
     _currentMesh->drawFidConts[i] = _fiducialContourCheckBox[i]->isChecked();
     
-    
+    if (_fiducialMapRadio[i]->isChecked())
+    {
+      _currentMesh->drawfidmap = i;
+      _currentMesh->fidMaps[i]->fidcontourspacing = (float) spacingSpinBox->value();
+    }
   }
-
-  // mesh->fidConts, mesh->drawFidConts (bool vector)
-  
-  // mesh->fidmapindex
-  //mesh->fidMaps[rowdata->mesh->fidmapindex -1]->fidcontourspacing = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->fid_map_contourspacing));
-  //numconts = mesh->fidMaps[rowdata->mesh->fidmapindex -1]->buildContours();
 
   
   close();

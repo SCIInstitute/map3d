@@ -721,10 +721,8 @@ void GeomWindow::UpdateAndRedraw()
     mesh->cont->buildContours();
     for(unsigned i = 0; i<mesh->fidConts.size();i++){      
       mesh->fidConts[i]->buildContours();
+      mesh->fidMaps[i]->buildContours();
     }
-    if (mesh->fidMap)
-      mesh->fidMap->buildContours();
-    
     // if legend window exists, update it too
     if (mesh->legendwin != 0) {
       mesh->legendwin->update();
@@ -1172,9 +1170,8 @@ void GeomWindow::TransformKeyboard(Mesh_Info * curmesh, QKeyEvent* event)
     curmesh->cont->buildContours();
     for(unsigned i = 0; i<curmesh->fidConts.size();i++){      
       curmesh->fidConts[i]->buildContours();
+      curmesh->fidMaps[i]->buildContours();
     }
-    if (curmesh->fidMap)
-      curmesh->fidMap->buildContours();
   }
   // finish rotations - save quaternion and matrix to arcball
   //   if we used the arcball's rotation matrix, next time we used the mouse to rotate
