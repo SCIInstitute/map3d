@@ -50,6 +50,7 @@ Map3dGLWidget::Map3dGLWidget(QWidget* parent, int type, const char* title, int m
   if (wintype == GEOMWINDOW)
     AssociateGeomWindow((GeomWindow*)this);
 
+  setFocusPolicy(Qt::ClickFocus);
   setPopLevel();
   // FIX setMinimumSize(min_width, min_height);
 }

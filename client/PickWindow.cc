@@ -33,6 +33,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QMenu>
+#include <QDebug>
 
 #define PICK_INSIDE  0
 #define PICK_OUTSIDE 1

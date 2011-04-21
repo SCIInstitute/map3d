@@ -33,7 +33,6 @@ const char* surfPropName = "SurfaceNum";
 void FileDialogWidget::on_geomLineEdit_editingFinished ()
 {
   int num = GetNumGeoms(geomLineEdit->text().toAscii().data());
-  qDebug() << __FUNCTION__;
 
   geomIndexComboBox->clear();
   QStringList indexEntries;
@@ -41,7 +40,7 @@ void FileDialogWidget::on_geomLineEdit_editingFinished ()
     indexEntries << QString::number(i);
 
   if (num > 1)
-    indexEntries << "*";
+    indexEntries << "all";
 
   geomIndexComboBox->addItems(indexEntries);
   geomIndexComboBox->setCurrentIndex(0);
@@ -50,13 +49,12 @@ void FileDialogWidget::on_geomLineEdit_editingFinished ()
 
 void FileDialogWidget::on_geomIndexComboBox_activated ( const QString & text )
 {
+  Q_UNUSED(text);
   reload_geom = true;    
 }
 
 void FileDialogWidget::on_dataLineEdit_editingFinished ()
 {
-  int num = GetNumGeoms(geomLineEdit->text().toAscii().data());
-
   QString filename = dataLineEdit->text();
 
   if (filename.endsWith(".tsdfc") || filename.endsWith(".mat"))
@@ -89,15 +87,13 @@ void FileDialogWidget::on_dataLineEdit_editingFinished ()
   
 void FileDialogWidget::on_dataIndexComboBox_activated ( const QString & text )
 {
+  Q_UNUSED(text);
   char filename[256];
   strncpy(filename, dataLineEdit->text().toAscii().data(), 256);
 
   if(strcmp(filename,"")!=0)
   {  
-    int ds = dataIndexComboBox->currentIndex();
-    int dstart = startFrameSpinBox->value()-1;
-    //int dend = gtk_spin_button_get_value(GTK_SPIN_BUTTON(dataend))-1;
-    
+    int ds = dataIndexComboBox->currentIndex();    
     int numframes = GetNumFrames(filename, ds);
 
     startFrameSpinBox->setRange(1, numframes);
@@ -113,12 +109,14 @@ void FileDialogWidget::on_dataIndexComboBox_activated ( const QString & text )
   
 void FileDialogWidget::on_startFrameSpinBox_valueChanged ( int i )
 {
+  Q_UNUSED(i);
   rmsWidget->update();
   reload_data = true;
 }
   
 void FileDialogWidget::on_endFrameSpinBox_valueChanged ( int i )
 {
+  Q_UNUSED(i);
   rmsWidget->update();
   reload_data = true;
 }
@@ -229,10 +227,10 @@ void FileDialog::addRow(Mesh_Info* mesh)
   {
     widget->geomLineEdit->setText(mesh->mysurf->geomfilename);
     widget->on_geomLineEdit_editingFinished();
-    if (mesh->mysurf->geomsurfnum < 0)
+    if (mesh->mysurf->geomsurfnum <= 0)
       widget->geomIndexComboBox->setCurrentIndex(widget->geomIndexComboBox->count()-1);
     else
-      widget->geomIndexComboBox->setCurrentIndex(mesh->mysurf->geomsurfnum);
+      widget->geomIndexComboBox->setCurrentIndex(mesh->mysurf->geomsurfnum-1); // geomsurfnum is 1-based
 
     widget->dataLineEdit->setText(mesh->mysurf->potfilename);
     widget->on_dataLineEdit_editingFinished();
@@ -277,9 +275,9 @@ void FileDialogWidget::updateRMS()
   strncpy(geom, geomLineEdit->text().toAscii().data(), 256);
   
   // gs should be 0 if the * was selected in a multisurf case, which is what we want 
-  int gs = geomIndexComboBox->currentIndex();
-  if (gs == geomIndexComboBox->count() - 1)
-    gs = -1;
+  int gs = geomIndexComboBox->currentIndex() + 1;
+  if (gs == geomIndexComboBox->count())
+    gs = 0;
     
   strncpy(data, dataLineEdit->text().toAscii().data(), 256);
   int ds = 0;
@@ -362,9 +360,9 @@ bool FileDialogWidget::updateFiles()
   strncpy(geom, geomLineEdit->text().toAscii().data(), 256);
   
   // gs should be 0 if the * was selected in a multisurf case, which is what we want 
-  int gs = geomIndexComboBox->currentIndex();
-  if (gs == geomIndexComboBox->count() - 1)
-    gs = -1;
+  int gs = geomIndexComboBox->currentIndex() + 1; // it's one based
+  if (gs == geomIndexComboBox->count())
+    gs = 0;
     
   strncpy(data, dataLineEdit->text().toAscii().data(), 256);
   int ds = 0;
@@ -377,6 +375,7 @@ bool FileDialogWidget::updateFiles()
   
   int dstart = startFrameSpinBox->value()-1;
   int dend = endFrameSpinBox->value()-1;
+  int dstep = frameStepSpinBox->value();
   
   strncpy(ch, channelsLineEdit->text().toAscii().data(), 256);
   strncpy(ll, leadlinksLineEdit->text().toAscii().data(), 256);
@@ -407,7 +406,7 @@ bool FileDialogWidget::updateFiles()
     input->llfilename = new char[256];
     input->fidfilename = new char[256];
 
-    
+    qDebug() << geom << gs;   
     input->geomsurfnum = gs;
     input->timeseries = ds;
     input->displaysurfnum = surf;
@@ -420,9 +419,10 @@ bool FileDialogWidget::updateFiles()
     
     input->ts_end = dend;
     input->ts_start = dstart;
+    input->ts_sample_step = dstep;
     map3d_info.scale_frame_set = 0;
     
-    
+    qDebug() << __FUNCTION__ << dstep;
     // careful - in these next two sections, we are adding windows.
     // we can't assume that windows that we just created have been added to the
     // window manager yet (GeomwindowInit may not have been called yet),
@@ -459,15 +459,15 @@ bool FileDialogWidget::updateFiles()
     return true;  // we don't need to (and shouldn't) go through the reload section
   }
   
-  GeomWindow* geompriv = GetGeomWindow(win);
-  if (mesh->gpriv != geompriv) {
+  GeomWindow* newWindow = GetGeomWindow(win);
+  if (mesh->gpriv != newWindow) {
     // move mesh from one window to another
-    if (geompriv == NULL) {
+    if (newWindow == NULL) {
       // new geom window
-      GeomWindow* geompriv = GeomWindow::GeomWindowCreate(0,0,0,0);
+      GeomWindow::GeomWindowCreate(0,0,0,0);
+      newWindow = GetGeomWindow(win);
     }
     GeomWindow* g = mesh->gpriv;
-    GeomWindow* newWindow = GetGeomWindow(win);
     for (unsigned i = 0; i < g->meshes.size(); i++) {
       // move all meshes with the same surf input to other window (multi-surf geom)
       Mesh_Info* tmp = g->meshes[i];
@@ -561,9 +561,16 @@ void filesDialogCreate(bool show /*=true*/)
     filedialog = new FileDialog;
     //filedialog->destroyed = true;
 
+    QSet<Surf_Input*> surfs_used;
     for (MeshIterator mi(0,0); !mi.isDone(); ++mi) {
       Mesh_Info* mesh = mi.getMesh();
-      filedialog->addRow(mesh);
+      if (!surfs_used.contains(mesh->mysurf))
+      {
+        // there can be more than one mesh per Surf_Input, but the addRow really works on 
+        //   Surf_Input
+        filedialog->addRow(mesh);
+        surfs_used.insert(mesh->mysurf);
+      }
     }
   }
 
@@ -612,6 +619,9 @@ FileDialogWidget::FileDialogWidget(QWidget* parent, Mesh_Info* mesh) : QWidget(p
   geomSaveButton->setIcon(style()->standardIcon(QStyle::SP_DriveFDIcon));
   geomSaveButton->setToolTip("Save Geometry");
   geomSaveButton->setEnabled(false);
+  
+  rmsWidget->rms = true;
+  rmsWidget->mesh = NULL;
 
   // plan for the future
   dataSaveButton->hide();
