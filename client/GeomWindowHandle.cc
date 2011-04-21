@@ -44,6 +44,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QApplication>
+#include <QTime>
 
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
@@ -90,10 +91,19 @@ void GeomWindow::MenuEvent(int menu)
 
 bool GeomWindow::HandleFrameAdvances()
 {
+  static QTime time;
+  static bool firstTime = true;
   if (!key_pressed) {
     return false;
   }
 
+  if (firstTime)
+    time.start();
+  else if (time.elapsed() < 10)
+    return false; // only do 100 frames per second
+  firstTime = false;
+
+  
   map3d_info.scale_frame_set = 0;
 
   map3d_info.selected_group = (map3d_info.lockframes == LOCK_GROUP && meshes.size() > 0)
