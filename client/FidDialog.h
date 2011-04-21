@@ -25,7 +25,7 @@ private:
 
   QList<QLabel*> _fiducialLabels;
   QList<ColorWidget*> _fiducialColors;
-  QList<QSpinBox*> _fiducialSizes;
+  QList<SizeWidget*> _fiducialSizes;
   QList<QRadioButton*> _fiducialMapRadio;
   QList<QCheckBox*> _fiducialContourCheckBox;
 

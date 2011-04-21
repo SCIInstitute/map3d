@@ -161,7 +161,8 @@ void GeomWindow::paintGL()
     /* draw the fiducial contour lines */
     if (curmesh->data && curmesh->drawfids){
       for(unsigned i = 0; i<curmesh->fidConts.size();i++){
-        DrawFidCont(curmesh,curmesh->fidConts[i]);
+        if (curmesh->drawFidConts[i])
+          DrawFidCont(curmesh,curmesh->fidConts[i]);
       }
       if(curmesh->fidmapindex > 0){
         if (curmesh->fidshadingmodel == SHADE_NONE ){

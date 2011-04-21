@@ -9,6 +9,7 @@
 
 #include <QCheckBox>
 #include <QRadioButton>
+#include <QDebug>
 
 enum fidTableCols{
   Fiducial, DrawMap, DrawContour, ContColor, ContSize, NumCols
@@ -38,12 +39,18 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
     widget->deleteLater();
   foreach (ColorWidget* widget, _fiducialColors)
     widget->deleteLater();
-  foreach (QSpinBox* widget, _fiducialSizes)
+  foreach (SizeWidget* widget, _fiducialSizes)
     widget->deleteLater();
   foreach (QCheckBox* widget, _fiducialContourCheckBox)
     widget->deleteLater();
   foreach (QRadioButton* widget, _fiducialMapRadio)
     widget->deleteLater();
+  
+  _fiducialLabels.clear();
+  _fiducialColors.clear();
+  _fiducialSizes.clear();
+  _fiducialContourCheckBox.clear();
+  _fiducialMapRadio.clear();
 
   // reset
   int i = 0;
@@ -83,10 +90,12 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
             gridLayout->addWidget(label, row, Fiducial, 1, 1);
 
             ColorWidget* cw = new ColorWidget(this, QColor(_currentMesh->fidConts[row-1]->fidcolor));
+            _fiducialColors.append(cw);
             gridLayout->addWidget(cw, row, ContColor, 1, 1);
 			connect(cw, SIGNAL(doubleClicked()), this, SLOT(pickColor()));
 
             SizeWidget* sw = new SizeWidget(this, _currentMesh->fidConts[row-1]->fidContSize);
+            _fiducialSizes.append(sw);
             gridLayout->addWidget(sw, row, ContSize, 1, 1);
 			connect(sw, SIGNAL(doubleClicked()), this, SLOT(pickSize()));
 
@@ -99,6 +108,7 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
 
             QCheckBox* cb = new QCheckBox(this);
             _fiducialContourCheckBox.append(cb);
+            cb->setChecked(_currentMesh->drawFidConts[row-1]);
             gridLayout->addWidget(cb, row, DrawContour, 1, 1);
 
             // TODO - size widget
@@ -113,6 +123,22 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
 
 void FidDialog::on_applyButton_clicked()
 {
+  for (int i = 0; i < _fiducialLabels.size(); i++)
+  {
+    _currentMesh->fidConts[i]->fidcolor = _fiducialColors[i]->colorAsQColor();
+    _currentMesh->fidConts[i]->fidContSize = (float) _fiducialSizes[i]->_size;
+    _currentMesh->drawFidConts[i] = _fiducialContourCheckBox[i]->isChecked();
+    
+    
+  }
+
+  // mesh->fidConts, mesh->drawFidConts (bool vector)
+  
+  // mesh->fidmapindex
+  //mesh->fidMaps[rowdata->mesh->fidmapindex -1]->fidcontourspacing = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(rowdata->fid_map_contourspacing));
+  //numconts = mesh->fidMaps[rowdata->mesh->fidmapindex -1]->buildContours();
+
+  
   close();
 }
 

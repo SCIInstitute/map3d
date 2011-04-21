@@ -42,6 +42,7 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QDebug>
 
 #ifndef MAX
 #define MAX(x,y) ((x>y)?x:y)
@@ -855,6 +856,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
         
         //for new fid dialog
           mesh->fidConts.push_back(new Contour_Info(mesh));
+          mesh->drawFidConts.push_back(true);
           mesh->fidConts.back()->datatype = fids.fidtypes[numfids];
           mesh->fidConts.back()->fidset = fidsets;
           QColor& fidcolor = mesh->fidConts.back()->fidcolor;
@@ -917,7 +919,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
             mesh->fidMap = new Contour_Info(mesh);
             mesh->fidMap->datatype = fids.fidtypes[numfids];
             mesh->fidMap->fidset = fidsets;
-            mesh->fidMap->fidmap = 1;
+            mesh->fidMap->fidmap = 7;
           }
 //#endif    
         //printf("fid %d - %d\n",numfids,mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids]);
