@@ -61,12 +61,14 @@ Surf_Data::Surf_Data()
   rmspotvals = 0;
   reference = 0;
   referencelock = 0;
-  numfs = 0;
   minmaxframes = 0;
   //globalfids = 0;
-  fids = 0;
+  fids.leadfids = 0;
+  fids.numfidleads = 0;
   minmaxfids = 0;
   user_scaling = 0;
+
+
 }
 
 Surf_Data::~Surf_Data()
@@ -84,21 +86,20 @@ Surf_Data::~Surf_Data()
     free(minmaxframes);
   if (minmaxfids)
     free(minmaxfids);
-  if (fids)                     // Series_Fids (defined in fids.h) doesn't have a destructor of its own
+
+  if (fids.leadfids)                     // Series_Fids (defined in fids.h) doesn't have a destructor of its own
   {
-    if (fids->fidtypes)
-      free(fids->fidtypes);
-    if (fids->fidnames)
-      free(fids->fidnames);
-    if (fids->leadfids) {
-      if (fids->leadfids->fidtypes)
-        free(fids->leadfids->fidtypes);
-      if (fids->leadfids->fidvals)
-        free(fids->leadfids->fidvals);
+    if (fids.fidtypes)
+      free(fids.fidtypes);
+    if (fids.fidnames)
+      free(fids.fidnames);
+    if (fids.leadfids) {
+      if (fids.leadfids->fidtypes)
+        free(fids.leadfids->fidtypes);
+      if (fids.leadfids->fidvals)
+        free(fids.leadfids->fidvals);
     }
   }
-  free(fids);                   // we need to many destroy all that is in a 'fids'
-
 }
 
 //static Surf_Data member
@@ -208,7 +209,8 @@ Surf_Data *Surf_Data::AddASurfData(Surf_Data * surfdata, long newsurfnum, long n
   surfdata[newsurfnum].userfidmin = 0.0;
   surfdata[newsurfnum].userfidmax = 0.0;
   surfdata[newsurfnum].minmaxframes = NULL;
-  surfdata[newsurfnum].fids = NULL;
+  surfdata[newsurfnum].fids.leadfids = NULL;
+  surfdata[newsurfnum].fids.numfidleads = NULL;
   surfdata[newsurfnum].potfilename[0] = '\0';
   //strcpy(surfdata[newsurfnum].potfilename,"");
   if (newsurfnum > 0)
@@ -322,48 +324,21 @@ void Surf_Data::get_minmax(float &min, float &max)
   }
 }
 
-void Surf_Data::get_fid_minmax(float &min, float &max, int type, int fidset)
-{
-  
-  float minval = 1.0e10;
-  float maxval = -1.0e10;
-  float val;
-  //for(int i = 0; i < numfs; i++){
-  for(int leadnum = 0; leadnum < fids[fidset].numfidleads; leadnum++){
-    for(int fidnum = 0; fidnum < fids[fidset].leadfids[leadnum].numfids; fidnum++){
-      if(fids[fidset].leadfids[leadnum].fidtypes[fidnum] == type){
-        val = fids[fidset].leadfids[leadnum].fidvals[fidnum];
-        if (val < minval) {
-          minval = val;
-        }
-        if (val > maxval) {
-          maxval = val;
-        }
-      }
-    }
-  }
-  //}
-  min = minval;
-  max = maxval;
-}
-
 void Surf_Data::get_fid_minmax(float &min, float &max, int type)
 {
   
   float minval = 1.0e10;
   float maxval = -1.0e10;
   float val;
-  for(int i = 0; i < numfs; i++){
-    for(int leadnum = 0; leadnum < fids[i].numfidleads; leadnum++){
-      for(int fidnum = 0; fidnum < fids[i].leadfids[leadnum].numfids; fidnum++){
-        if(fids[i].leadfids[leadnum].fidtypes[fidnum] == type){
-          val = fids[i].leadfids[leadnum].fidvals[fidnum];
-          if (val < minval) {
-            minval = val;
-          }
-          if (val > maxval) {
-            maxval = val;
-          }
+  for(int leadnum = 0; leadnum < fids.numfidleads; leadnum++){
+    for(int fidnum = 0; fidnum < fids.leadfids[leadnum].numfids; fidnum++){
+      if(fids.leadfids[leadnum].fidtypes[fidnum] == type){
+        val = fids.leadfids[leadnum].fidvals[fidnum];
+        if (val < minval) {
+          minval = val;
+        }
+        if (val > maxval) {
+          maxval = val;
         }
       }
     }

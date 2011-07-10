@@ -48,7 +48,6 @@ public:
   
   //fiducials
   QColor fidcolor;//fiducial contour color
-  int fidset;
   float fidContSize;
   int fidmap;    /*** Set=1 for fidmap. ***/
   int numfidconts;

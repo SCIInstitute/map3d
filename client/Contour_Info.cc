@@ -35,7 +35,6 @@ Contour_Info::Contour_Info(Mesh_Info * m)
   
   fidmap = 0;
   // FIX gdk_color_parse ("red", &fidcolor);
-  fidset = 0;
   fidContSize = 3.0;
   numfidconts = 10;
   fidcontourspacing = 0.0;
@@ -150,7 +149,7 @@ int Contour_Info::buildContours()
       fidmax = this->userfidmax;
     }
     else{
-      mesh->data->get_fid_minmax(fidmin, fidmax, this->datatype, this->fidset);
+      mesh->data->get_fid_minmax(fidmin, fidmax, this->datatype);
     }
     if (this->fidcontourspacing)
       this->numfidconts = (int)((fidmax - fidmin) / this->fidcontourspacing - 1);
@@ -167,7 +166,7 @@ int Contour_Info::buildContours()
       fidmax = this->userfidmax;
     }
     else{
-      mesh->data->get_fid_minmax(fidmin, fidmax, this->datatype, this->fidset);
+      mesh->data->get_fid_minmax(fidmin, fidmax, this->datatype);
     }   
     this->potthreshold = (fidmax - fidmin) / 1.0e5;
     //printf("fidmin %f, fidmax %f, fidset %d,  fidtype %d\n",fidmin, fidmax, this->fidset, this->datatype);
@@ -518,10 +517,10 @@ long Contour_Info::GenSurfContourBand(float min, float max, Map3d_Geom * onemap3
       }
       else{
         pot[j] = 0;
-        if(nodes[j] < onesurfdata->fids[this->fidset].numfidleads){
-          for(int numfids = 0; numfids < onesurfdata->fids[fidset].leadfids[nodes[j]].numfids; numfids++){
-            if((onesurfdata->fids[this->fidset].leadfids[nodes[j]].fidtypes[numfids] == this->datatype)){
-              pot[j] = onesurfdata->fids[this->fidset].leadfids[nodes[j]].fidvals[numfids];
+        if(nodes[j] < onesurfdata->fids.numfidleads){
+          for(int numfids = 0; numfids < onesurfdata->fids.leadfids[nodes[j]].numfids; numfids++){
+            if((onesurfdata->fids.leadfids[nodes[j]].fidtypes[numfids] == this->datatype)){
+              pot[j] = onesurfdata->fids.leadfids[nodes[j]].fidvals[numfids];
             }
           }
         }

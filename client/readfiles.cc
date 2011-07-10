@@ -651,7 +651,6 @@ Return:	    pointer to updated surf_data array or NULL for error
       float tpeaktime = 1, stofftime = 1;
       long numgfids;
       int numfidsets = 0;
-      surfdata[displaysurfnum].numfs = 1;
       numsurfnodes = map3d_geom[displaysurfnum].numpts;
 
 
@@ -670,32 +669,8 @@ Return:	    pointer to updated surf_data array or NULL for error
         return( NULL );
       }
       
-      long numfids = 1;// fids.getnumelements();
-      if ( surfdata[displaysurfnum].fids == NULL )
-      {
-        if (( surfdata[displaysurfnum].fids = (Series_Fids *) calloc( (size_t) numfids, 
-                                                   sizeof( Series_Fids ) )) == NULL ) 
-        {
-          char errtext[80];
-          sprintf(errtext," Tried to open %d fidsets", numfids);
-          ReportError( "ReadMatlabDataFile", "error getting big memory file",
-                       ERR_MEM, errtext );
-          return( NULL );
-        }
-      }
-      else 
-      { 
-        if (( surfdata[displaysurfnum].fids = (Series_Fids *) realloc( surfdata[displaysurfnum].fids, (size_t) 
-                                                    (numfids) * sizeof( Series_Fids ) )) == NULL ) 
-        {
-          ReportError( "ReadMatlabDataFile", "error expanding big memory file",
-                       ERR_MEM, "" );
-          return( NULL );
-        }
-      }
-      
       //set up series fids memory
-      if (( surfdata[displaysurfnum].fids[0].leadfids = (Lead_Fids *) 
+      if (( surfdata[displaysurfnum].fids.leadfids = (Lead_Fids *) 
             calloc( (size_t)  numsurfnodes, sizeof( Lead_Fids ) )) == NULL )
       {
         ReportError( "ReadMatlabDatafile", 
@@ -704,21 +679,21 @@ Return:	    pointer to updated surf_data array or NULL for error
       }
       
       //load the seriesfids structure
-      surfdata[displaysurfnum].fids[0].tsnum = insurfnum;
-      surfdata[displaysurfnum].fids[0].pakfilenum = -1;
-      surfdata[displaysurfnum].fids[0].numfidleads = numsurfnodes;
-      surfdata[displaysurfnum].fids[0].numfidtypes = fids.getnumelements();
-      //strcpy( surfdata[displaysurfnum].fids[0].fidlabel, myFS->name.c_str());
+      surfdata[displaysurfnum].fids.tsnum = insurfnum;
+      surfdata[displaysurfnum].fids.pakfilenum = -1;
+      surfdata[displaysurfnum].fids.numfidleads = numsurfnodes;
+      surfdata[displaysurfnum].fids.numfidtypes = fids.getnumelements();
+      //strcpy( surfdata[displaysurfnum].fids.fidlabel, myFS->name.c_str());
       
       //set up series fidnames memory
-      if (( surfdata[displaysurfnum].fids[0].fidnames = (char**) 
+      if (( surfdata[displaysurfnum].fids.fidnames = (char**) 
             calloc( (size_t) fids.getnumelements(), sizeof( char* ) )) == NULL )
       {
         ReportError( "ReadMatlabDatafile", 
                      "error getting fidnames memory", ERR_MEM, "" );
         return( NULL );
       }
-      if (( surfdata[displaysurfnum].fids[0].fidtypes =
+      if (( surfdata[displaysurfnum].fids.fidtypes =
             (short *) calloc( (size_t) fids.getnumelements(), sizeof( short )) ) == NULL )
       {
         ReportError( "ReadMatlabDatafile", "error getting fidtypes memory",
@@ -740,14 +715,14 @@ Return:	    pointer to updated surf_data array or NULL for error
         
         tmp->type = vtype[0];
 
-        surfdata[displaysurfnum].fids[0].fidtypes[numFidTypes] = vtype[0];
+        surfdata[displaysurfnum].fids.fidtypes[numFidTypes] = vtype[0];
         if(FI_GetInfoByType(tmp)){
-          if ((surfdata[displaysurfnum].fids[0].fidnames[numFidTypes] =
+          if ((surfdata[displaysurfnum].fids.fidnames[numFidTypes] =
                (char *)calloc((size_t) strlen(tmp->name)+1, sizeof(char))) == NULL) {
             ReportError("ReadMatlabDatafile", "error getting fidnames memory", ERR_MEM, "");
             return (NULL);
           }
-          strcpy( surfdata[displaysurfnum].fids[0].fidnames[numFidTypes],tmp->name);
+          strcpy( surfdata[displaysurfnum].fids.fidnames[numFidTypes],tmp->name);
         }
 
       }
@@ -767,8 +742,8 @@ Return:	    pointer to updated surf_data array or NULL for error
         }
 
         //printf("index %d leadnum %d\n", index, leadnum);
-        surfdata[displaysurfnum].fids[0].leadfids[leadnum].leadnum = leadnum;
-        surfdata[displaysurfnum].fids[0].leadfids[leadnum].numfids = 0;
+        surfdata[displaysurfnum].fids.leadfids[leadnum].leadnum = leadnum;
+        surfdata[displaysurfnum].fids.leadfids[leadnum].numfids = 0;
         std::vector<int> whichfid;
 
         for(int numFidTypes = 0; numFidTypes < fids.getnumelements(); numFidTypes++){
@@ -777,28 +752,28 @@ Return:	    pointer to updated surf_data array or NULL for error
           value.getnumericarray(vvalue);
           if(index <= vvalue.size()){
             whichfid.push_back(numFidTypes);
-            surfdata[displaysurfnum].fids[0].leadfids[leadnum].numfids++;
+            surfdata[displaysurfnum].fids.leadfids[leadnum].numfids++;
           }
         }
-        //printf("Lead %d numfids %d\n", leadnum,surfdata[displaysurfnum].fids[0].leadfids[leadnum].numfids);
+        //printf("Lead %d numfids %d\n", leadnum,surfdata[displaysurfnum].fids.leadfids[leadnum].numfids);
         
-        if (( surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidtypes =
-              (short *) calloc( (size_t) surfdata[displaysurfnum].fids[0].leadfids[leadnum].numfids, sizeof( short )) ) == NULL )
+        if (( surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes =
+              (short *) calloc( (size_t) surfdata[displaysurfnum].fids.leadfids[leadnum].numfids, sizeof( short )) ) == NULL )
         {
           ReportError( "ReadMatlabDatafile", "error getting fidtypes memory",
                        ERR_MEM, "" );
           return( NULL );
         }
         
-        if (( surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidvals =
-              (float *) calloc( (size_t) surfdata[displaysurfnum].fids[0].leadfids[leadnum].numfids, sizeof( float )) )== NULL )
+        if (( surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals =
+              (float *) calloc( (size_t) surfdata[displaysurfnum].fids.leadfids[leadnum].numfids, sizeof( float )) )== NULL )
         {
           ReportError( "ReadMatlabDatafile", "error getting fidvals memory",
                        ERR_MEM, "" );
           return( NULL );
         }
         
-        for(int fidnum = 0; fidnum < surfdata[displaysurfnum].fids[0].leadfids[leadnum].numfids; fidnum++){
+        for(int fidnum = 0; fidnum < surfdata[displaysurfnum].fids.leadfids[leadnum].numfids; fidnum++){
           value = fids.getfieldCI(whichfid[fidnum],"value");
           type = fids.getfieldCI(whichfid[fidnum],"type");
           std::vector<long> vtype;
@@ -808,17 +783,17 @@ Return:	    pointer to updated surf_data array or NULL for error
           value.getnumericarray(vvalue);
           
           //series fids
-          surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidtypes[fidnum] = vtype[0];
-          surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidvals[fidnum] = vvalue[leadnum];
+          surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes[fidnum] = vtype[0];
+          surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] = vvalue[leadnum];
           
-//          printf("fid type %d fid value %f\n", surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidtypes[fidnum],
-//                 surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidvals[fidnum]);
+//          printf("fid type %d fid value %f\n", surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes[fidnum],
+//                 surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum]);
             
           //get min-max fids
-          if( surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidvals[fidnum] > surfdata[displaysurfnum].fidmax)
-            surfdata[displaysurfnum].fidmax =  surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidvals[fidnum];
-          if( surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidvals[fidnum] < surfdata[displaysurfnum].fidmin)
-            surfdata[displaysurfnum].fidmin =  surfdata[displaysurfnum].fids[0].leadfids[leadnum].fidvals[fidnum];
+          if( surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] > surfdata[displaysurfnum].fidmax)
+            surfdata[displaysurfnum].fidmax =  surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum];
+          if( surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] < surfdata[displaysurfnum].fidmin)
+            surfdata[displaysurfnum].fidmin =  surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum];
           
           //global fids
           switch(vtype[0]){
@@ -1032,7 +1007,7 @@ Return:	    fidinfo (allocated and set up here--updated laer.
   long numfseriesinfile, index, maxindex, displaysurfnum;
   long nodenum, numsurfnodes;
   long surfstart, surfend;
-  Series_Fids *infidseries = NULL, *outfidseries = NULL;
+  Series_Fids *infidseries = NULL;
   /*********************************************************************/
   reportlevel = map3d_info.reportlevel;
   if (reportlevel)
@@ -1080,8 +1055,8 @@ Return:	    fidinfo (allocated and set up here--updated laer.
   surfend = insurfnum + numsurfsread - 1;
   maxindex = infidseries->numfidleads - 1;
   for (displaysurfnum = 0; displaysurfnum <= surfend - surfstart; displaysurfnum++) {
+    Series_Fids *outfidseries = &surfdata[displaysurfnum].fids;
     numsurfnodes = map3d_geom[displaysurfnum].numpts;
-    outfidseries = (Series_Fids *) calloc((size_t) 1, sizeof(Series_Fids));
     outfidseries->tsnum = infidseries->tsnum;
     outfidseries->pakfilenum = infidseries->pakfilenum;
     outfidseries->numfidtypes = infidseries->numfidtypes;
@@ -1116,8 +1091,6 @@ Return:	    fidinfo (allocated and set up here--updated laer.
         outfidseries->leadfids[nodenum].fidvals[fnum] = infidseries->leadfids[nodenum].fidvals[fnum];
       }
     }
-    surfdata[displaysurfnum].fids = outfidseries;
-    surfdata[displaysurfnum].numfs = 1;
   }
   
   /*** Clean up and get back to calling routine.  ***/

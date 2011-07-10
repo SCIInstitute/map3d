@@ -654,65 +654,6 @@ void FindAndReadLeadlinks(Surf_Input * surf, Map3d_Geom * geom)
   }
 }
 
-void FindAndReadFiducials(Surf_Input * /*surf*/, Mesh_Info * /*mesh*/)
-{
-//  FILE *filep = 0;
-//  char *filename = surf->containerfilename;
-//
-//  switch (DetectFileType(filename)) {
-//  case TSDFC_FILE:
-//    sprintf(filename, "%s.tsdfc", filename);
-//    filep = fopen(filename, "r");
-//    if (filep == 0) {
-//      printf("MAP3D WARNING: Unable to find file \"%s\".\n", filename);
-//      break;
-//    }
-//    printf("Read tsdfc file\n");
-//    fclose(filep);
-//
-//    for(int fidsets = 0; fidsets < mesh->data->numfs; fidsets++){
-//      for(int numfids = 0; numfids < mesh->data->fids[fidsets].leadfids[0].numfids; numfids++){
-//	if((mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids] == 10)){
-//	      mesh->fidactcont = new Contour_Info(mesh);
-//	      mesh->fidactcont->datatype = 10;
-//	      mesh->fidactmapcont = new Contour_Info(mesh);
-//	      mesh->fidactmapcont->datatype = 10;
-//	      mesh->fidactmapcont->fidmap = 1;
-//	}
-//	if((mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids] == 13)){
-//	  mesh->fidreccont = new Contour_Info(mesh);
-//	  mesh->fidreccont->datatype = 13;
-//	  mesh->fidrecmapcont = new Contour_Info(mesh);
-//	  mesh->fidrecmapcont->datatype = 13;
-//	  mesh->fidrecmapcont->fidmap = 1;
-//	}
-//      }
-//    }
-//    
-//    
-////     mesh->fidactcont = new Contour_Info(mesh);
-////     mesh->fidactcont->datatype = 10;
-////     mesh->fidreccont = new Contour_Info(mesh);
-////     mesh->fidreccont->datatype = 13;
-////     mesh->fidactmapcont = new Contour_Info(mesh);
-////     mesh->fidactmapcont->datatype = 10;
-////     mesh->fidactmapcont->fidmap = 1;
-////     mesh->fidrecmapcont = new Contour_Info(mesh);
-////     mesh->fidrecmapcont->datatype = 13;
-////     mesh->fidrecmapcont->fidmap = 1;
-//
-//    //ReadTsdfcFile(surf,filename);
-//    break;
-//  case -1:
-//    //printf("MAP3D WARNING: Unable to detect file type for file \"%s\"\n", surf->containerfilename);
-//    break;
-//  default:
-//    //printf("MAP3D WARNING: file \"%s\" does not contain fiducial information.\n", surf->containerfilename);
-//    break;
-//  }
-}
-
-
 void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
 {
   Surf_Data *s = 0;
@@ -840,88 +781,49 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
     // also adjust the fids if the data does not start at the beginning
 
     int fidAdjustment = mesh->data->ts_start;
-    for(int fidsets = 0; fidsets < mesh->data->numfs; fidsets++){
-      Series_Fids& fids = mesh->data->fids[fidsets];
-      // adjust the fids
-      if (fidAdjustment > 0) {
-        for (int lead = 0; lead < fids.numfidleads; lead++) {
-          for (int numfidinlead = 0; numfidinlead < fids.leadfids[lead].numfids; numfidinlead++)
-            fids.leadfids[lead].fidvals[numfidinlead] -= fidAdjustment;
-        }
-        //for (int globalfid = 0; globalfid < mesh->data->globalfids.numfids; globalfid++)
-          //mesh->data->globalfids.fidvals[globalfid] -= fidAdjustment;
+    Series_Fids& fids = mesh->data->fids;
+    // adjust the fids
+    if (fidAdjustment > 0) {
+      for (int lead = 0; lead < fids.numfidleads; lead++) {
+        for (int numfidinlead = 0; numfidinlead < fids.leadfids[lead].numfids; numfidinlead++)
+          fids.leadfids[lead].fidvals[numfidinlead] -= fidAdjustment;
       }
-      for(int numfids = 0; numfids < mesh->data->fids[fidsets].numfidtypes; numfids++){
+      //for (int globalfid = 0; globalfid < mesh->data->globalfids.numfids; globalfid++)
+        //mesh->data->globalfids.fidvals[globalfid] -= fidAdjustment;
+    }
+    for(int numfids = 0; numfids < fids.numfidtypes; numfids++){
 //#if 0 
-        
-        qDebug() << fidsets << numfids;
-        //for new fid dialog
-          mesh->fidConts.push_back(new Contour_Info(mesh));
-          mesh->drawFidConts.push_back(true);
-          mesh->fidConts.back()->datatype = fids.fidtypes[numfids];
-          mesh->fidConts.back()->fidset = fidsets;
-          QColor& fidcolor = mesh->fidConts.back()->fidcolor;
-          switch(mesh->fidConts.back()->datatype){
-            case 0:
-              fidcolor = Qt::gray;
-              break;
-            case 1:
-              fidcolor = Qt::gray;
-              break;
-            case 2:
-              fidcolor = Qt::magenta;
-              break;
-            case 3:
-              fidcolor = Qt::gray;
-              break;
-            case 4:
-              fidcolor = Qt::gray;
-              break;
-            case 5:
-              fidcolor = Qt::gray;
-              break;
-            case 6:
-              fidcolor = Qt::gray;
-              break;
-            case 7:
-              fidcolor = Qt::cyan;
-              break;
-            case 8:
-              fidcolor = Qt::gray;
-              break;
-            case 9:
-              fidcolor = Qt::gray;
-              break;
-            case 10:
-              fidcolor = Qt::red;
-              break;
-            case 11:
-              fidcolor = Qt::gray;
-              break;
-            case 12:
-              fidcolor = Qt::gray;
-              break;
-            case 13:
-              fidcolor = Qt::green;
-              break;
-            case 14:
-              fidcolor = Qt::yellow;
-              break;
-            case 15:
-              fidcolor = Qt::gray;
-              break;
-            case 16:
-              fidcolor = Qt::blue;
-              break;              
-          }
+      //for new fid dialog
+      mesh->fidConts.push_back(new Contour_Info(mesh));
+      mesh->fidMaps.push_back(new Contour_Info(mesh));
+      mesh->drawFidConts.push_back(true);
+      mesh->fidConts.back()->datatype = fids.fidtypes[numfids];
+      mesh->fidMaps.back()->fidmap = 1;
+      mesh->drawfidmap = 0;
 
-          mesh->drawfidmap = 0;
-          mesh->fidMaps.push_back(new Contour_Info(mesh));
-          mesh->fidMaps.back()->datatype = fids.fidtypes[numfids];
-          mesh->fidMaps.back()->fidset = fidsets;
-          mesh->fidMaps.back()->fidmap = 1;
+      QColor& fidcolor = mesh->fidConts.back()->fidcolor;
+      switch(mesh->fidConts.back()->datatype){
+        case 0:  fidcolor = Qt::gray;     break;
+        case 1:  fidcolor = Qt::gray;     break;
+        case 2:  fidcolor = Qt::magenta;  break;
+        case 3:  fidcolor = Qt::gray;     break;
+        case 4:  fidcolor = Qt::gray;     break;
+        case 5:  fidcolor = Qt::gray;     break;
+        case 6:  fidcolor = Qt::gray;     break;
+        case 7:  fidcolor = Qt::cyan;     break;
+        case 8:  fidcolor = Qt::gray;     break;
+        case 9:  fidcolor = Qt::gray;     break;
+        case 10: fidcolor = Qt::red;      break;
+        case 11: fidcolor = Qt::gray;     break;
+        case 12: fidcolor = Qt::gray;     break;
+        case 13: fidcolor = Qt::green;    break;
+        case 14: fidcolor = Qt::yellow;   break;
+        case 15: fidcolor = Qt::gray;     break;
+        case 16: fidcolor = Qt::blue;     break;              
+      }
+
 //#endif    
-        //printf("fid %d - %d\n",numfids,mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids]);
+    //printf("fid %d - %d\n",numfids,mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids]);
 //        if((mesh->data->fids[fidsets].leadfids[0].fidtypes[numfids] == 10)){
 //	      mesh->fidactcont = new Contour_Info(mesh);
 //	      mesh->fidactcont->datatype = 10;
@@ -936,7 +838,6 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
 //          mesh->fidrecmapcont->datatype = 13;
 //          mesh->fidrecmapcont->fidmap = 1;
 //        }
-      }
     }
     
 

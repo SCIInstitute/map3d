@@ -68,7 +68,7 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
       Surf_Data* data = _currentMesh->data;
       dataLabel->setText(_currentMesh->mysurf->potfilename);
 
-      if (data->numfs == 0)
+      if (data->fids.leadfids == 0)
       {
         QLabel* label = new QLabel("No fiducials", fidFrame);
         _fiducialLabels.append(label);
@@ -81,39 +81,36 @@ void FidDialog::on_surfComboBox_currentIndexChanged(int index)
           selectedMap = _currentMesh->drawfidmap;
 
         int row = 1;
-        for (int i = 0; i < data->numfs; i++)
+        for(int j = 0; j < data->fids.numfidtypes; j++)
         {
-          for(int j = 0; j < data->fids[i].numfidtypes; j++)
-          {
-            QLabel* label = new QLabel(QString(data->fids[i].fidnames[j]) + " " + data->fids[i].fidlabel, fidFrame);
-            _fiducialLabels.append(label);
-            gridLayout->addWidget(label, row, Fiducial, 1, 1);
+          QLabel* label = new QLabel(QString(data->fids.fidnames[j]) + " " + data->fids.fidlabel, fidFrame);
+          _fiducialLabels.append(label);
+          gridLayout->addWidget(label, row, Fiducial, 1, 1);
 
-            ColorWidget* cw = new ColorWidget(this, QColor(_currentMesh->fidConts[row-1]->fidcolor));
-            _fiducialColors.append(cw);
-            gridLayout->addWidget(cw, row, ContColor, 1, 1);
-			connect(cw, SIGNAL(doubleClicked()), this, SLOT(pickColor()));
+          ColorWidget* cw = new ColorWidget(this, QColor(_currentMesh->fidConts[row-1]->fidcolor));
+          _fiducialColors.append(cw);
+          gridLayout->addWidget(cw, row, ContColor, 1, 1);
+		connect(cw, SIGNAL(doubleClicked()), this, SLOT(pickColor()));
 
-            SizeWidget* sw = new SizeWidget(this, _currentMesh->fidConts[row-1]->fidContSize);
-            _fiducialSizes.append(sw);
-            gridLayout->addWidget(sw, row, ContSize, 1, 1);
-			connect(sw, SIGNAL(doubleClicked()), this, SLOT(pickSize()));
+          SizeWidget* sw = new SizeWidget(this, _currentMesh->fidConts[row-1]->fidContSize);
+          _fiducialSizes.append(sw);
+          gridLayout->addWidget(sw, row, ContSize, 1, 1);
+		connect(sw, SIGNAL(doubleClicked()), this, SLOT(pickSize()));
 
-            QRadioButton* rb = new QRadioButton(this);
-            _fiducialMapRadio.append(rb);
-            gridLayout->addWidget(rb, row, DrawMap, 1, 1);
+          QRadioButton* rb = new QRadioButton(this);
+          _fiducialMapRadio.append(rb);
+          gridLayout->addWidget(rb, row, DrawMap, 1, 1);
 
-            if (row-1 == selectedMap)
-              rb->setChecked(true);
+          if (row-1 == selectedMap)
+            rb->setChecked(true);
 
-            QCheckBox* cb = new QCheckBox(this);
-            _fiducialContourCheckBox.append(cb);
-            cb->setChecked(_currentMesh->drawFidConts[row-1]);
-            gridLayout->addWidget(cb, row, DrawContour, 1, 1);
+          QCheckBox* cb = new QCheckBox(this);
+          _fiducialContourCheckBox.append(cb);
+          cb->setChecked(_currentMesh->drawFidConts[row-1]);
+          gridLayout->addWidget(cb, row, DrawContour, 1, 1);
 
-            // TODO - size widget
-            row++;
-          }
+          // TODO - size widget
+          row++;
         }
       }
     }

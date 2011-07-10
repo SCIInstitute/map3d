@@ -30,7 +30,6 @@ int ProcessCommandLineOptions(Global_Input & g);
 Mesh_List FindAndReadGeom(Surf_Input *, Mesh_List currentMeshes, int reload);
 void FindAndReadChannels(Surf_Input *, Map3d_Geom *);
 void FindAndReadLeadlinks(Surf_Input *, Map3d_Geom *);
-void FindAndReadFiducials(Surf_Input *, Mesh_Info *);
 void FindAndReadData(Surf_Input *, Mesh_Info *, int reload);
 int DetectFileType(char *);
 const char *GetExtension(const char *s);

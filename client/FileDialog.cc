@@ -406,7 +406,6 @@ bool FileDialogWidget::updateFiles()
     input->llfilename = new char[256];
     input->fidfilename = new char[256];
 
-    qDebug() << geom << gs;   
     input->geomsurfnum = gs;
     input->timeseries = ds;
     input->displaysurfnum = surf;
@@ -422,7 +421,6 @@ bool FileDialogWidget::updateFiles()
     input->ts_sample_step = dstep;
     map3d_info.scale_frame_set = 0;
     
-    qDebug() << __FUNCTION__ << dstep;
     // careful - in these next two sections, we are adding windows.
     // we can't assume that windows that we just created have been added to the
     // window manager yet (GeomwindowInit may not have been called yet),

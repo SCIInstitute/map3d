@@ -732,7 +732,7 @@ void DrawFidMapCont(Mesh_Info * curmesh, Contour_Info *cont)
   }
   
   float fidmin, fidmax;
-  cursurf->get_fid_minmax(fidmin, fidmax, cont->datatype, cont->fidset);
+  cursurf->get_fid_minmax(fidmin, fidmax, cont->datatype);
   
   //   if (map3d_info.scale_mapping == SYMMETRIC) {
   //     if (fabs(potmax) > fabs(potmin))
@@ -861,7 +861,7 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
     a = b = 0;                  //when there is no data
   
   float fidmin, fidmax;
-  cursurf->get_fid_minmax(fidmin, fidmax, cont->datatype, cont->fidset);  
+  cursurf->get_fid_minmax(fidmin, fidmax, cont->datatype);  
 //  if (map3d_info.scale_mapping == SYMMETRIC) {
 //    if (fabs(potmax) > fabs(potmin))
 //      potmin = -potmax;
@@ -908,10 +908,10 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
           index = curgeom->elements[loop2][loop3];
           fidval = 0;
           //for(int fidsets = 0; fidsets < cursurf->numfs; fidsets++){
-            if(index < cursurf->fids[cont->fidset].numfidleads){
-              for(int numfids = 0; numfids < cursurf->fids[cont->fidset].leadfids[index].numfids; numfids++){
-                if((cursurf->fids[cont->fidset].leadfids[index].fidtypes[numfids] == cont->datatype)){
-                  fidval = cursurf->fids[cont->fidset].leadfids[index].fidvals[numfids];
+            if(index < cursurf->fids.numfidleads){
+              for(int numfids = 0; numfids < cursurf->fids.leadfids[index].numfids; numfids++){
+                if((cursurf->fids.leadfids[index].fidtypes[numfids] == cont->datatype)){
+                  fidval = cursurf->fids.leadfids[index].fidvals[numfids];
                 }
               }
             }
@@ -932,10 +932,10 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
         for (loop3 = 0; loop3 < 3; loop3++) {
           index = curgeom->elements[loop2][loop3];
           //for(int fidsets = 0; fidsets < cursurf->numfs; fidsets++){
-            if(index < cursurf->fids[cont->fidset].numfidleads){
-              for(int numfids = 0; numfids < cursurf->fids[cont->fidset].leadfids[index].numfids; numfids++){
-                if((cursurf->fids[cont->fidset].leadfids[index].fidtypes[numfids] == cont->datatype)){
-                  mean += cursurf->fids[cont->fidset].leadfids[index].fidvals[numfids];
+            if(index < cursurf->fids.numfidleads){
+              for(int numfids = 0; numfids < cursurf->fids.leadfids[index].numfids; numfids++){
+                if((cursurf->fids.leadfids[index].fidtypes[numfids] == cont->datatype)){
+                  mean += cursurf->fids.leadfids[index].fidvals[numfids];
                 }
               }
             }
@@ -1395,14 +1395,12 @@ void GeomWindow::DrawNodes(Mesh_Info * curmesh)
           renderString3f(pos[0], pos[1], pos[2], (int)small_font, lead_labels[loop]);
           break;
         }
-        else if (curmesh->mark_all_number == 4 && cursurf->fids){
+        else if (curmesh->mark_all_number == 4 && cursurf->fids.numfidleads > 0){
           float fid = 0;
-          for(int fidsets = 0; fidsets < cursurf->numfs; fidsets++){
-            if(loop < cursurf->fids[fidsets].numfidleads){
-              for(int numfids = 0; numfids < cursurf->fids[fidsets].leadfids[loop].numfids; numfids++){
-                if((cursurf->fids[fidsets].leadfids[loop].fidtypes[numfids] == curmesh->drawfidmapcont)){
-                  fid = cursurf->fids[fidsets].leadfids[loop].fidvals[numfids];
-                }
+          if(loop < cursurf->fids.numfidleads){
+            for(int numfids = 0; numfids < cursurf->fids.leadfids[loop].numfids; numfids++){
+              if((cursurf->fids.leadfids[loop].fidtypes[numfids] == curmesh->drawfidmapcont)){
+                fid = cursurf->fids.leadfids[loop].fidvals[numfids];
               }
             }
           }

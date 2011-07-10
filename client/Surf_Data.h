@@ -18,7 +18,6 @@ public:
   static Surf_Data *AddASurfData(Surf_Data * surfdata, long newsurfnum, long numframes, long numleads);
   void FrameAdvance(int delta_frames);
   void get_minmax(float &min, float &max);
-  void get_fid_minmax(float &min, float &max, int type, int fidset);
   void get_fid_minmax(float &min, float &max, int type);
   void MinMaxPot(Map3d_Geom * onemap3dgeom);
   void ChangeReference(long leadnum, Map3d_Geom * onemap3dgeom);
@@ -70,14 +69,13 @@ public:
   float *rmspotvals;           /* The root mean square potential at each time */
   float *reference;             /* The reference signal for this surface */
   int referencelock;
-  int numfs;                     //number of fid series
 
   bool user_scaling;
   
   Surf_Data *mastersurf;
   MinMax_Frame *minmaxframes; /*** Potential extrema for each frame ***/
   Lead_Fids globalfids; /*** Global fiducials, whatever that means! ***/
-  Series_Fids *fids; /*** All lead by lead fiducials for this surface ***/
+  Series_Fids fids; /*** All lead by lead fiducials for this surface ***/
   MinMax_Fids *minmaxfids; /*** Min and max values for all the fids. ***/
   Mesh_Info *mesh; /*** pointer to its owning mesh ***/
 };

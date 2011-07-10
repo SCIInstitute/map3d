@@ -720,32 +720,29 @@ void PickWindow::DrawNode()
     //draw fiducial markers
     if(wintype == TIMEWINDOW){
       int index = 0;
-      for(int fidsets = 0; fidsets < data->numfs; fidsets++){
-//        printf("fidsets %d\n", fidsets);
-//        printf("mesh->fidConts.size() %d\n",mesh->fidConts.size());
-//        printf("1data->fids[fidsets].numfidleads %d\n", data->fids[fidsets].numfidleads);
+//    printf("mesh->fidConts.size() %d\n",mesh->fidConts.size());
+//    printf("1data->fids[fidsets].numfidleads %d\n", data->fids[fidsets].numfidleads);
 
-        if(pick->node < data->fids[fidsets].numfidleads){
-//          printf("2data->fids[fidsets].numfidleads %d\n", data->fids[fidsets].numfidleads);
-          for(int i = 0; i < data->fids[fidsets].leadfids[pick->node].numfids;i++){
-            short fidType = data->fids[fidsets].leadfids[pick->node].fidtypes[i];
-            for(unsigned j = 0; j<mesh->fidConts.size();j++){
-              if(mesh->fidConts[j]->datatype == fidType)
-                index = j;
-            }
-            glLineWidth(1);
-            glColor3f(mesh->fidConts[index]->fidcolor.redF(),
-                      mesh->fidConts[index]->fidcolor.greenF(),
-                      mesh->fidConts[index]->fidcolor.blueF());
-            glBegin(GL_LINES);
-            glVertex3f(left * width() + d * data->fids[fidsets].leadfids[pick->node].fidvals[i], b+(.1f * height()), 0);
-            glVertex3f(left * width() + d * data->fids[fidsets].leadfids[pick->node].fidvals[i], b - (.1f * height()), 0);
-            glEnd();
-//            printf("index %d i %d\n", index, i);
-            index++;
+      if(pick->node < data->fids.numfidleads){
+//      printf("2data->fids.numfidleads %d\n", data->fids[fidsets].numfidleads);
+        for(int i = 0; i < data->fids.leadfids[pick->node].numfids;i++){
+          short fidType = data->fids.leadfids[pick->node].fidtypes[i];
+          for(unsigned j = 0; j<mesh->fidConts.size();j++){
+            if(mesh->fidConts[j]->datatype == fidType)
+              index = j;
           }
-        }else{index+=data->fids[fidsets].numfidtypes;}
-      }
+          glLineWidth(1);
+          glColor3f(mesh->fidConts[index]->fidcolor.redF(),
+                    mesh->fidConts[index]->fidcolor.greenF(),
+                    mesh->fidConts[index]->fidcolor.blueF());
+          glBegin(GL_LINES);
+          glVertex3f(left * width() + d * data->fids.leadfids[pick->node].fidvals[i], b+(.1f * height()), 0);
+          glVertex3f(left * width() + d * data->fids.leadfids[pick->node].fidvals[i], b - (.1f * height()), 0);
+          glEnd();
+//            printf("index %d i %d\n", index, i);
+          index++;
+        }
+      }else{index+=data->fids.numfidtypes;}
     }
     
     
