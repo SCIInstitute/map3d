@@ -784,7 +784,7 @@ Return:	    pointer to updated surf_data array or NULL for error
           
           //series fids
           surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes[fidnum] = vtype[0];
-          surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] = vvalue[leadnum];
+          surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] = leadnum < vvalue.size() ? vvalue[leadnum] : -999;
           
 //          printf("fid type %d fid value %f\n", surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes[fidnum],
 //                 surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum]);
@@ -796,30 +796,31 @@ Return:	    pointer to updated surf_data array or NULL for error
             surfdata[displaysurfnum].fidmin =  surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum];
           
           //global fids
+          int globalIndex = leadnum < vvalue.size() ? leadnum : 0;
           switch(vtype[0]){
             case 0:
-              pontime = vvalue[leadnum];
+              pontime = vvalue[globalIndex];
               break;
             case 1:
-              pofftime = vvalue[leadnum];
+              pofftime = vvalue[globalIndex];
               break;
             case 2:
-              qtime = vvalue[leadnum];
+              qtime = vvalue[globalIndex];
               break;
             case 3:
-              rpeaktime = vvalue[leadnum];
+              rpeaktime = vvalue[globalIndex];
               break;
             case 4:
-              stime = vvalue[leadnum];
+              stime = vvalue[globalIndex];
               break;
             case 5:
-              stofftime = vvalue[leadnum];
+              stofftime = vvalue[globalIndex];
               break;
             case 6:
-              tpeaktime = vvalue[leadnum];
+              tpeaktime = vvalue[globalIndex];
               break;
             case 7:
-              ttime = vvalue[leadnum];
+              ttime = vvalue[globalIndex];
               break;
           }
         }
