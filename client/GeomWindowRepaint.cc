@@ -164,7 +164,7 @@ void GeomWindow::paintGL()
         if (curmesh->drawFidConts[i])
           DrawFidCont(curmesh,curmesh->fidConts[i]);
       }
-      if(curmesh->drawfidmap < curmesh->fidMaps.size()){
+      if(curmesh->drawfidmap < curmesh->fidMaps.size() && !curmesh->drawcont){
         if (curmesh->fidshadingmodel == SHADE_NONE ){
           DrawFidMapCont(curmesh,curmesh->fidMaps[curmesh->drawfidmap]);
         }

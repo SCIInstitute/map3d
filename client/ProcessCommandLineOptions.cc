@@ -798,6 +798,7 @@ void FindAndReadData(Surf_Input * surf, Mesh_Info * mesh, int reload)
       mesh->fidMaps.push_back(new Contour_Info(mesh));
       mesh->drawFidConts.push_back(true);
       mesh->fidConts.back()->datatype = fids.fidtypes[numfids];
+      mesh->fidMaps.back()->datatype = fids.fidtypes[numfids];
       mesh->fidMaps.back()->fidmap = 1;
       mesh->drawfidmap = 0;
 
