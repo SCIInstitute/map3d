@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <set>
 #include <string.h>
 #include <stdlib.h>
 
@@ -31,9 +32,9 @@ extern char datalabels[][100];
 extern char geomlabels[][100];
 extern Map3d_Info map3d_info;
 FileCache file_cache;
-using std::string;
+using namespace std;
 
-matlabarray* FileCache::readMatlabFile(std::string str)
+matlabarray* FileCache::readMatlabFile(string str)
 {
   if (cache.find(str) != cache.end())
     return (matlabarray*) cache[str];
@@ -447,7 +448,7 @@ Return:	    pointer to updated surf_data array or NULL for error
   
   matlabfile mf;
   matlabarray ma;
-  std::string name;
+  string name;
   
   // open the matlab file and get the root array
   mf.open(datafilename, "r");
@@ -630,17 +631,18 @@ Return:	    pointer to updated surf_data array or NULL for error
     }
     
     /*** Set up some parameters that we know already. ***/
+    Surf_Data* surf = &surfdata[displaysurfnum];
     
-    surfdata[displaysurfnum].setUnits(localunits);
-    surfdata[displaysurfnum].ts_start = framestart;
-    surfdata[displaysurfnum].ts_end = frameend;
-    surfdata[displaysurfnum].ts_sample_step = framestep;
-    surfdata[displaysurfnum].user_step = framestep;
-    surfdata[displaysurfnum].userpotmin = sinputlist->potusermin;
-    surfdata[displaysurfnum].userpotmax = sinputlist->potusermax;
-    surfdata[displaysurfnum].potscale = potscale;
-    surfdata[displaysurfnum].seriesnum = insurfnum;
-    surfdata[displaysurfnum].numseries = numseries;
+    surf->setUnits(localunits);
+    surf->ts_start = framestart;
+    surf->ts_end = frameend;
+    surf->ts_sample_step = framestep;
+    surf->user_step = framestep;
+    surf->userpotmin = sinputlist->potusermin;
+    surf->userpotmax = sinputlist->potusermax;
+    surf->potscale = potscale;
+    surf->seriesnum = insurfnum;
+    surf->numseries = numseries;
     
 #pragma mark Matlab Fiducials
     /******************** Fiducials ***********************/
@@ -649,28 +651,42 @@ Return:	    pointer to updated surf_data array or NULL for error
       //printf("Start reading matlab fiducials\n");
       float qtime = 1, stime = 1, ttime = 1, pontime = 1, pofftime = 1, rpeaktime = 1;
       float tpeaktime = 1, stofftime = 1;
-      long numgfids;
       int numfidsets = 0;
       numsurfnodes = map3d_geom[displaysurfnum].numpts;
 
 
       //set up global fids memory
-      numgfids = 8;
-      if (( surfdata[displaysurfnum].globalfids.fidtypes = (short *) calloc( (size_t) numgfids, sizeof( short ))) == NULL)
-      {
-        ReportError( "ReadMatlabDatafile", "error getting basic fid mem", 
-                     ERR_MEM, "");
-        return( NULL );
+      set<int> gfidIndices;
+      long numgfids = 0;
+      for(int numFidTypes = 0; numFidTypes < fids.getnumelements(); numFidTypes++){
+        vector<double> values;
+        fids.getfieldCI(numFidTypes,"value").getnumericarray(values);
+        if (values.size() == 1) // then it's a globalfid
+        {
+          gfidIndices.insert(numFidTypes);
+          numgfids++;
+        }
       }
-      if (( surfdata[displaysurfnum].globalfids.fidvals = (float *) calloc( (size_t) numgfids, sizeof( float ))) == NULL)
+      
+      long numsfids = fids.getnumelements() - numgfids;
+      
+      if (( surf->globalfids = (float *) calloc( (size_t) numgfids, sizeof( float ))) == NULL)
       {
         ReportError( "ReadMatlabDatafile", "error getting basic fid mem", 
                      ERR_MEM, "");
         return( NULL );
       }
       
+      if (( surf->globalfidnames = (char**) 
+           calloc( (size_t) numgfids, sizeof( char* ) )) == NULL )
+      {
+        ReportError( "ReadMatlabDatafile", 
+                    "error getting fidnames memory", ERR_MEM, "" );
+        return( NULL );
+      }
+
       //set up series fids memory
-      if (( surfdata[displaysurfnum].fids.leadfids = (Lead_Fids *) 
+      if (( surf->fids.leadfids = (Lead_Fids *) 
             calloc( (size_t)  numsurfnodes, sizeof( Lead_Fids ) )) == NULL )
       {
         ReportError( "ReadMatlabDatafile", 
@@ -679,22 +695,21 @@ Return:	    pointer to updated surf_data array or NULL for error
       }
       
       //load the seriesfids structure
-      surfdata[displaysurfnum].fids.tsnum = insurfnum;
-      surfdata[displaysurfnum].fids.pakfilenum = -1;
-      surfdata[displaysurfnum].fids.numfidleads = numsurfnodes;
-      surfdata[displaysurfnum].fids.numfidtypes = fids.getnumelements();
-      //strcpy( surfdata[displaysurfnum].fids.fidlabel, myFS->name.c_str());
+      surf->fids.tsnum = insurfnum;
+      surf->fids.pakfilenum = -1;
+      surf->fids.numfidleads = numsurfnodes;
+      surf->fids.numfidtypes = numsfids;
       
       //set up series fidnames memory
-      if (( surfdata[displaysurfnum].fids.fidnames = (char**) 
-            calloc( (size_t) fids.getnumelements(), sizeof( char* ) )) == NULL )
+      if (( surf->fids.fidnames = (char**) 
+            calloc( (size_t) numsfids, sizeof( char* ) )) == NULL )
       {
         ReportError( "ReadMatlabDatafile", 
                      "error getting fidnames memory", ERR_MEM, "" );
         return( NULL );
       }
-      if (( surfdata[displaysurfnum].fids.fidtypes =
-            (short *) calloc( (size_t) fids.getnumelements(), sizeof( short )) ) == NULL )
+      if (( surf->fids.fidtypes =
+            (short *) calloc( (size_t) numsfids, sizeof( short )) ) == NULL )
       {
         ReportError( "ReadMatlabDatafile", "error getting fidtypes memory",
                      ERR_MEM, "" );
@@ -706,28 +721,53 @@ Return:	    pointer to updated surf_data array or NULL for error
       matlabarray type;
       FI_Init(1);
       
+      int sfidnum = 0;
+      int gfidnum = 0;
+      
+      
       for(int numFidTypes = 0; numFidTypes < fids.getnumelements(); numFidTypes++){
         FiducialInfo* tmp = (FiducialInfo*) malloc(sizeof(FiducialInfo));
         
         type = fids.getfieldCI(numFidTypes,"type");
-        std::vector<short> vtype;
+        vector<short> vtype;
         type.getnumericarray(vtype);
         
         tmp->type = vtype[0];
 
-        surfdata[displaysurfnum].fids.fidtypes[numFidTypes] = vtype[0];
+        char* name = NULL;
         if(FI_GetInfoByType(tmp)){
-          if ((surfdata[displaysurfnum].fids.fidnames[numFidTypes] =
-               (char *)calloc((size_t) strlen(tmp->name)+1, sizeof(char))) == NULL) {
+          if ((name = (char *)calloc((size_t) strlen(tmp->name)+1, sizeof(char))) == NULL) {
             ReportError("ReadMatlabDatafile", "error getting fidnames memory", ERR_MEM, "");
             return (NULL);
           }
-          strcpy( surfdata[displaysurfnum].fids.fidnames[numFidTypes],tmp->name);
+          strcpy(name, tmp->name);
         }
-
+        
+        if (gfidIndices.find(numFidTypes) != gfidIndices.end())
+        {
+          vector<double> values;
+          matlabarray value = fids.getfieldCI(numFidTypes,"value");
+          value.getnumericarray(values);
+          // values should be size 1 here, based on presence in the gfidIndices list
+          // set the actual value
+          surf->globalfids[gfidnum] = values[0];
+          surf->globalfidnames[gfidnum] = name;
+          gfidnum++;
+        }
+        else
+        {
+          surf->fids.fidtypes[sfidnum] = vtype[0];
+          surf->fids.fidnames[sfidnum] = name;
+          sfidnum++;
+        }
       }
-      
-      
+
+      if ( map3d_info.reportlevel > 1 ){
+        printf(" Some global fidicials from the file\n");
+        for (int i = 0; i < surf->numglobalfids; i++)
+          printf(" %s = %f\n", surf->globalfidnames[i], surf->globalfids[i]);
+      }
+
       for(long leadnum = 0; leadnum <numsurfnodes; leadnum++){
         index = map3d_geom[displaysurfnum].channels[leadnum];
         maxindex = numfileleads - 1;
@@ -742,189 +782,90 @@ Return:	    pointer to updated surf_data array or NULL for error
         }
 
         //printf("index %d leadnum %d\n", index, leadnum);
-        surfdata[displaysurfnum].fids.leadfids[leadnum].leadnum = leadnum;
-        surfdata[displaysurfnum].fids.leadfids[leadnum].numfids = 0;
-        std::vector<int> whichfid;
+        surf->fids.leadfids[leadnum].leadnum = leadnum;
+        surf->fids.leadfids[leadnum].numfids = 0;
+        vector<int> whichfid;
 
         for(int numFidTypes = 0; numFidTypes < fids.getnumelements(); numFidTypes++){
+          if (gfidIndices.find(numFidTypes) != gfidIndices.end())
+            continue; // don't count global fids
           value = fids.getfieldCI(numFidTypes,"value");
-          std::vector<double> vvalue;
+          vector<double> vvalue;
           value.getnumericarray(vvalue);
           if(index <= vvalue.size()){
             whichfid.push_back(numFidTypes);
-            surfdata[displaysurfnum].fids.leadfids[leadnum].numfids++;
+            surf->fids.leadfids[leadnum].numfids++;
           }
         }
-        //printf("Lead %d numfids %d\n", leadnum,surfdata[displaysurfnum].fids.leadfids[leadnum].numfids);
+        //printf("Lead %d numfids %d\n", leadnum,surf->fids.leadfids[leadnum].numfids);
         
-        if (( surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes =
-              (short *) calloc( (size_t) surfdata[displaysurfnum].fids.leadfids[leadnum].numfids, sizeof( short )) ) == NULL )
+        if (( surf->fids.leadfids[leadnum].fidtypes =
+              (short *) calloc( (size_t) surf->fids.leadfids[leadnum].numfids, sizeof( short )) ) == NULL )
         {
           ReportError( "ReadMatlabDatafile", "error getting fidtypes memory",
                        ERR_MEM, "" );
           return( NULL );
         }
         
-        if (( surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals =
-              (float *) calloc( (size_t) surfdata[displaysurfnum].fids.leadfids[leadnum].numfids, sizeof( float )) )== NULL )
+        if (( surf->fids.leadfids[leadnum].fidvals =
+              (float *) calloc( (size_t) surf->fids.leadfids[leadnum].numfids, sizeof( float )) )== NULL )
         {
           ReportError( "ReadMatlabDatafile", "error getting fidvals memory",
                        ERR_MEM, "" );
           return( NULL );
         }
         
-        for(int fidnum = 0; fidnum < surfdata[displaysurfnum].fids.leadfids[leadnum].numfids; fidnum++){
-          value = fids.getfieldCI(whichfid[fidnum],"value");
-          type = fids.getfieldCI(whichfid[fidnum],"type");
-          std::vector<long> vtype;
-          std::vector<double> vvalue;
+        sfidnum = 0;
+        for(int fidnum = 0; fidnum < whichfid.size(); fidnum++){
+          int fid = whichfid[fidnum];
+          value = fids.getfieldCI(fid,"value");
+          type = fids.getfieldCI(fid,"type");
+          vector<long> vtype;
+          vector<double> vvalue;
 
           type.getnumericarray(vtype);
           value.getnumericarray(vvalue);
           
           //series fids
-          surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes[fidnum] = vtype[0];
-          surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] = leadnum < vvalue.size() ? vvalue[leadnum] : -999;
+          surf->fids.leadfids[leadnum].fidtypes[fidnum] = vtype[0];
+          surf->fids.leadfids[leadnum].fidvals[fidnum] = vvalue[leadnum];
           
-//          printf("fid type %d fid value %f\n", surfdata[displaysurfnum].fids.leadfids[leadnum].fidtypes[fidnum],
-//                 surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum]);
+//          printf("fid type %d fid value %f\n", surf->fids.leadfids[leadnum].fidtypes[fidnum],
+//                 surf->fids.leadfids[leadnum].fidvals[fidnum]);
             
           //get min-max fids
-          if( surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] > surfdata[displaysurfnum].fidmax)
-            surfdata[displaysurfnum].fidmax =  surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum];
-          if( surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum] < surfdata[displaysurfnum].fidmin)
-            surfdata[displaysurfnum].fidmin =  surfdata[displaysurfnum].fids.leadfids[leadnum].fidvals[fidnum];
-          
-          //global fids
-          int globalIndex = leadnum < vvalue.size() ? leadnum : 0;
-          switch(vtype[0]){
-            case 0:
-              pontime = vvalue[globalIndex];
-              break;
-            case 1:
-              pofftime = vvalue[globalIndex];
-              break;
-            case 2:
-              qtime = vvalue[globalIndex];
-              break;
-            case 3:
-              rpeaktime = vvalue[globalIndex];
-              break;
-            case 4:
-              stime = vvalue[globalIndex];
-              break;
-            case 5:
-              stofftime = vvalue[globalIndex];
-              break;
-            case 6:
-              tpeaktime = vvalue[globalIndex];
-              break;
-            case 7:
-              ttime = vvalue[globalIndex];
-              break;
-          }
+          if( surf->fids.leadfids[leadnum].fidvals[sfidnum] > surf->fidmax)
+            surf->fidmax =  surf->fids.leadfids[leadnum].fidvals[sfidnum];
+          if( surf->fids.leadfids[leadnum].fidvals[sfidnum] < surf->fidmin)
+            surf->fidmin =  surf->fids.leadfids[leadnum].fidvals[sfidnum];
+          sfidnum++;
         }
-      }
-      
-      
-      surfdata[displaysurfnum].globalfids.numfids = numgfids;
-      surfdata[displaysurfnum].globalfids.leadnum = -1;
-      surfdata[displaysurfnum].globalfids.fidtypes[0] = FI_PON;
-      surfdata[displaysurfnum].globalfids.fidvals[0] = (float) pontime - 1.f;
-      surfdata[displaysurfnum].globalfids.fidtypes[1] = FI_POFF;
-      surfdata[displaysurfnum].globalfids.fidvals[1] = (float) pofftime - 1.f;
-      surfdata[displaysurfnum].globalfids.fidtypes[2] = FI_QON;
-      surfdata[displaysurfnum].globalfids.fidvals[2]   = (float) qtime - 1.f;
-      surfdata[displaysurfnum].globalfids.fidtypes[3] = FI_RPEAK;
-      surfdata[displaysurfnum].globalfids.fidvals[3]    = (float) rpeaktime - 1.f;
-      surfdata[displaysurfnum].globalfids.fidtypes[4] = FI_SOFF;
-      surfdata[displaysurfnum].globalfids.fidvals[4]   = (float) stime - 1.f;
-      surfdata[displaysurfnum].globalfids.fidtypes[6] = FI_STOFF;
-      surfdata[displaysurfnum].globalfids.fidvals[6]    = (float) stofftime - 1.f;
-      surfdata[displaysurfnum].globalfids.fidtypes[6] = FI_TPEAK;
-      surfdata[displaysurfnum].globalfids.fidvals[6]    = (float) tpeaktime - 1.f;
-      surfdata[displaysurfnum].globalfids.fidtypes[7] = FI_TOFF;
-      surfdata[displaysurfnum].globalfids.fidvals[7]   = (float) ttime - 1.f;
-      
-      if ( map3d_info.reportlevel > 1 ){
-        printf(" Some global fidicials from the file\n"
-               " qframe   = %f\n"
-               " ponframe = %f\n"
-               " rpeak    = %f\n",
-               surfdata[displaysurfnum].globalfids.fidvals[2],
-               surfdata[displaysurfnum].globalfids.fidvals[0],
-             surfdata[displaysurfnum].globalfids.fidvals[3]);
       }
     }
       
-//      if (!fids.isfieldCI("value"))
-//      {  return; /* ERROR INPROPER FORMAT*/}
-//      if (!fids.isfieldCI("type"))
-//      {  return; /* ERROR INPROPER FORMAT*/}
-//      
-//      matlabarray value;
-//      matlabarray type;
-//      
-//      std::vector<double> vvalue;
-//      std::vector<long> vtype;
-//      
-//      for (long p=0;p<numfids;p++)
-//      {
-//        value = fids.getfieldCI(p,"value");
-//        type = fids.getfieldCI(p,"type");
-//        
-//        type.getnumericarray(vtype);
-//        value.getnumericarray(vvalue);
-//                    
-//        if (vtype.size() < 1) continue;
-//        switch(vtype[0])
-//        {
-//          case 0 :
-//          {	// P-onset
-//            //Do something with vvalue which has all the fiducials				
-//          }
-//          case 1 :
-//          {
-//            
-//            
-//          }
-//            
-//        }
-//        
-//      }
-//      
-//    }
-    
-    // error = LoadGlobalFids(luin, reportlevel, &surfdata[displaysurfnum].globalfids);
-    //     surfdata[displaysurfnum].fids = NULL;
-    //     /***	
-    // 	long fidsetnum = 0;
-    // 	surfdata[displaysurfnum].fids = 
-    // 	ReadDfileFids( luin, seriesnum, reportlevel, 
-    // 	surfdata[displaysurfnum].fids, 
-    // 	&fidsetnum );
-    //     ***/
   }
-  
+    
   /*** Series Label (used for display later) ***/
   for (displaysurfnum = 0; displaysurfnum <= surfend - surfstart; displaysurfnum++) {
+    Surf_Data* surf = &surfdata[displaysurfnum];
+
     sprintf(cseries, "Series %ld: ", insurfnum + 1);
-    strcpy(surfdata[displaysurfnum].label, cseries);
-    sprintf(csurface, ": Surface %ld", surfdata[displaysurfnum].surfnum + 1);
-    strcat(surfdata[displaysurfnum].label, clabel);
-    strcat(surfdata[displaysurfnum].label, csurface);
+    strcpy(surf->label, cseries);
+    sprintf(csurface, ": Surface %ld", surf->surfnum + 1);
+    strcat(surf->label, clabel);
+    strcat(surf->label, csurface);
     
     // short display name - put as series number if label is not in file
     if (strlen(clabel) == 0)
       sprintf(clabel, "%d", insurfnum+1);
-    strcpy(surfdata[displaysurfnum].shortlabel, clabel);
+    strcpy(surf->shortlabel, clabel);
     
     if (reportlevel > 2)
       fprintf(stderr, " For surface #%ld the label is %s\n",
-              surfdata[displaysurfnum].surfnum + 1, surfdata[displaysurfnum].label);
+              surf->surfnum + 1, surf->label);
     if (sinputlist->parent->datapathname)
-      strcpy(surfdata[displaysurfnum].filepath, sinputlist->parent->datapathname);
-    strcpy(surfdata[displaysurfnum].potfilename, sinputlist->potfilename);
+      strcpy(surf->filepath, sinputlist->parent->datapathname);
+    strcpy(surf->potfilename, sinputlist->potfilename);
   }
   
   /*** Get the data buffer. ***/
@@ -944,6 +885,7 @@ Return:	    pointer to updated surf_data array or NULL for error
   maxindex = numfileleads * numfileframes -1;
   surfcount = 0;
   for (displaysurfnum = 0; displaysurfnum <= surfend - surfstart; displaysurfnum++) {
+    Surf_Data* surf = &surfdata[displaysurfnum];
     numsurfnodes = map3d_geom[displaysurfnum].numpts;
     
     for (framenum = framestart, modelframenum = 0; framenum <= frameend;
@@ -957,7 +899,7 @@ Return:	    pointer to updated surf_data array or NULL for error
                     "    Data buffer index points to %ld "
                     "in data buffer\n"
                     "    but max size is %ld\n",
-                    surfdata[displaysurfnum].surfnum + 1, index, maxindex);
+                    surf->surfnum + 1, index, maxindex);
             fprintf(stderr, " framenum = %ld, numberofframes = %ld\n"
                     " numberofleads = %ld, channelnum = %ld\n"
                     " numberofnodes = %ld, nodenum = %ld\n",
@@ -965,10 +907,10 @@ Return:	    pointer to updated surf_data array or NULL for error
                     map3d_geom[displaysurfnum].channels[nodenum], numsurfnodes, nodenum);
             return (NULL);
           }
-          surfdata[displaysurfnum].potvals[modelframenum][nodenum] = databuff[index] * potscale;
+          surf->potvals[modelframenum][nodenum] = databuff[index] * potscale;
         }
         else {
-          surfdata[displaysurfnum].potvals[modelframenum][nodenum] = UNUSED_DATA;
+          surf->potvals[modelframenum][nodenum] = UNUSED_DATA;
         }
       }
     }
@@ -1154,7 +1096,7 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
   matlabarray cell;
   
   matlabarray ma = mf.getmatlabarray(0);  // Get the first matlab array from the file
-  std::string name = ma.getname();		// Get the name of this array
+  string name = ma.getname();		// Get the name of this array
   int num = ma.getnumelements();
   if (insurfnum > num) {
     printf("%s does not contain %d surfaces\n", geom->basefilename, insurfnum);

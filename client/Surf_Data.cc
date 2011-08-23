@@ -62,7 +62,9 @@ Surf_Data::Surf_Data()
   reference = 0;
   referencelock = 0;
   minmaxframes = 0;
-  //globalfids = 0;
+  numglobalfids = 0;
+  globalfids = 0;
+  globalfidnames = 0;
   fids.leadfids = 0;
   fids.numfidleads = 0;
   minmaxfids = 0;

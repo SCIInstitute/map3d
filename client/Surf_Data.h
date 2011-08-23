@@ -74,7 +74,9 @@ public:
   
   Surf_Data *mastersurf;
   MinMax_Frame *minmaxframes; /*** Potential extrema for each frame ***/
-  Lead_Fids globalfids; /*** Global fiducials, whatever that means! ***/
+  int numglobalfids;
+  float* globalfids; /*** Global fiducials, whatever that means! ***/
+  char** globalfidnames;
   Series_Fids fids; /*** All lead by lead fiducials for this surface ***/
   MinMax_Fids *minmaxfids; /*** Min and max values for all the fids. ***/
   Mesh_Info *mesh; /*** pointer to its owning mesh ***/

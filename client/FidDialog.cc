@@ -21,6 +21,10 @@ FidDialog::FidDialog(QWidget* parent) : QDialog(parent)
 {
   setupUi(this);
 
+  // for now, until we get them working and displayed somewhere
+  globalFidFrame->hide();
+  globalFidLabel->hide();
+  
   for (MeshIterator mi(0,0); !mi.isDone(); ++mi)
   {
     surfComboBox->addItem(QString::number(mi.getMesh()->geom->surfnum));
