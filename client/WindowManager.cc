@@ -454,7 +454,15 @@ void window_state_callback (GtkWidget *widget,
 
 MeshIterator::MeshIterator(int geom /*=0*/, int mesh /*=0*/)  : geomwinnum(geom), meshnum(mesh) 
 {
-  done = numGeomWindows() == 0 || GetGeomWindow(0)->meshes.size() == 0;
+  done = true;
+  for (int i = 0; i < numGeomWindows(); i++) 
+  {
+    if (GeomWindows[i]->meshes.size() > 0)
+    {
+      done = false;
+      break;
+    }
+  }
 }
 MeshIterator& MeshIterator::operator++()
 {
