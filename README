@@ -6,6 +6,7 @@ set PATH=%QTDIR%\path;%PATH;
 
 qmake -r
 nmake
+cd client
 makensis installer.nsi
 
 
