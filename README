@@ -15,3 +15,12 @@ qmake -spec macx-g++ -r
 make
 ./buildOsxApp.sh
 hdiutil create map3d.dmg -srcfolder client/map3d.app
+
+Building from source
+1) Qt 4.7 or greater must be installed
+2) Untar the map3d source tarball
+3) cd into the map3d source
+4) Run <path-to-Qt>/bin/qmake
+5) make
+6) map3d will (on Linux) be in client/release/map3d
+
