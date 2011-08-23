@@ -831,3 +831,8 @@ void PickWindow::MenuEvent(int menu_data)
   }
   update();
 }
+
+void PickWindow::closeEvent(QCloseEvent *event)
+{
+  Destroy();
+}

@@ -29,6 +29,8 @@ public:
   virtual void enterEvent( QEvent* event ); 
   virtual void leaveEvent( QEvent* event ); 
 
+  void closeEvent(QCloseEvent *event);
+  
   void RMSButtonPress(QMouseEvent* event);
   void RMSButtonRelease(QMouseEvent* event);
   void RMSMotion(QMouseEvent* event);
