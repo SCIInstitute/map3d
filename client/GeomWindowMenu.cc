@@ -145,12 +145,6 @@ void GeomWindow::HandleMenu(int menu_data)
         if (mesh->legendwin != 0)
           lpriv->update();
         break;
-      case fid_dialog:
-        {
-          FidDialog dialog;
-          dialog.exec();
-        }
-        break;
       case fid_map_toggle:
         switch (mesh->fidshadingmodel) {
           case SHADE_NONE:
@@ -1150,6 +1144,12 @@ bool GeomWindow::MenuGlobalOptions(int menu)
     }
     case scaling_dialog:
       ScaleDialog(0).exec();
+      break;
+    case fid_dialog:
+      {
+        FidDialog dialog;
+        dialog.exec();
+      }
       break;
 
 
