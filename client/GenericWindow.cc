@@ -24,6 +24,7 @@ extern Map3d_Info map3d_info;
 static int font_size[] = {4, 6, 8, 10, 12, 14, 18, 24, 36, 48 };
 
 Map3dGLWidget* Map3dGLWidget::sharedWidget = NULL;
+QMap<QPair<int, char>, int> Map3dGLWidget::fontDisplayLists;
 
 // in Qt, the x,y coords of a toplevel widget are the window coordinates.  The width and the height
 //   are still the size of the interior widget, and we can get the entire size of the window (including
@@ -183,20 +184,114 @@ void Map3dGLWidget::initializeGL() {
 // size should be a float/int from 1-10. 
 void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QString string)
 {
-  int sizeindex = (int) size;
+  int sizeindex = (int) size - 1;
 
-  QFont f = font();
+  QFont f = QFont("Helvetica");
   f.setPointSize(font_size[sizeindex]);
-  //setFont(f);
+  
+  glEnable(GL_BLEND);
+  //glColor3f(1,1,1);
+  glDisable(GL_ALPHA_TEST);
+  //glAlphaFunc(GL_GEQUAL, 0.0001f);
+  glEnable(GL_TEXTURE_2D);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  renderText(x, y, z, string, f);
+  glPushMatrix();
+  glTranslatef(x, y, z);
+  // QGLWidget::renderText sucks.  It draws a bitmap, slowly, and doesn't allow for fog
+  //    as such, we need to compile our own font rendering using textures and display lists
+  for (int i = 0; i < string.size(); i++)
+  {
+    char c = string[i].toAscii();
+    int displayList = -1;
+    if (fontDisplayLists.contains(qMakePair(sizeindex, c)))
+      displayList = fontDisplayLists[qMakePair(sizeindex, c)];
+    else
+    {
+      QFontMetrics fontMetrics(f);
+      int width = fontMetrics.width( c ) + 1;
+      int height = fontMetrics.height() + 1;
+      QImage image(width, height, QImage::Format_RGB32 );
+      
+      QPainter painter;
+      painter.begin(&image);
+      painter.setFont(f);
+      painter.setRenderHint(QPainter::TextAntialiasing);
+      painter.setBackground(Qt::black);
+      painter.eraseRect(image.rect());
+      painter.setPen(Qt::red);
+      painter.drawText (QRectF(0, 0, width, height), Qt::AlignBottom, QString(c));
+      painter.end();
+      
+      image.save(QString(c) + QString::number(sizeindex) + ".png");
+      
+      GLubyte *bitmap = new GLubyte[width * height];
+      
+      int pix = 0;
+      for (int j = height-1; j >= 0; j-- )
+        for (int i = 0; i < width; i++)
+        {
+          bitmap[pix++] = qRed(image.pixel(i, j));
+        }
+
+      GLuint texture = -1;
+      glGenTextures( 1, &texture );
+      
+      glBindTexture( GL_TEXTURE_2D, texture );
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);      
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);      
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);      
+      glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+#if 1
+      glTexImage2D(GL_TEXTURE_2D,
+                   0,
+                   GL_ALPHA,
+                   width,
+                   height,
+                   0,
+                   GL_ALPHA,
+                   GL_UNSIGNED_BYTE,
+                   bitmap);
+#else
+      gluBuild2DMipmaps(GL_TEXTURE_2D, GL_ALPHA, width, height, GL_ALPHA, GL_UNSIGNED_BYTE, bitmap);
+#endif
+      delete [] bitmap;
+      
+      displayList = glGenLists(1);
+      fontDisplayLists[qMakePair(sizeindex, c)] = displayList;
+      
+      glNewList(displayList, GL_COMPILE);
+      glBindTexture(GL_TEXTURE_2D, texture);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);      
+      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+      glBegin(GL_QUADS);
+      glTexCoord2f(0, 0);
+      glVertex2f(0, 0);
+      glTexCoord2f(1, 0);
+      glVertex2f(width, 0);
+      glTexCoord2f(1, 1);
+      glVertex2f(width, height);
+      glTexCoord2f(0, 1);
+      glVertex2f(0, height);
+      glEnd();
+      glTranslatef(width, 0, 0);
+      glEndList();
+    }
+    glCallList(displayList);
+  }
+  glPopMatrix();
+  glDisable(GL_BLEND);
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_ALPHA_TEST);
 }
 
 
 int Map3dGLWidget::getFontWidth(int size_index, QString string) 
 {
   QFont f = font();
-  f.setPointSize(font_size[size_index]);
+  f.setPointSize(font_size[size_index-1]);
 
   return QFontMetrics(f).width(string);
 }
@@ -204,7 +299,7 @@ int Map3dGLWidget::getFontWidth(int size_index, QString string)
 int Map3dGLWidget::getFontHeight(int size_index) 
 {
   QFont f = font();
-  f.setPointSize(font_size[size_index]);
+  f.setPointSize(font_size[size_index-1]);
 
   return QFontMetrics(f).height();
 }

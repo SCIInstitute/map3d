@@ -13,6 +13,10 @@
 
 #include <QGLWidget>
 
+#include <QMap>
+#include <QPair>
+#include <QFont>
+
 class Map3dGLWidget : public QGLWidget {
 public:
   Map3dGLWidget(QWidget* parent);  // this one should ONLY be called from the RMS Pick window in the File Dialog
@@ -66,6 +70,7 @@ public:
 	
 private:
   static Map3dGLWidget* sharedWidget;
+  static QMap<QPair<int, char>, int> fontDisplayLists; // map of size and char to display list
 };
 
 #endif
