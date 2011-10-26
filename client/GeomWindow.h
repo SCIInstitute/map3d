@@ -103,6 +103,8 @@ public:
   void DrawAxes(Mesh_Info * curmesh);
   void DrawBGImage();
 
+  // how much to scale the node marks by
+  float fontScale();
   QTimer frameAdvanceTimer;
   private slots:
     bool HandleFrameAdvances();

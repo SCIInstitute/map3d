@@ -182,7 +182,7 @@ void Map3dGLWidget::initializeGL() {
 }
 
 // size should be a float/int from 1-10. 
-void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QString string)
+void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QString string, float scale)
 {
   int sizeindex = (int) size - 1;
 
@@ -198,6 +198,7 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
 
   glPushMatrix();
   glTranslatef(x, y, z);
+  glScalef(scale, scale, 1);
   // QGLWidget::renderText sucks.  It draws a bitmap, slowly, and doesn't allow for fog
   //    as such, we need to compile our own font rendering using textures and display lists
   for (int i = 0; i < string.size(); i++)

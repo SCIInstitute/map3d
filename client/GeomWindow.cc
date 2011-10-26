@@ -45,7 +45,7 @@
 #include "FileDialog.h"
 
 #include <QFile>
-
+#include <QDebug>
 
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
@@ -173,6 +173,7 @@ void GeomWindow::recalcMinMax()
   else if (lock_l2norms && this != first_geom_window)
     l2norm = first_geom_window->l2norm;
 
+  qDebug() << l2norm;
 
   /* Adjust clipping plane coordinates */
   clip->front_init = clip->front = zmax - zsize / 4;
@@ -960,4 +961,9 @@ Mesh_List GeomWindow::findMeshesFromSameInput(Mesh_Info* mesh)
   if (newmeshes.size() == 0)
     newmeshes.push_back(mesh);
   return newmeshes;
+}
+
+float GeomWindow::fontScale()
+{
+    return l2norm / 450;
 }

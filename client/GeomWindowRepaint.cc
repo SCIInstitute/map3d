@@ -1374,25 +1374,27 @@ void GeomWindow::DrawNodes(Mesh_Info * curmesh)
         glColor3f(curmesh->mark_all_color[0], curmesh->mark_all_color[1], curmesh->mark_all_color[2]);
         number = curmesh->mark_all_number;
       }
+
+      float scale = fontScale();
       switch (number) {
       case 1:
-        renderString3f(pos[0], pos[1], pos[2], (int)small_font, QString::number(loop + 1));
+        renderString3f(pos[0], pos[1], pos[2], (int)small_font, QString::number(loop + 1), scale);
         break;
       case 2:
         if (curgeom->channels[loop]+1 > 0)
-          renderString3f(pos[0], pos[1], pos[2], (int)small_font, QString::number(curgeom->channels[loop] + 1));
+          renderString3f(pos[0], pos[1], pos[2], (int)small_font, QString::number(curgeom->channels[loop] + 1), scale);
         break;
       case 3:
         if (cursurf && cursurf->potvals && cursurf->potvals[cursurf->framenum][loop] != UNUSED_DATA)
           renderString3f(pos[0], pos[1], pos[2], (int)small_font, 
-            QString::number(cursurf->potvals[cursurf->framenum][loop], 'g', 2));
+            QString::number(cursurf->potvals[cursurf->framenum][loop], 'g', 2), scale);
         break;
       case 4:
         // case 4 is dependent on which type of mark it is
         //   if it is a leadlink, and its value is 4, then print the lead label.
         //   if it is a fid, and its value is 4, then print the fid label
         if (curmesh->mark_lead_number == 4 && lead_labels[loop]) {
-          renderString3f(pos[0], pos[1], pos[2], (int)small_font, lead_labels[loop]);
+          renderString3f(pos[0], pos[1], pos[2], (int)small_font, lead_labels[loop], scale);
           break;
         }
         else if (curmesh->mark_all_number == 4 && cursurf->fids.numfidleads > 0){
@@ -1405,7 +1407,7 @@ void GeomWindow::DrawNodes(Mesh_Info * curmesh)
             }
           }
           
-          renderString3f(pos[0], pos[1], pos[2], (int)small_font, QString::number(fid, 'g', 2));
+          renderString3f(pos[0], pos[1], pos[2], (int)small_font, QString::number(fid, 'g', 2), scale);
           break;
         }
       }

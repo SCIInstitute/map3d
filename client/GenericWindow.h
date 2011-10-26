@@ -54,7 +54,9 @@ public:
 
   //size takes an int from 1-10, or one of the defines below
   //it is a float here because most of the code references are floats - see incrSize in dialogs.cc
-  void renderString3f(float x, float y, float z, float size, QString string);
+  //  scale is for the 3D node mark drawing - since we're drawing textures now, they are smaller 
+  //  further away.  Pass in a scale based on the window's l2norm
+  void renderString3f(float x, float y, float z, float size, QString string, float scale = 1);
   int getFontHeight(int size_index);
   int getFontWidth(int size_index, QString string);
 

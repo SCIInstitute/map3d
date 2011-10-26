@@ -178,7 +178,7 @@ void DrawCorSeg(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type, G
                      onelandmarkseg->rad[i] + 1,
                      onelandmarkseg->pts[i][2] +
                      onelandmarkseg->rad[i] + 1, (int)geom->small_font, 
-                     QString("%1,%2").arg(onelandmarkseg->segnum).arg(i));
+                     QString("%1,%2").arg(onelandmarkseg->segnum).arg(i), geom->fontScale());
     }
     else if (draw->qshowlabels && strlen(onelandmarkseg->labels[i]) > 0) {
       geom->renderString3f(onelandmarkseg->pts[i][0] +
@@ -187,7 +187,7 @@ void DrawCorSeg(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type, G
                      onelandmarkseg->rad[i] + 1,
                      onelandmarkseg->pts[i][2] +
                      onelandmarkseg->rad[i] + 1, (int)geom->small_font, 
-                     onelandmarkseg->labels[i]);
+                     onelandmarkseg->labels[i], geom->fontScale());
     }
   }
 
@@ -198,7 +198,7 @@ void DrawCorSeg(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type, G
                    onelandmarkseg->pts[i][1] + onelandmarkseg->rad[i] + 1,
                    onelandmarkseg->pts[i][2] + onelandmarkseg->rad[i] + 1,
                    (int)geom->small_font,
-                   QString("%1,%2").arg(onelandmarkseg->segnum).arg(i));
+                   QString("%1,%2").arg(onelandmarkseg->segnum).arg(i), geom->fontScale());
   }
   else if (draw->qshowlabels && strlen(onelandmarkseg->labels[i]) > 0) {
     geom->renderString3f(onelandmarkseg->pts[i][0] +
@@ -207,7 +207,7 @@ void DrawCorSeg(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type, G
                     onelandmarkseg->rad[i] + 1,
                     onelandmarkseg->pts[i][2] +
                     onelandmarkseg->rad[i] + 1, (int)geom->small_font, 
-                    onelandmarkseg->labels[i]);
+                    onelandmarkseg->labels[i], geom->fontScale());
   }
   //glTranslatef(onelandmarkseg->pts[i][0], onelandmarkseg->pts[i][1], 
   // onelandmarkseg->pts[i][2]);
@@ -257,7 +257,7 @@ void DrawLMarkPoint(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long typ
                     onelandmarkseg->rad[0] + 1,
                     onelandmarkseg->pts[0][2] +
                     onelandmarkseg->rad[0] + 1, (int)geom->small_font, 
-                    onelandmarkseg->labels[0]);
+                    onelandmarkseg->labels[0], geom->fontScale());
   }
   glDisable(GL_LIGHTING);
   //glDisable(GL_FOG);
@@ -376,7 +376,7 @@ void DrawLMarkPlane(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, GeomWind
       geom->renderString3f(onelandmarkseg->pts[i][0],
                       onelandmarkseg->pts[i][1],
                       onelandmarkseg->pts[i][2], (int)geom->small_font, 
-                      onelandmarkseg->labels[i]);
+                      onelandmarkseg->labels[i], geom->fontScale());
     }
 }
 
@@ -463,7 +463,7 @@ void DrawLMarkRod(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type,
                     onelandmarkseg->rad[0] + 1,
                     onelandmarkseg->pts[0][2] +
                     onelandmarkseg->rad[0] + 1, (int)geom->small_font, 
-                    onelandmarkseg->labels[0]);
+                    onelandmarkseg->labels[0], geom->fontScale());
   }
 
   if (draw->qshowlabels && strlen(onelandmarkseg->labels[1]) > 0) {
@@ -473,7 +473,7 @@ void DrawLMarkRod(LandMarkSeg * onelandmarkseg, Landmark_Draw * draw, long type,
                     onelandmarkseg->rad[1] + 1,
                     onelandmarkseg->pts[1][2] +
                     onelandmarkseg->rad[1] + 1, (int)geom->small_font, 
-                    onelandmarkseg->labels[1]);
+                    onelandmarkseg->labels[1], geom->fontScale());
   }
   if (type == LM_FIBER) {
     radius = 0;
