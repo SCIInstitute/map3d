@@ -542,14 +542,14 @@ void GeomWindow::HandleKeyPress(QKeyEvent* event)
 
       // increment size of currently-selected feature
     case '+':
-        // FIX if (mesh->current_size_selector && (first || mesh->current_size_mesh_based))
-        // FIX incrSize(mesh->current_size_selector, mesh->current_size_increment,
-        // FIX        mesh->current_size_midpoint, map3d_info.sizeincrement);
+      if (mesh->current_size_selector && (first || mesh->current_size_mesh_based))
+          incrSize(mesh->current_size_selector, mesh->current_size_increment,
+                   mesh->current_size_midpoint, map3d_info.sizeincrement);
       break;
     case '-':
-      // FIX if (mesh->current_size_selector && (first || mesh->current_size_mesh_based))
-      // FIX  incrSize(mesh->current_size_selector, mesh->current_size_increment,
-      // FIX          mesh->current_size_midpoint, -map3d_info.sizeincrement);
+      if (mesh->current_size_selector && (first || mesh->current_size_mesh_based))
+        incrSize(mesh->current_size_selector, mesh->current_size_increment,
+                 mesh->current_size_midpoint, -map3d_info.sizeincrement);
       break;
 
     }
