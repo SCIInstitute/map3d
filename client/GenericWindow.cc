@@ -24,7 +24,7 @@ extern Map3d_Info map3d_info;
 static int font_size[] = {4, 6, 8, 10, 12, 14, 18, 24, 36, 48 };
 
 Map3dGLWidget* Map3dGLWidget::sharedWidget = NULL;
-QMap<QPair<int, char>, int> Map3dGLWidget::fontDisplayLists;
+QMap<QPair<int, char>, int> Map3dGLWidget::fontTextures;
 
 // in Qt, the x,y coords of a toplevel widget are the window coordinates.  The width and the height
 //   are still the size of the interior widget, and we can get the entire size of the window (including
@@ -188,6 +188,7 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
 
   QFont f = QFont("Helvetica");
   f.setPointSize(font_size[sizeindex]);
+  QFontMetrics fontMetrics(f);
   
   glEnable(GL_BLEND);
   //glColor3f(1,1,1);
@@ -199,19 +200,18 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
   glPushMatrix();
   glTranslatef(x, y, z);
   glScalef(scale, scale, 1);
+  GLuint texture = -1;
   // QGLWidget::renderText sucks.  It draws a bitmap, slowly, and doesn't allow for fog
   //    as such, we need to compile our own font rendering using textures and display lists
   for (int i = 0; i < string.size(); i++)
   {
     char c = string[i].toAscii();
-    int displayList = -1;
-    if (fontDisplayLists.contains(qMakePair(sizeindex, c)))
-      displayList = fontDisplayLists[qMakePair(sizeindex, c)];
+    int width = fontMetrics.width( c ) + 1;
+    int height = fontMetrics.height() + 1;
+    if (fontTextures.contains(qMakePair(sizeindex, c)))
+      texture = fontTextures[qMakePair(sizeindex, c)];
     else
     {
-      QFontMetrics fontMetrics(f);
-      int width = fontMetrics.width( c ) + 1;
-      int height = fontMetrics.height() + 1;
       QImage image(width, height, QImage::Format_RGB32 );
       
       QPainter painter;
@@ -224,7 +224,8 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
       painter.drawText (QRectF(0, 0, width, height), Qt::AlignBottom, QString(c));
       painter.end();
       
-      image.save(QString(c) + QString::number(sizeindex) + ".png");
+      // uncomment this to test
+      //image.save(QString(c) + QString::number(sizeindex) + ".png");
       
       GLubyte *bitmap = new GLubyte[width * height];
       
@@ -235,7 +236,6 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
           bitmap[pix++] = qRed(image.pixel(i, j));
         }
 
-      GLuint texture = -1;
       glGenTextures( 1, &texture );
       
       glBindTexture( GL_TEXTURE_2D, texture );
@@ -259,29 +259,26 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
 #endif
       delete [] bitmap;
       
-      displayList = glGenLists(1);
-      fontDisplayLists[qMakePair(sizeindex, c)] = displayList;
-      
-      glNewList(displayList, GL_COMPILE);
-      glBindTexture(GL_TEXTURE_2D, texture);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);      
-      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-      glBegin(GL_QUADS);
-      glTexCoord2f(0, 0);
-      glVertex2f(0, 0);
-      glTexCoord2f(1, 0);
-      glVertex2f(width, 0);
-      glTexCoord2f(1, 1);
-      glVertex2f(width, height);
-      glTexCoord2f(0, 1);
-      glVertex2f(0, height);
-      glEnd();
-      glTranslatef(width, 0, 0);
-      glEndList();
+      fontTextures[qMakePair(sizeindex, c)] = texture;
     }
-    glCallList(displayList);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);      
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0);
+    glVertex2f(0, 0);
+    glTexCoord2f(1, 0);
+    glVertex2f(width, 0);
+    glTexCoord2f(1, 1);
+    glVertex2f(width, height);
+    glTexCoord2f(0, 1);
+    glVertex2f(0, height);
+    glEnd();
+    glTranslatef(width, 0, 0);
   }
+
   glPopMatrix();
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);

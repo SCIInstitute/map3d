@@ -965,5 +965,5 @@ Mesh_List GeomWindow::findMeshesFromSameInput(Mesh_Info* mesh)
 
 float GeomWindow::fontScale()
 {
-    return l2norm / 450;
+    return l2norm * vfov / height() / 40;
 }

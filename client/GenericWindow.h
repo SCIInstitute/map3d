@@ -72,7 +72,7 @@ public:
 	
 private:
   static Map3dGLWidget* sharedWidget;
-  static QMap<QPair<int, char>, int> fontDisplayLists; // map of size and char to display list
+  static QMap<QPair<int, char>, int> fontTextures; // map of size and char to premade texture
 };
 
 #endif
