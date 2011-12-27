@@ -186,7 +186,7 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
 {
   int sizeindex = (int) size - 1;
 
-  QFont f = QFont("Helvetica");
+  QFont f = QFont();
   f.setPointSize(font_size[sizeindex]);
   QFontMetrics fontMetrics(f);
   
@@ -197,6 +197,8 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
   glEnable(GL_TEXTURE_2D);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  //qDebug() << size << f.pointSize() << scale;
+  
   glPushMatrix();
   glTranslatef(x, y, z);
   glScalef(scale, scale, 1);
@@ -221,7 +223,10 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
       painter.setBackground(Qt::black);
       painter.eraseRect(image.rect());
       painter.setPen(Qt::red);
-      painter.drawText (QRectF(0, 0, width, height), Qt::AlignBottom, QString(c));
+      //painter.drawRect (QRectF(0, 0, width, height));
+      QRectF br;
+      painter.drawText (QRectF(0, 0, width, height), Qt::AlignCenter, QString(c), &br);
+      
       painter.end();
       
       // uncomment this to test

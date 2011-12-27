@@ -1134,6 +1134,12 @@ void CopySurfToMesh(Surf_Input * s, Surf_Input* globalSurf, Mesh_Info * m)
     else
       s->small_font = 3;
 
+#ifdef __APPLE__
+  s->large_font++;
+  s->med_font++;
+  s->small_font++;
+#endif
+  
   m->groupid = (s->groupid > 0 ) ? s->groupid -1 : 0;
   if (m->groupid >= (int)surf_group.size()) {
     surf_group.resize(m->groupid + 1);
