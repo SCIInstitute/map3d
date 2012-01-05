@@ -100,7 +100,11 @@ bool GeomWindow::HandleFrameAdvances()
   if (firstTime)
     time.start();
   else if (time.elapsed() < 10)
+  {
     return false; // only do 100 frames per second
+  }
+
+  time.restart(); // restart timer to return false above
   firstTime = false;
 
   
