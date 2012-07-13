@@ -672,7 +672,7 @@ void matfile::closechild()
 		
 		m_->ptrstack_.pop();
         m_->curptr_ = parptr;    
-        mfwrite(static_cast<void *>(&segsize),sizeof(long),1,m_->curptr_.hdrptr+4);
+        mfwrite(static_cast<void *>(&segsize),sizeof(int),1,m_->curptr_.hdrptr+4);
 		m_->curptr_.size = segsize;
     }
     else
