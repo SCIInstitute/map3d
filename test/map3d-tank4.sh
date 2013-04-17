@@ -13,17 +13,17 @@ MAP3D=map3d
 GEOM=../geom/tank
 DATA=../data/tank
 
-$MAP3D -nw -b -f ${GEOM}/25feb97_sock_closed.geom \
+$MAP3D -nw -b -f ${GEOM}/25feb97_sock_closed.fac \
 	-as 200 600 400 800 \
-	-p ${DATA}/cool1-atdr.mat@1 -s 82 420 \
+	-p ${DATA}/cool1-atdr.mat -s 82 420 \
 	-sl 2 \
 	-at 200 600 250 400 -t 126\
 	-al 1 200 500 750 \
 	-ch ${GEOM}/sock128.channels \
 	-lm ${GEOM}/25feb97_sock.lmarks \
-	-f ${GEOM}/25feb97_sock_closed.geom \
+	-f ${GEOM}/25feb97_sock_closed.fac \
 	-as 590 990 400 800 \
-	-p ${DATA}/cool1-atdr.mat@2 -s 74 412 \
+	-p ${DATA}/cool1-atdr.mat -s 74 412 \
 	-slw 0 \
 	-at 590 990 250 400 -t 126 \
         -al 1 200 250 500  \

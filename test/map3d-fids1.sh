@@ -7,7 +7,7 @@ MAP3D=map3d
 GEOM=../geom/socks
 DATA=../data/socks/10jan01
 
-$MAP3D -f ${GEOM}/490sock.geom -p ${DATA}/rsm10jan01-cs-0004.mat \
+$MAP3D -f ${GEOM}/490sock.fac -p ${DATA}/rsm10jan01-cs-0004.mat \
 -s 1 712 -i 1 -nco 10 -w \
 -as 171 671 250 750 \
 -al 1 170 500 750 \

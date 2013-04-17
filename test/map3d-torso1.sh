@@ -5,4 +5,4 @@ MAP3D=map3d
 GEOM=../geom/torso
 DATA=../data/torso
 
-$MAP3D -f ${GEOM}/daltorso.geom -p ${DATA}/dipole2.tsdf -s 1 6
+$MAP3D -f ${GEOM}/daltorso.fac -p ${DATA}/dipole2_001.pot -s 1 6
