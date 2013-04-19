@@ -1,1 +1,1 @@
-map3d -f ../geom/torso/daltorso.geom -p ../data/torso/dipole2.tsdf -s 1 6
+..\map3d.exe -f ../geom/torso/daltorso.fac -p ../data/torso/dipole2_001.pot -s 1 6

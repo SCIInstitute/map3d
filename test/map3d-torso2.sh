@@ -10,4 +10,4 @@ $MAP3D  -f ${GEOM}/daltorsoepi.mat \
 	-p ${DATA}/dipole2_002.pot -s 1 200 \
 	-as 350 750 200 600 \
 	-f ${GEOM}/daltorsoepi.fac \
-	-p ${DATA}/p2_3200_77_epi.tsdf -s 1 200
+	-p ${DATA}/dipole2_003.pot -s 1 200
