@@ -46,6 +46,7 @@
 
 #include <QFile>
 #include <QDebug>
+#include <QCloseEvent>
 
 extern Map3d_Info map3d_info;
 extern MainWindow *masterWindow;
@@ -138,6 +139,12 @@ void GeomWindow::initializeGL()
   glSelectBuffer(2048, selectbuffer);
   glLineStipple(1, 57795);
 
+}
+
+void GeomWindow::closeEvent(QCloseEvent * event)
+{
+  map3d_quit(this);
+  event->ignore();
 }
 
 // for when a mesh is add, removed, or reloaded

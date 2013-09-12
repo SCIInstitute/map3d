@@ -7,6 +7,7 @@
 #include "eventdata.h"
 #include "map3d-struct.h"
 #include "colormaps.h"
+#include "dialogs.h"
 #include "texture.h"
 #include "lock.h"
 #include "dot.h"
@@ -161,7 +162,6 @@ void Map3dGLWidget::showEvent(QShowEvent * event)
     }
   }
 }
-
 
 void Map3dGLWidget::initializeGL() {
   // Lock Texture

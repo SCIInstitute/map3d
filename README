@@ -3,19 +3,13 @@ Open a MS Visual Studio command prompt
 
 set QTDIR=C:\Qt\<version
 set PATH=%QTDIR%\path;%PATH;
-
 qmake -r
 nmake
 cd client
 makensis installer.nsi
 
-
-
 Building on mac
-qmake -spec macx-g++ -r
-make
 ./buildOsxApp.sh
-hdiutil create map3d.dmg -srcfolder client/map3d.app
 
 Building from source
 1) Qt 4.7 or greater must be installed

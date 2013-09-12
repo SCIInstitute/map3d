@@ -34,6 +34,7 @@ public:
   virtual void mouseReleaseEvent ( QMouseEvent * event );
   virtual void keyPressEvent ( QKeyEvent * event );
   virtual void keyReleaseEvent ( QKeyEvent * event );
+  virtual void closeEvent(QCloseEvent * event);
   
   int OpenMenu(QPoint point);
   void MenuEvent(int menu_data);
