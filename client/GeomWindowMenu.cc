@@ -42,6 +42,10 @@
 #  include <GL/glu.h>
 #endif
 
+#ifdef Q_OS_LINUX
+#  include <unistd.h>
+#endif
+
 extern Map3d_Info map3d_info;
 extern vector<Surface_Group> surf_group;
 extern MainWindow* masterWindow;

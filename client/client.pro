@@ -35,6 +35,9 @@ win32 {
     PRE_TARGETDEPS *= ../thirdparty/MatlabIO/libMatlabIO.a
 }
 
+unix {
+    LIBS += -lz
+}
 
 QMAKE_LIBDIR += ../thirdparty/cutil$$LIB_DIR
 QMAKE_LIBDIR += ../thirdparty/fi$$LIB_DIR

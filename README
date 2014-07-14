@@ -1,3 +1,7 @@
+Update thirdparty
+./updateThirdparty.sh
+
+
 Building on windows
 Open a MS Visual Studio command prompt
 

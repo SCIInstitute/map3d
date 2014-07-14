@@ -14,6 +14,7 @@
 
 #include <math.h>
 #include <float.h>
+#include <stdlib.h>
 
 extern Map3d_Info map3d_info;
 

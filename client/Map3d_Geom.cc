@@ -7,6 +7,7 @@
 #include "map3dmath.h"
 #include "geomlib.h"            //for OrderEnodes
 #include <limits.h>
+#include <stdlib.h>
 
 extern Map3d_Info map3d_info;
 

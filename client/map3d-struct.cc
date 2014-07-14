@@ -14,6 +14,7 @@
 #include "texture.h"
 #include <float.h>
 #include <limits.h>
+#include <string.h>
 #ifdef __APPLE__
 #  include <OpenGL/glu.h>
 #else

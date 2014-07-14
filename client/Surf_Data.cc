@@ -8,6 +8,8 @@
 #include "map3dmath.h"
 #include "MeshList.h"
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 void *calloc(size_t, size_t);
 
