@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if ! test -d thirdparty; then
+  echo "map3d thirdparty not checked out.  Run ./updateThirdparty.sh"
+  exit 2
+fi
+
 FILES=`ls`
 mkdir map3d-src
 cp -r $FILES map3d-src
