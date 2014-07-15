@@ -18,7 +18,7 @@ Building on mac
 Building on linux
 1) ./updateThirdparty.sh
 2) export QTDIR=<path-to-qt>
-3) export PATH=$QTDIR/bin
+3) export PATH=$QTDIR/bin:$PATH
 4) qmake -r
 5) make
 
