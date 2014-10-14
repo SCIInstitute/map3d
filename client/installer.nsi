@@ -1,7 +1,7 @@
   !include "MUI.nsh"
 
   Name "map3d"
-  OutFile "map3d-win32-6.5.exe"
+  OutFile "map3d-win32-7.1.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\map3d"
@@ -45,12 +45,9 @@ Section "Install"
   File $%QTDIR%\bin\QtGui4.dll
   File $%QTDIR%\bin\QtOpenGL4.dll
 
-  ; Install Microsoft Runtime libraries using the Manifest method:
-  SetOutPath "$INSTDIR\Microsoft.VC90.CRT"
-
-  File winfix\Microsoft.VC90.CRT\MSVCR90.DLL
-  File winfix\Microsoft.VC90.CRT\MSVCP90.DLL
-  File winfix\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest
+  ; Install Microsoft Runtime libraries
+  File winfix\MSVCR100.DLL
+  File winfix\MSVCP100.DLL
 
   ;Store installation folder in the registry for the uninstaller to use:
   WriteRegStr HKCU "Software\map3d" "" $INSTDIR
@@ -81,9 +78,8 @@ Section "Uninstall"
   ; dependent DLLs:
   Delete "$INSTDIR\*.dll"
 
-  Delete "$INSTDIR\Microsoft.VC90.CRT\*.dll"
-  Delete "$INSTDIR\Microsoft.VC90.CRT\*.manifest"
-  RMDir  "$INSTDIR\Microsoft.VC90.CRT"
+  ; Potentially from previous installs
+  RMDir /r "$INSTDIR\Microsoft.VC90.CRT"
 
   RMDir  "$INSTDIR"
   
