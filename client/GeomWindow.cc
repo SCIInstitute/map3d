@@ -659,44 +659,33 @@ void Triangulate(Mesh_Info * curmesh, int nodenum)
 void GeneratePick(PickInfo * pick)
 {
   Mesh_Info* mesh = pick->mesh;
-  pick->show = 1;
   PickWindow *ppriv = 0;
-  static PickWindow *top = 0;
 
-  if (map3d_info.useonepickwindow)  // refresh pick window mode (only 1 window)
+  // make a new window if necessary
+  if (!map3d_info.useonepickwindow || map3d_info.numPickwins == 0)  // refresh pick window mode (only 1 window)
   {
-    // make pick window only if it doesn't exist
-    if (map3d_info.numPickwins == 0) { //used to be one per geom window - BJW
-      mesh->pickstacktop = 0;
-
-      // use default x,y pos
-      ppriv = PickWindow::PickWindowCreate(-1, -1, -1, -1);
-      ppriv->pick = pick;
-      ppriv->mesh = mesh;
-      top = pick->pickwin = ppriv;
-    }
-    else {                      //if pick windows were created with the -at flag
-      top = map3d_info.pickwins[map3d_info.numPickwins-1];
-    }
-
-    pick->pickwin = top;
-    top->pick = pick;
-    top->mesh = mesh;
-    top->updateGL();
-    mesh->pickstack[mesh->pickstacktop] = pick;
-  }
-  else {
-    // use default x,y pos
     ppriv = PickWindow::PickWindowCreate(-1, -1, -1, -1);
-    if (!ppriv) return; // can fail if more than MAX_PICKS
-    mesh->pickstacktop++;
-    mesh->pickstack[mesh->pickstacktop] = pick;
-    ppriv->pick = pick;
-    ppriv->mesh = mesh;
-    pick->pickwin = ppriv;
-    top = ppriv;
-    ppriv->show();
+    if (map3d_info.useonepickwindow)
+      mesh->pickstacktop = 0;
+    else
+      mesh->pickstacktop++;
   }
+  else 
+  {
+    ppriv = map3d_info.pickwins[map3d_info.numPickwins-1];
+  }
+
+  if (!ppriv) return; // can fail if more than MAX_PICKS
+
+  pick->show = 1;
+  ppriv->pick = pick;
+  ppriv->mesh = mesh;
+  pick->pickwin = ppriv;
+  mesh->pickstack[mesh->pickstacktop] = pick;
+
+  ppriv->show();
+  ppriv->updateGL();
+
 }
 
 

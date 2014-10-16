@@ -109,7 +109,8 @@ void DestroyWindow(PickWindow * p)
   else{
     // FIX gtk_widget_hide(p->window);
   }
-  //delete p;
+  //p->setVisible(false);
+  p->deleteLater();
 }
 
 void DestroyWindow(GeomWindow * p)

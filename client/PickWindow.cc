@@ -93,6 +93,9 @@ PickWindow* PickWindow::PickWindowCreate(int _width, int _height, int _x, int _y
   PickWindow* win = new PickWindow(masterWindow ? masterWindow->childrenFrame : NULL, false);
   win->positionWindow(_width, _height, _x, _y, default_width, default_height);
 
+  map3d_info.pickwins[map3d_info.numPickwins] = win;
+  map3d_info.numPickwins++;
+
   // don't show until mesh and pick have been set up
   //win->show();
   return win;
@@ -100,7 +103,6 @@ PickWindow* PickWindow::PickWindowCreate(int _width, int _height, int _x, int _y
 
 PickWindow::~PickWindow()
 {
-
 }
 
 void PickWindow::initializeGL()
@@ -169,10 +171,15 @@ void PickWindow::Destroy()
     map3d_info.pickwins[j] = this;
     DestroyWindow(this);
   }
+  mesh->gpriv->update();
+  pick = NULL;
+  mesh = NULL;
 }
 
 void PickWindow::paintGL()
 {
+  if (pick == NULL || mesh == NULL)
+    return;
   glViewport(0, 0, width(), height());
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
