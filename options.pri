@@ -17,3 +17,5 @@ QT += core
 
 CONFIG += release
 CONFIG -= debug
+
+include (overrides.pri)
