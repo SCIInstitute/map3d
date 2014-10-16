@@ -346,7 +346,7 @@ bool FileDialogWidget::updateFiles()
   // as far as I can tell, surf, ds, dstart and dend are 1-based to the user,
   // but gs is not
   int surf = property(surfPropName).toInt();
-  int win = winComboBox->currentIndex(); // combo box entries are one-based
+  int win = winComboBox->currentIndex();
 
   // grabbing the char* from a QString will not stay in scope after the QByteArray (toAscii) is destroyed
   //   so we need to copy them out
@@ -421,16 +421,11 @@ bool FileDialogWidget::updateFiles()
     input->ts_sample_step = dstep;
     map3d_info.scale_frame_set = 0;
     
-    // careful - in these next two sections, we are adding windows.
-    // we can't assume that windows that we just created have been added to the
-    // window manager yet (GeomwindowInit may not have been called yet),
-    // so we use map3d_info.geomwins to be on the safe side, though
-    // normally not recommended
     Mesh_List currentMeshes;
     currentMeshes.push_back(mesh);
     Mesh_List returnedMeshes = FindAndReadGeom(input,currentMeshes,RELOAD_NONE);
     if (returnedMeshes.size() > 0) {
-      if (win >= map3d_info.numGeomwins) {
+      if (win >= numGeomWindows()) {
         // new window as well
         geomwin = GeomWindow::GeomWindowCreate(0,0,0,0);
         

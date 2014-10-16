@@ -455,12 +455,16 @@ void window_state_callback (GtkWidget *widget,
 MeshIterator::MeshIterator(int geom /*=0*/, int mesh /*=0*/)  : geomwinnum(geom), meshnum(mesh) 
 {
   done = true;
-  for (int i = 0; i < numGeomWindows(); i++) 
+  for (unsigned i = 0; i < numGeomWindows(); i++) 
   {
     if (GeomWindows[i]->meshes.size() > 0)
     {
       done = false;
       break;
+    }
+    else if (i == 0 && geomwinnum == 0)
+	  {
+      geomwinnum++; // don't crash if there isn't a mesh in the first window
     }
   }
 }
