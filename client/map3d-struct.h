@@ -191,10 +191,8 @@ public:
   int parentid;                 // will be set to the borderless window id if one exists
   Global_Input* gi;           // store to create additional surfaces
   
-  GeomWindow* geomwins[MAX_SURFS+1];
   LegendWindow* legendwins[MAX_SURFS];
   PickWindow* pickwins[MAX_PICKS];
-  int numGeomwins;
   int numLegendwins;
   int numPickwins;
 

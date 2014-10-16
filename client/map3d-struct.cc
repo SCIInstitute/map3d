@@ -272,7 +272,6 @@ Map3d_Info::Map3d_Info()
   borderWidth = 0;
   titleHeight = 0;
 
-  numGeomwins = 0;
   numPickwins = 0;
   numLegendwins = 0;
 

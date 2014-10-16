@@ -173,7 +173,7 @@ void GeomWindow::recalcMinMax()
   // Set the "fit" for the window.  If -ss is specified, set
   // all windows' fit to the first window's.  If it's the first
   // window, set it only once.
-  GeomWindow* first_geom_window = map3d_info.geomwins[0];
+  GeomWindow* first_geom_window = GetGeomWindow(0);
   bool lock_l2norms = map3d_info.same_scale;
   if (!lock_l2norms || (this == first_geom_window && l2norm == 0))
     l2norm = sqrt(xsize * xsize + ysize * ysize + zsize * zsize);
