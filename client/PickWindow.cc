@@ -653,14 +653,12 @@ void PickWindow::DrawNode()
     renderString3f(pos[0], pos[1], pos[2], mesh->gpriv->med_font, toRender);
     pos[0] = width() - getFontWidth(mesh->gpriv->med_font, toRender);
     
-    if (mesh->geom->subsurf <= 0)
-      renderString3f(pos[0], pos[1], pos[2], mesh->gpriv->med_font, 
-        "Surface# " + QString::number(mesh->geom->surfnum));
-    else
-      renderString3f(pos[0], pos[1], pos[2], mesh->gpriv->med_font, 
-        "Surface# " + QString::number(mesh->geom->surfnum) + "-" +
-        QString::number(mesh->geom->subsurf));
-    
+    toRender = "Surface# " + QString::number(mesh->geom->surfnum);
+    if (mesh->geom->subsurf > 0)
+      toRender += "-" + QString::number(mesh->geom->subsurf);
+
+    pos[0] = width() - getFontWidth(mesh->gpriv->med_font, toRender) - 2;
+    renderString3f(pos[0], pos[1], pos[2], mesh->gpriv->med_font, toRender);    
     
     /* axis labels */
     pos[0] = width()/2 - getFontWidth(mesh->gpriv->med_font, "Time")/2;
