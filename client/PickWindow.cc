@@ -630,12 +630,12 @@ void PickWindow::DrawNode()
     toRender = "";
     
     if (data) {
-      toRender = "Value: " + QString::number(data->rmspotvals[data->framenum], 'g', 3);
+      toRender = "Value: " + QString::number(data->potvals[data->framenum][pick->node], 'g', 3);
     }
     else {
       toRender = "Value: ---";
     }
-    pos[0] = width() - getFontWidth(mesh->gpriv->med_font, toRender);
+    pos[0] = width() - getFontWidth(mesh->gpriv->med_font, toRender) - 2;
 
     renderString3f(pos[0], pos[1], pos[2], mesh->gpriv->med_font, toRender);
     toRender = "";
