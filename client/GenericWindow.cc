@@ -186,7 +186,7 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
 {
   int sizeindex = (int) size - 1;
 
-  QFont f = QFont();
+  QFont f = font();
   f.setPointSize(font_size[sizeindex]);
   QFontMetrics fontMetrics(f);
   
@@ -208,7 +208,7 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
   for (int i = 0; i < string.size(); i++)
   {
     char c = string[i].toAscii();
-    int width = fontMetrics.width( c ) + 1;
+    int width = fontMetrics.width( c )/* + 1*/;
     int height = fontMetrics.height() + 1;
     if (fontTextures.contains(qMakePair(sizeindex, c)))
       texture = fontTextures[qMakePair(sizeindex, c)];
