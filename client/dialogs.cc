@@ -62,7 +62,7 @@ QString PickFile(QWidget* parentWindow, bool save)
 
 void QStringToCharPtr(QString in, char* out, int size)
 {
-  strncpy(out, in.toAscii().data(), size);
+  strncpy(out, in.toLatin1().data(), size);
 }
 
 

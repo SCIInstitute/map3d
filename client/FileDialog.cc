@@ -32,7 +32,7 @@ const char* surfPropName = "SurfaceNum";
 
 void FileDialogWidget::on_geomLineEdit_editingFinished ()
 {
-  int num = GetNumGeoms(geomLineEdit->text().toAscii().data());
+  int num = GetNumGeoms(geomLineEdit->text().toLatin1().data());
 
   geomIndexComboBox->clear();
   QStringList indexEntries;
@@ -59,12 +59,12 @@ void FileDialogWidget::on_dataLineEdit_editingFinished ()
 
   if (filename.endsWith(".tsdfc") || filename.endsWith(".mat"))
   {
-    int numseries = GetNumTimeSeries(filename.toAscii().data());
+    int numseries = GetNumTimeSeries(filename.toLatin1().data());
     
     QStringList items;
     for(int i = 0; i < numseries; i++){
       char label[100];
-      GetTimeSeriesLabel(filename.toAscii().data(), i, label);
+      GetTimeSeriesLabel(filename.toLatin1().data(), i, label);
       items << label;
     }
 
@@ -73,7 +73,7 @@ void FileDialogWidget::on_dataLineEdit_editingFinished ()
   }
   
   int ds = 0;  // if changing the first filename, always grab the first index
-  int numframes = GetNumFrames(filename.toAscii().data(), ds);
+  int numframes = GetNumFrames(filename.toLatin1().data(), ds);
   startFrameSpinBox->setRange(1, numframes);
   endFrameSpinBox->setRange(1, numframes);
 
@@ -89,7 +89,7 @@ void FileDialogWidget::on_dataIndexComboBox_activated ( const QString & text )
 {
   Q_UNUSED(text);
   char filename[256];
-  strncpy(filename, dataLineEdit->text().toAscii().data(), 256);
+  strncpy(filename, dataLineEdit->text().toLatin1().data(), 256);
 
   if(strcmp(filename,"")!=0)
   {  
@@ -272,14 +272,14 @@ void FileDialogWidget::updateRMS()
   char data[256];
   char ch[256];
 
-  strncpy(geom, geomLineEdit->text().toAscii().data(), 256);
+  strncpy(geom, geomLineEdit->text().toLatin1().data(), 256);
   
   // gs should be 0 if the * was selected in a multisurf case, which is what we want 
   int gs = geomIndexComboBox->currentIndex() + 1;
   if (gs == geomIndexComboBox->count())
     gs = 0;
     
-  strncpy(data, dataLineEdit->text().toAscii().data(), 256);
+  strncpy(data, dataLineEdit->text().toLatin1().data(), 256);
   int ds = 0;
   
   if (strcmp(GetExtension(data), ".tsdfc") == 0 || strcmp(GetExtension(data), ".mat") == 0) {
@@ -288,7 +288,7 @@ void FileDialogWidget::updateRMS()
       ds = 0;
   }
   
-  strncpy(ch, channelsLineEdit->text().toAscii().data(), 256);
+  strncpy(ch, channelsLineEdit->text().toLatin1().data(), 256);
     
   int numframes = GetNumFrames(data, ds);
   
@@ -348,7 +348,7 @@ bool FileDialogWidget::updateFiles()
   int surf = property(surfPropName).toInt();
   int win = winComboBox->currentIndex();
 
-  // grabbing the char* from a QString will not stay in scope after the QByteArray (toAscii) is destroyed
+  // grabbing the char* from a QString will not stay in scope after the QByteArray (toLatin1) is destroyed
   //   so we need to copy them out
   char geom[256];
   char data[256];
@@ -357,14 +357,14 @@ bool FileDialogWidget::updateFiles()
   char lm[256];
   char fi[256];
 
-  strncpy(geom, geomLineEdit->text().toAscii().data(), 256);
+  strncpy(geom, geomLineEdit->text().toLatin1().data(), 256);
   
   // gs should be 0 if the * was selected in a multisurf case, which is what we want 
   int gs = geomIndexComboBox->currentIndex() + 1; // it's one based
   if (gs == geomIndexComboBox->count())
     gs = 0;
     
-  strncpy(data, dataLineEdit->text().toAscii().data(), 256);
+  strncpy(data, dataLineEdit->text().toLatin1().data(), 256);
   int ds = 0;
   
   if (strcmp(GetExtension(data), ".tsdfc") == 0 || strcmp(GetExtension(data), ".mat") == 0) {
@@ -377,10 +377,10 @@ bool FileDialogWidget::updateFiles()
   int dend = endFrameSpinBox->value()-1;
   int dstep = frameStepSpinBox->value();
   
-  strncpy(ch, channelsLineEdit->text().toAscii().data(), 256);
-  strncpy(ll, leadlinksLineEdit->text().toAscii().data(), 256);
-  strncpy(lm, landmarksLineEdit->text().toAscii().data(), 256);
-  strncpy(fi, fiducialLineEdit->text().toAscii().data(), 256);
+  strncpy(ch, channelsLineEdit->text().toLatin1().data(), 256);
+  strncpy(ll, leadlinksLineEdit->text().toLatin1().data(), 256);
+  strncpy(lm, landmarksLineEdit->text().toLatin1().data(), 256);
+  strncpy(fi, fiducialLineEdit->text().toLatin1().data(), 256);
   
   if (mesh == 0 && strcmp(geom, "") == 0) {
     // we clicked 'new surface' and 'apply' without putting in a filename

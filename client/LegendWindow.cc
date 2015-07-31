@@ -553,7 +553,7 @@ void LegendWindow::paintGL()
 
 void LegendWindow::keyPressEvent ( QKeyEvent * event )
 {
-  switch (event->text().toAscii()[0]) {
+  switch (event->text().toLatin1()[0]) {
   case 'q':
     hide();
     mesh->showlegend = false;

@@ -17,7 +17,7 @@ ImageControlDialog::ImageControlDialog()
 
 void ImageControlDialog::on_closeButton_clicked()
 {
-  strncpy(map3d_info.imagefile, imageLineEdit->text().toAscii().data(), 1024);
+  strncpy(map3d_info.imagefile, imageLineEdit->text().toLatin1().data(), 1024);
   map3d_info.saving_animations = saveAnimationsCheckBox->isChecked();
 
   done(0);

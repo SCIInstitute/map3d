@@ -536,7 +536,7 @@ void PickWindow::keyPressEvent(QKeyEvent* event)
   if (rms) return;
 
   int key = event->key();
-  char keyChar = event->text().toAscii()[0];
+  char keyChar = event->text().toLatin1()[0];
   if (keyChar == 'p') {
     MenuEvent(full_screen);
   }
@@ -631,6 +631,7 @@ void PickWindow::DrawNode()
     
     if (data) {
       toRender = "Value: " + QString::number(data->potvals[data->framenum][pick->node], 'g', 3);
+      printf("pick %d\n", pick->node);
     }
     else {
       toRender = "Value: ---";

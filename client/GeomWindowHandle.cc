@@ -148,7 +148,7 @@ bool GeomWindow::HandleFrameAdvances()
 void GeomWindow::keyPressEvent(QKeyEvent* event)
 {
   int keysym = event->key();
-  int key = event->text().toAscii()[0];  // this one applies SHIFT, keysym does not
+  int key = event->text().toLatin1()[0];  // this one applies SHIFT, keysym does not
 
 
   //set up here so both Broadcast branches can access it.  Up/down/left/right won't need it
@@ -296,7 +296,7 @@ void GeomWindow::HandleKeyPress(QKeyEvent* event)
   }
 
   int keysym = event->key();
-  int key = event->text().toAscii()[0];  // this one applies SHIFT, keysym does not
+  int key = event->text().toLatin1()[0];  // this one applies SHIFT, keysym does not
 
   bool first = true;
   for (; loop < length; loop++)

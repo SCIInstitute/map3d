@@ -207,7 +207,7 @@ void Map3dGLWidget::renderString3f(float x, float y, float z, float size, QStrin
   //    as such, we need to compile our own font rendering using textures and display lists
   for (int i = 0; i < string.size(); i++)
   {
-    char c = string[i].toAscii();
+    char c = string[i].toLatin1();
     int width = fontMetrics.width( c )/* + 1*/;
     int height = fontMetrics.height() + 1;
     if (fontTextures.contains(qMakePair(sizeindex, c)))
