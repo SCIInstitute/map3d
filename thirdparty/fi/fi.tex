@@ -1,0 +1,393 @@
+\documentclass[letterpaper,11pt]{article}
+\usepackage{alltt}
+\newcommand{\subfection}[2]{\subsection*{\ttfamily#2}\addcontentsline{toc}{subsection}{\ttfamily #1}}
+\newcommand{\btt}{\begin{alltt}}        % Begin `typed' text.
+\newcommand{\ett}{\end{alltt}}                  % End `typed' text.
+\newcommand{\itt}[1]{{\ttfamily #1}}
+\textheight 8.5in
+\textwidth 6.5in
+\topmargin -.5in
+\oddsidemargin 0in
+\setlength{\parskip}{\smallskipamount}
+
+\begin{document}
+
+\title{The Fiducial Info Library}
+\author{Ted Dustman}
+\maketitle
+\pagenumbering{roman}
+\tableofcontents 
+\pagebreak
+\pagenumbering{arabic}
+
+\section{Introduction}
+
+Libfi is a library of routines for obtaining information about fiducial
+types from a fiducial database.
+
+Each fiduical type has the following information associated with it: a
+name, a type, a short description, and several pieces of color information.
+The routines in this library fetch this information for you.
+
+There are 2 sets of routines.  One set for C programmers and one set for
+Fortran programmers.  There is only one library however, which holds
+routines for both languages.
+
+Currently, this library exists only on the Silicon Graphics workstations.
+
+\section{Fiducial Type Information}
+
+C programmers communicate with the library routines via the 
+\itt{FiducialInfo} structure.  This structure contains all information for
+one fiducial type.  The \itt{FiducialInfo} structure is used to pass information to
+the routines and to recieve information from the routines.  Here is the
+declaration of the \itt{FiducialInfo} structure:
+
+\btt
+typedef struct FiducialInfo \{
+    const char *name;       /* Fiducial name. */
+    short type;             /* Fiducial type. */
+    const char *label;      /* Short descrip of the fiducial. */
+    const char *xColorName; /* The X11 color name for the fiducial. For
+                               use with X11. */
+    short red, green, blue; /* The RGB color values for the
+                               fiducial. For use with X11 or gl's rgb
+                               mode. */
+    XColor xColor;          /* X11 color value. For use with X11. */
+    Colorindex glColorIndex;/* The gl color index for the
+                               fiducial. For use with gl's colormap
+                               mode. */
+\} FiducialInfo;
+\ett
+
+This declaration is in the header file /usr/local/include/fi.h.
+
+Fortran programs don't use the \itt{FiducialInfo} structure.  They obtain the
+same information using the Fortran specific calls.  Note however that the
+Fortran routines do not support the X11 color model.
+
+\section{Usage}
+
+In general fiducial names are used to communicate with the users of your
+programs via a command line or by way of a menu.  Symbols defining
+fiducial types and their corresponding names can be found in the files 
+\itt{fi.h}
+for C programmers and \itt{fi\_f.h} for Fortran programmers.
+
+Fiducial types are for your programs' internal use and for writing to and
+reading from files.  Given a fiducial name you can obtain a fiducial type
+via the C routine \emph{FI\_GetInfoByName} or the Fortran routine
+\emph{fi\_fnametotype}. Users of your programs should never see the value of a
+type nor should you ask your users to input a type value.  You should
+communicate with your users via fiducial names.  In fact, as a programmer
+you should have no need to know the actual value of a fiducial type.  Of
+course, never hard code a fiducial value in your programs.
+
+Fiducial labels can be used to communicate additional information about
+fiducials to users of your programs.
+
+The color information is used when your programs draw fiducials.  C support
+is provided for the X11, gl color map model, and gl rgb model.  Fortran
+support is provided for the gl color map and gl rgb models only.  Color
+information for the X11 color model always comes from the default colormap.
+
+\section{Libraries}
+
+There are actually 4 basic versions of the fi library.  Each library is
+distinguished by the type of color information it supports, if any.  There
+is additionally a shared and non-shared version of each basic library.
+Thus there are a total of 8 libraries.  The following table lists all
+libraries: 
+
+\begin{itemize}
+        \item  libfi.a - A basic non-shared version of the library.  No color support at
+all.
+
+        \item  libfi.so - Shared version of above.
+
+        \item  libfix11.a - Support for X11 color only.  Non-shared.
+
+        \item  libfix11.so - Shared version of libfix11.a
+
+        \item  libfigl.a - Support for gl color only.  Non-shared.
+
+        \item  libfigl.so - Shared version of libfigl.a.
+
+        \item  libfix11gl.a - Support for x11 and gl color.  Non-shared.
+
+        \item  libfix11gl.so - Shared version of libfix11gl.a.
+\end{itemize}
+
+All versions of the library are in /usr/local/lib.
+
+Well, I still haven't told the whole story about these libraries.  The 
+above libraries are ``o32'' libraries.  There are also ``n32'' 
+versions of the libraries.  These exist as shared libraries only.  
+These can be found in /usr/local/lib32.  
+
+\section{Compiling And Linking}
+
+You must compile your program appropriately depending on which library you
+will be using.
+
+When using libfi.a or libfi.so you need not do anything special.  Just be
+sure to \emph{\#include ``fi.h''} for a C program or fi\_f.h for a Fortran program.
+Your compile command will look something like the following when using the
+non-shared version of the library:
+
+\begin{verbatim}
+cc -o myprog myprog.c -I/usr/local/include /usr/local/lib/libfi.a
+f77 -o myprog myprog.f -I/usr/local/include /usr/local/lib/libfi.a
+\end{verbatim}
+
+Your compile command will look something like the following when using the
+shared version of the library:
+
+\begin{verbatim}
+cc -o myprog myprog.c -I/usr/local/include -L/usr/local/lib -lfi
+f77 -o myprog myprog.f -I/usr/local/include -L/usr/local/lib -lfi
+\end{verbatim}
+
+When using other versions of the library your compile command must include
+one or both of these options: -DFI\_USE\_X11 and/or -DFI\_USE\_GL.  These
+options indicate the desired color support.
+
+If you are using libfix11.a, libfigl.a, or libfix11gl.a you must also
+include these options: -lX11 and/or -lgl.  Don't include these options if
+using the shared versions of these libraries.
+
+\section{C Routines}
+
+This section provides a description of each C routine.  Unless otherwise
+noted each routine is available in all versions of the library.
+
+\subfection{FI\_Init}{int FI\_Init(int reportLevel);}
+\itt{FI\_Init} initializes the fi library.  You must call this routine before
+calling any others. The variable reportLevel determines if error messages will be
+printed on subsequent calls to the library routines.  If reportLevel is 0
+then no messages will be printed if errors occur.  If it is 1 then error
+messages will be printed.
+
+\subfection{FI\_Done}{int FI\_Done(void);}
+\itt{FI\_Done} deallocates resources used by the FI library.  Call this routine
+when you are through with the library.
+
+
+\subfection{FI\_InitX11Colors}{int FI\_InitX11Colors(Display *display);}
+This routine is available in libfix11.a and libfix11.so only.
+
+\itt{FI\_InitX11Colors} allocates and initializes required X11 color resources.
+Call \itt{FI\_InitX11Colors} if you are going to be drawing fiducials in the X11
+window system.  Returns TRUE if the X11 color resources were initialized
+correctly, FALSE otherwise.
+
+You must call \itt{FI\_Init} before calling this routine.  If you call this
+routine then you may not call \itt{FI\_InitGLColorMapMode} or
+\itt{FI\_InitGLRGBMode}.  In other words you can work in only one color mode
+at a time.
+
+\subfection{FI\_InitGLColorMapMode}{int FI\_InitGLColorMapMode(void);}
+This routine is available in libfigl.a and libfigl.so only.
+
+\itt{FI\_InitGLColorMapMode} allocates and initializes needed gl color resources.
+Call \itt{FI\_InitGLColorMapMode} if you are going to be drawing fiducials using
+gl's colormap mode.  Returns TRUE if the gl color resources were
+initialized correctly, FALSE otherwise.
+
+You must call \itt{FI\_Init} before calling this routine.  If you call this
+routine then you may not call \itt{FI\_InitX11Colors} or 
+\itt{FI\_InitGLRGBMode}.  In
+other words you can work in only one color mode at a time.
+
+\subfection{FI\_InitGLRGBMode}{int FI\_InitGLRGBMode(void);}
+This routine is available in libfigl.a and libfigl.so only.
+
+Call \itt{FI\_InitGLRGBMode} if you are going to be drawing fiducials using gl's
+RGB color mode.  Returns TRUE if the gl RGB colors were initialized
+correctly, FALSE otherwise.
+
+You must call \itt{FI\_Init} before calling this routine.  If you call this
+routine then you may not call \itt{FI\_InitX11Colors} or
+\itt{FI\_InitGLColorMapMode}.  In other words you can work in only one color
+mode at a time.
+
+\subfection{FI\_GetNumTypes}{int FI\_GetNumTypes(void);}
+\itt{FI\_GetNumTypes} returns the total number of fiducial types in the database.
+
+\subfection{FI\_GetInfoByName}{int FI\_GetInfoByName(FiducialInfo *fi);}
+\itt{FI\_GetInfoByName} uses the name field of the FiducialInfo structure to
+retrieve the other FiducialInfo information.  It returns FALSE if name is
+not in the fiducial database, TRUE otherwise.  Fiducial names can be found
+in fi.h.
+
+Example:
+
+\btt
+FiducialInfo fi;
+int result;
+char fidName[80];
+GetFidNameFromUser(fidName);
+fi.name = fidName;
+result = FI_GetInfoByName(&fi);
+if (result == TRUE)
+    DoSomethingWithFidInfo(fi);
+else
+    NoSuchFiducialNameError(fidName);
+\ett
+
+\subfection{FI\_GetInfoByType}{int FI\_GetInfoByType(FiducialInfo *fi);}
+
+\itt{FI\_GetInfoByType} uses the type field of the FiducialInfo structure to
+retrieve all the other information. It returns FALSE if type is not in
+the fiducial database, TRUE otherwise.
+
+Example:
+
+\btt
+FiducialInfo fi;
+int result;
+fi.type = FI_ACT;
+result = FI_GetInfoByType(&fi);
+if (result == TRUE)
+    DoSomethingWidthFidInfo(fi);
+else
+    NoSuchFiducialTypeError(type);
+\ett
+
+\subfection{FI\_NameToType}{short FI\_NameToType(const char *name);}
+
+\itt{FI\_NameToType} returns a fiducial type number given the fiducial's name.
+Behavior is undefined if the fiducial name is invalid.
+
+\subfection{FI\_IsValidType}{int FI\_IsValidType(short type);}
+\itt{FI\_IsValidType} returns TRUE if the given type is a valid type, FALSE
+otherwise.  This routine is really only useful in assertion statements and
+other similar error checking code.
+
+\subfection{FI\_IsValidName}{int FI\_IsValidName(const char *name);}
+\itt{FI\_IsValidName} returns TRUE if the given name is a valid name, FALSE
+otherwise. 
+
+\subfection{FI\_First}{int FI\_First(FiducialInfo *fi);} 
+\itt{FI\_First} and
+its companion \itt{FI\_Next} are used to iterate through all entries in the
+database.  Entries are returned in alphabetical order according to
+fiducial name.  \itt{FI\_First} gets the first entry in the database.  It returns TRUE if
+successful, FALSE otherwise. 
+These routines are not reentrant so don't nest them!
+
+\subfection{FI\_Next}{int FI\_Next(FiducialInfo *fi);}
+\itt{FI\_Next} fetches the next entry in the database.  After calling 
+\itt{FI\_First} to get the first database entry, call \itt{FI\_Next}
+repeatedly to get the remainder of the database entries.  It returns
+TRUE if successful, FALSE when all fiducial types have been visited
+(fi will not contain valid information in this case).  
+
+\section{Fortran Routines}
+This section provides a description of each Fortran routine.  Unless otherwise
+noted each routine is available in all versions of the library.
+
+\subfection{fi\_finit}{integer function fi\_finit(reportLevel) \\* integer reportLevel}
+\itt{Fi\_fnit} initializes the fi library.  You must call this routine before
+calling any others. ReportLevel determines if error messages will be
+printed on subsequent calls to the library routines.  If reportLevel is 0
+then no messages will be printed if errors occur.  If it is 1 then error
+messages will be printed.
+
+\subfection{fi\_fdone}{integer function fi\_fdone()}
+\itt{Fi\_fdone} deallocates resources used by the FI library.  Call this routine
+when you are through with the library.
+
+\subfection{fi\_finitglcolormapmode}{integer function fi\_finitglcolormapmode()}
+This routine is available in libfigl.a and libfigl.so only.
+
+\itt{Fi\_finitglcolormapmode} allocates and initializes needed gl color resources.
+Call \itt{fi\_finitglcolormapmode} if you are going to be drawing fiducials using
+gl's colormap mode.  Returns .true. if the gl color resources were
+initialized correctly, .false. otherwise.
+
+You must call \itt{fi\_init} before calling this routine.  If you call this
+routine then you may not call \itt{fi\_initglrgbmode}.  In other words you can
+work in only one color mode at a time.
+
+\subfection{fi\_finitglrgbmode}{integer function fi\_finitglrgbmode()}
+This routine is available in libfigl.a and libfigl.so only.
+
+\itt{Fi\_finitglrgbmode} allocates and initializes needed gl color resources.
+Call \itt{fi\_finitglrgbmode} if you are going to be drawing fiducials using gl's
+RGB color mode.  Returns .true. if the gl RGB colors were initialized
+correctly, .false. otherwise.
+
+You must call \itt{fi\_init} before calling this routine.  If you call this
+routine then you may not call \itt{fi\_finitglcolormapmode}  In other words you
+can work in only one color mode at a time.
+
+\subfection{fi\_fgetnumtypes}{integer function fi\_fgetnumtypes()}
+\itt{Fi\_fgetnumtypes} returns the total number of fiducial types in the database.
+
+\subfection{fi\_fnametotype}{integer function fi\_fnametotype(name, type) \\*
+character*(*) name \\*
+integer*2 type}
+\itt{Fi\_fnametotype} finds a fiducial's type given its name.  Returns .false. if
+the name is not in the fiducial database, .true. otherwise.
+
+\subfection{fi\_ftypetoname}{integer function fi\_ftypetoname(type, name) \\*
+integer*2 type \\*
+character*(*) name}
+\itt{Fi\_ftypetoname} finds a fiducial's name given its type.  Returns .false. if
+the type is not in the fiducial database, .true. otherwise.
+
+\subfection{fi\_fisvalidtype}{integer function fi\_fisvalidtype(type) \\*
+integer*2 type}\itt{Fi\_fisvalidtype} returns TRUE if the given type is a valid type, FALSE
+otherwise. 
+
+\subfection{fi\_fisvalidname}{integer function fi\_fisvalidname(name) \\*
+character*(*) name}
+\itt{Fi\_fisvalidname} returns TRUE if the given name is a valid name, FALSE
+otherwise.
+
+\subfection{fi\_fgetlabel}{integer function fi\_fgetlabel(type, label) \\*
+integer*2 type \\*
+character*(*) label)}
+\itt{Fi\_fgetlabel} finds a fiducial's label given its type.  Returns .false. if the
+type is not in the fiducial database, .true. otherwise.
+
+\subfection{fi\_fgetxcolorname}{integer function fi\_fgetxcolorname(type, xColorName) \\*
+integer*2 type \\*
+character*(*) xColorName}
+\itt{Fi\_fgettxcolorname}, finds a fiducial's x color name given its type.
+Returns .false. if the type is not in the fiducial database, .true. otherwise.
+
+\subfection{fi\_fgetrgbvalues}{integer function fi\_fgetrgbvalues(type, red, green, 
+blue) \\*
+integer*2 type, red, green, blue}
+\itt{Fi\_fgetrgbvalues} find a fiducial's RGB color values given the fiducial's
+type.  Returns .false. if the type is not in the fiducial database, .true.
+otherwise.
+
+\subfection{fi\_fgetglindex}{integer function fi\_fgetglindex(type, glColorIndex) \\*
+integer*2 type, glColorIndex}
+This routine is available in libfigl.a and libfigl.so only.
+
+\itt{Fi\_fgetglindex} finds a fiducial's gl color index given the fiducial's type.
+Returns .false. if the type is not in the fiducial database,
+.true. otherwise.
+
+\subfection{fi\_ffirst}{integer function fi\_ffirst(type) \\*
+integer*2 type} \itt{Fi\_ffirst} and its companion \itt{Fi\_fnext}are
+used to iterate through all entries in the database.  Entries are
+returned in alphabetical order according to fiducial name.  These
+routines are not reentrant so don't nest them!
+
+\itt{Fi\_ffirst} finds the first entry in the database and gets its type.  Returns
+.true. if successful, .false. otherwise. 
+
+\subfection{fi\_fnext}{integer function fi\_fnext(type) \\* integer*2
+type} \itt{Fi\_fnext} gets the next entry in the database and
+determines its type.  After calling \itt{fi\_ffirst} to get the first
+database entry call \itt{fi\_fnext} repeatedly to get the remainder of
+the database entries.  Returns .true.  if successful, .false.  if all
+entries have been exhausted.
+
+\end{document}
+

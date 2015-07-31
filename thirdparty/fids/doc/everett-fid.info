@@ -1,0 +1,111 @@
+FIDUCIALS, FIDUCIAL LISTS, AND FIDUCIAL SETS
+--------------------------------------------
+
+A fiducial is a parameter consisting of 2 parts: a type part and a
+value part.  The type part indicates the type of fiducial,
+e.g. activation, recovery, reference, etc.  The value part is the time
+instance value of the fiducial.
+
+Fiducials are organized into groups called "fiducial sets".  A
+fiducial set is in turn a group of "fiducial lists".  And a fiducial
+list is, well, a list of fiducials.  In everett a fiducial list holds
+all fiducials for one channel of a waveform.  A fiducial list can hold
+any number of any type of fiducial.  A fiducial set then is merely a
+collection of fiducial lists, one list per channel.
+
+Everett gives you great flexibility in organizing your fiducials
+within fiducial sets. It's up to you to decide how best to organize
+them.
+
+
+DATA FILES, TIME SERIES DATA, AND FIDUCIAL SETS
+------------------------------------------
+
+Data files maintain a list of time series data.  These data may be
+internal or external to the data file.  Data files also contain
+fiducial sets.  For each time series the data file maintains a list of
+fiducial sets.  Thus there may be 1 or more fiducial sets per time
+series.  
+
+Usually each fiducial set will have the same number of channels
+(i.e. the same number of fiducial lists) as the time series data.
+This is not necessary though.  For instance, you may want to save a
+global reference fiducial derived from an rms waveform.  To do this
+you would compute the rms waveform, then create an associated fiducial
+set, and then select a reference time and add it to the fiducial set.
+This fiducial set can then be saved with all the others.  Another
+example would be 32 lead body surface data.  You could generate 192
+lead time series data from the 32 lead data using the limited lead
+expansion plugin.  Then you could generate 1 or more 192 lead fiducial
+sets from these data.  Then you could save the 192 lead fiducial sets
+without having to save the 192 lead time series data.
+
+When everett opens a data set it does not read any fiducial sets. When
+everett opens a time series it reads all fiducial sets for that
+timeseries.  You can then edit the fiducials within any of the
+fiducial sets, create new fiducial sets, and even delete fiducials
+sets.  You can save the changes.  Deleted fiducial sets will not be in
+the updated data file.  Everett does not delete the original data
+file.  It renames it by appending ".bak" to its file name.  The
+updated file will have the same name as the original.
+
+When everett opens the next time series it first gives you a chance to
+save modified fiducial sets if you have not already done so.  Then
+everett will purge all current waveform and fiducial data from memory
+and read the next time series data and all associated fiducial sets.
+
+
+CREATING FIDUCIAL SETS
+----------------------
+
+Everett gives you 2 ways to create fiducial sets.  Invoking a fiducial
+generating plugin from the "Generate" menu will create a new fiducial
+set.  Fiducials computed by the plugin will be saved in the new
+fiducial set.  Everett will automatically generate a name for the
+fiducial set and this name will appear in the menus that display
+fiducial set names.
+
+You can create a fiducial set manually be selecting the "New Fiducial
+Set" menu item.  You must give the fiducial set a name of your own
+choosing.  You can only create a new fiducial set in conjunction with
+a waveform.  That is you must be displaying a waveform before you can
+create a new fiducial set.  Everett will create a fiducial set having
+the same number of channels as the waveform.
+
+
+WAVEFORMS + FIDUCIAL SETS = LINKING + OTHER BORING STUFF
+--------------------------------------------------------
+
+To display fiducials with a waveform you must "link" them together
+using the "Link" menu item.  Each waveform maintains a list of
+fiducial sets that are linked to it.  Therefore you may link 1 or more
+fiducial sets to a waveform (assuming they are all compatible with the
+waveform).  Different waveforms may be linked to the same fiducial
+set.
+
+In a waveform's list of linked fiducial sets there is always one
+that is considered the "current" fiducial set.  You may choose which
+one this is.  The notion of a current fiducial set is useful in two
+contexts.  First, if you want to add fiducials to an existing fiducial
+set you must first make that fiducial set the current one.  Then you
+can add fiducials to it by selecting a fiducial generating plugin from
+the "Generate To Current" menu or you can add fiducials manually using
+the "Add" menu item.  Second, some waveform generating plugins require
+fiducials as input.  Before invoking one of these plugins you must
+first make an appropriate fiducial set the current one.  Everett will
+then pass this fiducial set to the plugin.  Most plugins don't require
+a fiducial set as input so you don't normally need to worry about
+selecting a current fiducial set before invoking the plugin.
+
+
+CONCLUSION
+----------
+
+I can't think of anything else to say right now.  Actually, there is
+lots more to say and I'll say it another day.  In the meantime give
+the new everett a try.  I tried to flush out as many bugs as possible
+but I'm sure there are more.  As always, constructive criticism is
+welcome.  Unconstructive criticism sucks.  Keep it to yourself.
+
+Ted.
+

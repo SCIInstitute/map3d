@@ -1,0 +1,243 @@
+
+  Fid File Library 
+  Rob MacLeod 
+
+  Introduction 
+
+  What is a Fids File? 
+
+A fids file contains fiducial frame numbers from each lead of mapping
+data.  The potentials are usually stored in .data files and there we have
+fiducials that apply to the whole beat, that is, the same value applies to
+every lead in the mapping array.  Eventually, the information in fids files
+will migrate to the .data files too, but in the meantime---and thereafter
+if experience is any guide---we have fids files.
+
+A fids file is in ASCII format, and hence can be easily created by anything
+from a text editor to awk, C, and Fortran programs.  The disadvantage is
+that ASCII files are large and there is less control of format.  What this
+means in practice is that the routines in the fids library may fail because
+the file is not quite in the correct format.  The errors causing the
+failure may be hard to find, harder than if this were a binary file.  But
+this is the price of simplicity and easy access.
+
+   The Standard 
+
+The standard format for the fids files is as follows:
+ 
+ 
+ num-time-series
+ time-series-num  pakfilenum
+ nleads fid1 fid2 fid3 .....
+ 1 10 20 30  ...
+ 2 10 20 31 ...
+ ...
+ time-series-num2 pakfilenum2 
+ nleads fid1 fid2 fid3 .....
+ 1 10 20 30  ...
+ 2 10 20 31 ...
+ ...
+ 
+
+and so on for multiple time series.  
+
+The difference between    time-series-num  and    pakfilenum  is that 
+   time-series-num  is the running number within the file itself; 
+it starts at one and increases for each time series in the file.  The 
+values for pakfilenum is only really meaningful to link fid information to 
+.pak files on the Vax and this is how I anticipate it being used.
+
+The numeric values are in frame numbers relative to the full pack file,
+starting at 1.  The ``fid1'', ``fid2'',    . are strings that tell us what
+type of fiducials are stored in the file and it what order.  The legal
+strings for this must include the following:
+
+    l l    
+  1   c   Text  &
+  1   c   Contents     
+pon	 & P-onset  
+poff	 & P-offset  
+qon	 & Q-onset  
+rpeak	 & Peak of the R wave  
+soff	 & S-offset == end of QRS  
+tpeak	 & Peak of the T wave  
+toff	 & End of the T wave  
+act	 & Activation time   
+actplus	 & Activation time Max + slope  
+actminus & Activation time Max - slope  
+rec	 & Recovery time  
+recplus	 & Recovery time Max + slope  
+recminus & Recovery time Max - slope  
+ 
+ 
+
+The standard file extension for these files is ``.fids''.
+
+Comments are designated by the symbols  ,  , or ! and can appear anywhere
+in the file.
+
+All values are assumed to be in frame numbers    beginning with 1!!! .
+
+  What is this library? 
+
+This library offers some routines to manage fids files, especially reading
+existing fids files into a data structure defined for this purpose.  I hope
+they make programs a little easier to write and perhaps exert some gentle
+pressure towards a standard approach to these files.  At least it makes my
+life easier as I have written several program using the library and will
+probably have more in the near future.
+
+  The Library 
+
+The code for the library will normally be kept in /usr/llocal/dfile/fids,
+with a local copy maintained and updated by Rob (macleod@cvrti.utah.edu).
+
+  The data structure 
+
+The contents of the fids.h file reveal the latest format of the data
+structure. At present this looks as follows: 
+
+  
+enum fidtype  FID_PON, FID_POFF, FID_QON, FID_RPEAK, FID_SOFF,
+	      FID_TPEAK, FID_TOFF, FID_ACTPLUS, FID_ACTMINUS, FID_ACT, 
+	      FID_RECPLUS, FID_RECMINUS, FID_REC  ;
+
+typedef struct Fiducials
+ 
+    long ponframe;
+    long pofframe;
+    long qframe;
+    long rpeak;
+    long sframe;
+    long tpeak;
+    long tframe;
+    long actpframe; /*** Activation frame max + dv/dt***/
+    long actmframe; /*** Activation frame  max - dv/dt ***/
+    long actframe; /*** Actual or best activation frame ***/
+    long recpframe; /*** Recovery frame max + dv/dt ***/
+    long recmframe; /*** Recovery frame max - dv/dt ***/
+    long recframe; /*** Actual or best recovery frame ***/
+    long aridur; /*** Difference between activation and recovery ***/
+  Fiducials;
+
+typedef struct FidList /*** List of set of fiducials. ***/
+ 
+    long tsnum;	/*** Fiducial series number from the fid file starting at 1.*/
+    long pakfilenum; /*** Pak file number associated with fids. ***/
+    long numfids;
+    Fiducials *fids;
+  FidList;
+ 
+
+  The Functions 
+
+  File management 
+
+I list these first as they are a key component of the functions described
+below.  
+
+    l p 4in     
+  1   c   Function Name  &
+  1   c   Purpose     
+ReadComments & To read over any comments or blank line until we hit the
+next line of useful information in the file; this makes the inclusion of
+copious comments very easy to deal with when reading the file. 
+QComment & Returns a logical value which indicates whether or not a line is
+considered a comment ( ,  , and ! are the characters scanned for)  
+FindFidSeries & Move to a desired time series in the fid file; this can be
+specified in terms of running time series numbers, as well as pakfile
+numbers.  
+SkipFidSeries & Used most internally, this routine jumps over the current
+time series and places the file read pointer at the line in which the number
+of leads and fid labels reside.  
+SetFid & Also used internally to link fid type values, which are numeric,
+with the elements of the data structure in which the information eventually
+belongs.  
+GetNumFidSeries & Returns the number of time series in a particular file. 
+FindNumFids & Returns the number of valid fiducial types that are in a
+passed FidList data structure; valid in this context means that fid values
+are larger than 0.   
+ 
+
+  Reading a fid file 
+
+Fid files are organized by time series and in each time series, we have a
+matrix organized by lead number (the rows) and fiducial type (the
+columns).  The number of rows has to equal the number of leads in the
+associated data file but is otherwise unbounded;  the number of fiducials
+is completely arbitrary.  The data structure that I defined to contain this
+information is organized similarly, with a single instance of FidList for
+each time series and a single instance of Fiducials for each lead.  So the
+typical arrangement is to have an array of type FidList, and within each
+element, an array of type Fiducials.  Within each element of the Fiducials
+array is an entry for every allowed type of fiducial.
+
+Reading a fids file reflects this structure.  We read in a single FidList
+worth of data at a time and either process the results right away or store
+the results in an array of type FidList for later processing.  This is the
+purpose of the    ReadFidList  function, which takes the times series and
+pakfile numbers to find the right time series and returns a single FidList
+structure.  
+
+Here is an example in which the contents of a number sequence (numseq code
+compliments of Ted Dustman) is used to drive the search for specific time
+series of fid values.  The Boolean qbypaknum determines whether pakfile
+numbers of time series numbers drive the search and assigns each element of
+the number list to the appropriate variable.     ReadFidList  looks at
+both    tsnum  and    pakfilenum  and chooses based on which is
+non-zero and passes the directions to    FindFidSeries  to get to the
+correct point in the fids file.
+
+  
+    while (NumSeqNext(tsnumseq, &intval))
+     
+	if ( qbypaknum )
+	    pakfilenum = (long) intval;
+	else
+	    tsnum = (long) intval;
+	printf(" Going to read fids with tsnum = 
+	       tsnum, pakfilenum);
+	error = ReadFidList( report_level, fidsfilename,
+			     tsnum, pakfilenum, 
+			     &fidlist[numfidseries++] );
+	if ( error < 0 )
+	 
+	    printf(" Error return from reading fids ");
+	    exit(ERR_FILE);
+	 
+     
+ 
+
+Within the    ReadFidList  function is a call to the function   
+ReadFidSeries , which then reads the fiducials values themselves into the
+FidList.Fids structure.
+
+  Writing a fids file 
+
+Fortunately, writing a fid file is typically a lot easier than reading
+one.  The fidlib does provide one routine for writing fid files, called
+   WriteFidList  and its arguments mimic those of    ReadFidList .
+
+  Sample/Utility Programs 
+
+  smap:       smap   is a graphics program that displays a
+.data file as a set of scalar leads but will also display fiducial values
+it gets from a fids file, and allow you to edit and save these values in a
+new fids file.
+
+  fidtodata:    This program converts fids files to .data files
+and thus allows you to view them with    map3d .
+
+  makedata:   makedata creates .data files from .pak files on the
+Vax and now also permits fids file data to be appended to the .data file.
+Run this program whenever you need to get at pak files with    map3d  
+and also wish to have .fids file data visible.
+
+  dartofids.awk:   An awk script that can read Marc Fuller's dar
+files and convert them to fids files.
+
+  fidtopot.awk:   An awk script that takes fids files and makes
+.pot files from them.
+
+ 
+

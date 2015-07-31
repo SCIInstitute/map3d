@@ -1,0 +1,58 @@
+This is TeX, Version 3.14159 (Web2C 7.2) (format=latex 2000.1.7)  14 DEC 2000 15:59
+**fidlib.tex
+(fidlib.tex
+LaTeX2e <1999/06/01> patch level 1
+(/usr/local/share/texmf/tex/latex/base/article.cls
+Document Class: article 1999/01/07 v1.4a Standard LaTeX document class
+(/usr/local/share/texmf/tex/latex/base/size11.clo
+File: size11.clo 1999/01/07 v1.4a Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (fidlib.aux)
+\openout1 = `fidlib.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 25.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 25.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 25.
+ [1
+
+]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 78.
+ [2]
+[3] [4] [5] (fidlib.aux) ) 
+Here is how much of TeX's memory you used:
+ 236 strings out of 10974
+ 2333 string characters out of 73476
+ 48310 words of memory out of 263001
+ 3169 multiletter control sequences out of 10000+0
+ 9325 words of font info for 33 fonts, out of 200000 for 1000
+ 14 hyphenation exceptions out of 1000
+ 21i,8n,19p,129b,299s stack positions out of 300i,100n,500p,30000b,4000s
+
+Output written on fidlib.dvi (5 pages, 13176 bytes).

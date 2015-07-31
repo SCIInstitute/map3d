@@ -1,0 +1,46 @@
+**********************************************************************
+
+               Fidlib: a library for handling fiducial file.
+
+**********************************************************************
+I you are dealing with lead by lead fiducials, this may interest you.
+From the documentation:
+----------------------------------------------------------------------
+  Fid File Library 
+  Rob MacLeod 
+
+  Introduction 
+
+  What is a Fids File? 
+
+A fids file contains fiducial frame numbers from each lead of mapping
+data.  The potentials are usually stored in .data files and there we have
+fiducials that apply to the whole beat, that is, the same value applies to
+every lead in the mapping array.  Eventually, the information in fids files
+will migrate to the .data files too, but in the meantime---and thereafter
+if experience is any guide---we have fids files.
+
+A fids file is in ASCII format, and hence can be easily created by anything
+from a text editor to awk, C, and Fortran programs.  The disadvantage is
+that ASCII files are large and there is less control of format.  What this
+means in practice is that the routines in the fids library may fail because
+the file is not quite in the correct format.  The errors causing the
+failure may be hard to find, harder than if this were a binary file.  But
+this is the price of simplicity and easy access.
+
+  What is this library? 
+
+This library offers some routines to manage fids files, especially reading
+existing fids files into a data structure defined for this purpose.  I hope
+they make programs a little easier to write and perhaps exert some gentle
+pressure towards a standard approach to these files.  At least it makes my
+life easier as I have written several program using the library and will
+probably have more in the near future.
+----------------------------------------------------------------------
+
+For details, see the file /usr/llocal/dfile/fid/fidlib.ps and the source
+code in the same directory.
+
+Rob
+# Last update: Mon Oct 28 14:34:50 1996
+#    - created.

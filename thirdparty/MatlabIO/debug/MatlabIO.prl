@@ -1,0 +1,5 @@
+QMAKE_PRL_BUILD_DIR = C:/Users/Bryan/dev/map3d/thirdparty/MatlabIO
+QMAKE_PRO_INPUT = MatlabIO.pro
+QMAKE_PRL_TARGET = MatlabIO
+QMAKE_PRL_CONFIG = lex yacc exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin incremental_off windows qt warn_on link_prl incremental flat precompile_header autogen_precompile_source debug_and_release debug_and_release_target embed_manifest_dll embed_manifest_exe copy_dir_files rtti no_plugin_manifest qpa win32 msvc DebugBuild Debug build_pass staticlib create_prl debug DebugBuild Debug build_pass have_target static staticlib no_plist exclusive_builds debug_info no_autoqmake thread opengl moc resources
+QMAKE_PRL_LIBS = glu32.lib opengl32.lib gdi32.lib user32.lib /LIBPATH:C:\\Qt\\Qt5.4.0\\5.4\\msvc2012_opengl\\lib C:\\Qt\\Qt5.4.0\\5.4\\msvc2012_opengl\\lib\\Qt5Guid.lib C:\\Qt\\Qt5.4.0\\5.4\\msvc2012_opengl\\lib\\Qt5Cored.lib  
