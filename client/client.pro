@@ -9,6 +9,7 @@ INCLUDEPATH += ../thirdparty/fi
 INCLUDEPATH += ../thirdparty/fids
 INCLUDEPATH += ../thirdparty/gfilelib
 INCLUDEPATH += ../thirdparty/MatlabIO
+INCLUDEPATH += ../thirdparty/zlib
 INCLUDEPATH += $$QMAKE_INCDIR_QT/../src/3rdparty/zlib
 
 CONFIG += console link_prl
@@ -27,6 +28,8 @@ win32 {
     PRE_TARGETDEPS *= ../thirdparty/gfilelib$$LIB_DIR/gfilelib.lib
     PRE_TARGETDEPS *= ../thirdparty/cutil$$LIB_DIR/cutil.lib
     PRE_TARGETDEPS *= ../thirdparty/MatlabIO$$LIB_DIR/MatlabIO.lib
+    DEFINES += NOMINMAX
+    QMAKE_LIBDIR += ../thirdparty/zlib
 } else {
     PRE_TARGETDEPS *= ../thirdparty/fids/libfids.a
     PRE_TARGETDEPS *= ../thirdparty/fi/libfi.a
@@ -35,7 +38,9 @@ win32 {
     PRE_TARGETDEPS *= ../thirdparty/MatlabIO/libMatlabIO.a
 }
 
-unix {
+win32 {
+    LIBS += -lzlib
+} else {
     LIBS += -lz
 }
 
