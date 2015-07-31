@@ -1154,6 +1154,8 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
   /* BUILD IN SOME MORE ROBUSTNESS */
   /* if matrix define the other way around, just transpose the matrix
     also check if arrays have correct dimensions */
+
+  int base = 1;
  
   if (!pts.isempty()) {
     if ((pts.getm() != 3)&&(pts.getn()==3)) pts.transpose();
@@ -1197,10 +1199,17 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
       geom->SetupMap3dSurfElements(fac.getnumelements()/3, 3);
       long* elements = new long[geom->numelements*3];
       fac.getnumericarray(elements, geom->numelements*3);
+
+      // allow for 0-based files if there is a zero in the file
       for (int i = 0; i < geom->numelements; i++) {
-        geom->elements[i][0] = elements[i*3+0]-1;
-        geom->elements[i][1] = elements[i*3+1]-1;
-        geom->elements[i][2] = elements[i*3+2]-1;
+        if (elements[i*3+0] == 0 || elements[i*3+1] == 0 || elements[i*3+2] == 0)
+            base = 0;
+      }
+
+      for (int i = 0; i < geom->numelements; i++) {
+        geom->elements[i][0] = elements[i*3+0]-base;
+        geom->elements[i][1] = elements[i*3+1]-base;
+        geom->elements[i][2] = elements[i*3+2]-base;
       }
 
       delete[] elements;
@@ -1215,9 +1224,16 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
       geom->SetupMap3dSurfElements(geom->numelements, 2);
       long* elements = new long[geom->numelements*2];
       seg.getnumericarray(elements, geom->numelements*2);
+
+      // allow for 0-based files if there is a zero in the file
       for (int i = 0; i < geom->numelements; i++) {
-        geom->elements[i][0] = elements[i*2+0]-1;
-        geom->elements[i][1] = elements[i*2+1]-1;
+        if (elements[i*3+0] == 0 || elements[i*3+1] == 0)
+            base = 0;
+      }
+
+      for (int i = 0; i < geom->numelements; i++) {
+        geom->elements[i][0] = elements[i*2+0]-base;
+        geom->elements[i][1] = elements[i*2+1]-base;
       }
       delete[] elements;
     }
@@ -1226,11 +1242,18 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
       geom->SetupMap3dSurfElements(geom->numelements, 4);
       long* elements = new long[geom->numelements*4];
       tet.getnumericarray(elements, geom->numelements*4);
+
+      // allow for 0-based files if there is a zero in the file
       for (int i = 0; i < geom->numelements; i++) {
-        geom->elements[i][0] = elements[i*4+0]-1;
-        geom->elements[i][1] = elements[i*4+1]-1;
-        geom->elements[i][2] = elements[i*4+2]-1;
-        geom->elements[i][3] = elements[i*4+3]-1;
+        if (elements[i*3+0] == 0 || elements[i*3+1] == 0 || elements[i*3+2] == 0 || elements[i*3+3] == 0)
+            base = 0;
+      }
+
+      for (int i = 0; i < geom->numelements; i++) {
+        geom->elements[i][0] = elements[i*4+0]-base;
+        geom->elements[i][1] = elements[i*4+1]-base;
+        geom->elements[i][2] = elements[i*4+2]-base;
+        geom->elements[i][3] = elements[i*4+3]-base;
       }
       delete[] elements;
       
