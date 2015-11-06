@@ -1,5 +1,0 @@
-QMAKE_PRL_BUILD_DIR = C:/Users/Bryan/dev/map3d/thirdparty/gfilelib
-QMAKE_PRO_INPUT = gfilelib.pro
-QMAKE_PRL_TARGET = gfilelib
-QMAKE_PRL_CONFIG = lex yacc exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin incremental_off windows warn_on link_prl incremental flat precompile_header autogen_precompile_source debug_and_release debug_and_release_target embed_manifest_dll embed_manifest_exe copy_dir_files rtti no_plugin_manifest qpa win32 msvc DebugBuild Debug build_pass staticlib create_prl debug DebugBuild Debug build_pass have_target static staticlib no_plist exclusive_builds debug_info no_autoqmake
-QMAKE_PRL_LIBS =   

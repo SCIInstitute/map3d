@@ -1,7 +1,8 @@
-rem This assumes that Qt is in C:\Qt\4.8.6
+rem VS 2012 Command Prompt needs to be opened
+rem This assumes that Qt is in C:\Qt\Qt5.4.0\5.4\msvc2012_opengl
 
-set QTDIR=C:\Qt\4.8.6
-set PATH=%QTDIR%\path;C:\Program Files (x86)\NSIS;%PATH%;
+set QTDIR=C:\Qt\Qt5.4.0\5.4\msvc2012_opengl
+set PATH=%PATH%;%QTDIR%\bin;C:\Program Files (x86)\NSIS
 
 qmake -r
 nmake

@@ -1,0 +1,9 @@
+*.obj
+*.lib
+*.pdb
+ui_*.h
+Makefile
+Makefile.Debug
+Makefile.Release
+
+

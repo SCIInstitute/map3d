@@ -1,7 +1,7 @@
   !include "MUI.nsh"
 
   Name "map3d"
-  OutFile "map3d-win32-7.2.exe"
+  OutFile "map3d-win32-7.2.1.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\map3d"
@@ -41,13 +41,17 @@ Section "Install"
   File /r /x .svn ..\geom 
 
   ; the QTDIR environment variable must be set - copy all required Qt dlls
-  File $%QTDIR%\bin\QtCore4.dll
-  File $%QTDIR%\bin\QtGui4.dll
-  File $%QTDIR%\bin\QtOpenGL4.dll
+  File $%QTDIR%\bin\Qt5Core.dll
+  File $%QTDIR%\bin\Qt5Gui.dll
+  File $%QTDIR%\bin\Qt5OpenGL.dll
+  File $%QTDIR%\bin\Qt5Widgets.dll
+  File $%QTDIR%\bin\icuin53.dll
+  File $%QTDIR%\bin\icuuc53.dll
+  File $%QTDIR%\bin\icudt53.dll
 
   ; Install Microsoft Runtime libraries
-  File winfix\MSVCR100.DLL
-  File winfix\MSVCP100.DLL
+  File winfix\MSVCR110.DLL
+  File winfix\MSVCP110.DLL
 
   ;Store installation folder in the registry for the uninstaller to use:
   WriteRegStr HKCU "Software\map3d" "" $INSTDIR
