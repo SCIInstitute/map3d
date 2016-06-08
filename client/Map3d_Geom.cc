@@ -86,26 +86,6 @@ void Map3d_Geom::destroy()
   init();
 }
 
-long Map3d_Geom::SetupMap3dSurfPoints(long num)
-{
-
-/*** Set up the buffers that are related to points in a map3d_geom 
-  structure. ***/
-
-  /**********************************************************************/
-
-  if ((points[geom_index] = Alloc_fmatrix(num, 3)) == NULL) {
-    fprintf(stderr, "*** SetupMap3dSurfPoints: error getting memory" " for points\n");
-    return (ERR_MEM);
-  }
-  if ((channels = (long *)calloc((size_t) num, sizeof(long))) == NULL) {
-    fprintf(stderr, "*** SetupMap3dSurfPoints: error getting memory" " for channels\n");
-    return (ERR_MEM);
-  }
-  numpts = num;
-  return 0;
-}
-
 long Map3d_Geom::SetupMap3dSurfElements(long numelts, long eltsize)
 {
   if ((elements = Alloc_lmatrix(numelts, eltsize)) == NULL) {
@@ -256,4 +236,17 @@ int Map3d_Geom::CheckElementValidity()
 void Map3d_Geom::SetTimestep(int)
 {
   //geom_index = data_timestep;
+}
+
+void Map3d_Geom::UpdateTimestep(Surf_Data* data)
+{
+  // need to use these metrics in case the user specified a frame step or frame end limit on the command line
+  // (which actually stop the data from loading into memory)
+  int dataFrame = data->getRealFrameNum();
+  int numDataFrames = data->ts_available_frames;
+
+  // the frame rate should be proportional to the data frame rate
+  geom_index = ((double) dataFrame/numDataFrames) * points.size();
+  //printf("geom update %d %d = frame %d\n", dataFrame, numDataFrames, geom_index);
+
 }

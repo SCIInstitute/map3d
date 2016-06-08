@@ -614,7 +614,7 @@ void PickWindow::DrawNode()
     
     if (data) {
       // print real frame num if start is not beginning
-      int real_frame = data->framenum * data->ts_sample_step + data->ts_start;
+      int real_frame = data->getRealFrameNum();
       int zero_frame = data->zerotimeframe * data->ts_sample_step + data->ts_start;
       if (data->ts_start != 0 || data->ts_sample_step != 1)
         toRender = QString("Frame: %1 (%2)   Time: %3%4").arg(data->framenum + 1).arg(real_frame + 1)
@@ -631,7 +631,6 @@ void PickWindow::DrawNode()
     
     if (data) {
       toRender = "Value: " + QString::number(data->potvals[data->framenum][pick->node], 'g', 3);
-      printf("pick %d\n", pick->node);
     }
     else {
       toRender = "Value: ---";

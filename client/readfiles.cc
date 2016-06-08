@@ -637,6 +637,7 @@ Return:	    pointer to updated surf_data array or NULL for error
     surf->ts_start = framestart;
     surf->ts_end = frameend;
     surf->ts_sample_step = framestep;
+    surf->ts_available_frames = numfileframes;
     surf->user_step = framestep;
     surf->userpotmin = sinputlist->potusermin;
     surf->userpotmax = sinputlist->potusermax;
@@ -1106,6 +1107,7 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
   int index = insurfnum > 0 ? insurfnum-1 : 0;
   
   matlabarray pts;
+  matlabarray pts_mv;
   matlabarray fac;
   matlabarray tet;
   matlabarray seg;
@@ -1113,6 +1115,7 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
   
   if (ma.isstruct()) {
     if (ma.isfieldCI("pts")) pts = ma.getfieldCI(index,"pts");
+    if (ma.isfieldCI("pts_mv")) pts_mv = ma.getfieldCI(index,"pts_mv");
     if (ma.isfieldCI("node")) pts = ma.getfieldCI(index,"node");
 
     if (ma.isfieldCI("fac")) fac = ma.getfieldCI(index,"fac");
@@ -1133,6 +1136,7 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
 	
     if(cell.isstruct()) {
       if (cell.isfieldCI("pts")) pts = cell.getfieldCI(0,"pts");
+      if (cell.isfieldCI("pts_mv")) pts_mv = cell.getfieldCI(0,"pts_mv");
       if (cell.isfieldCI("node")) pts = cell.getfieldCI(0,"node");
       
       if (cell.isfieldCI("fac")) fac = cell.getfieldCI(0,"fac");
@@ -1156,7 +1160,12 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
     also check if arrays have correct dimensions */
 
   int base = 1;
- 
+
+  if (!pts.isempty() && !pts_mv.isempty()) {
+    printf("Cannot specify pts and pts_mv\n");
+    return 0;
+  }
+
   if (!pts.isempty()) {
     if ((pts.getm() != 3)&&(pts.getn()==3)) pts.transpose();
     if (pts.getm() != 3) {
@@ -1164,7 +1173,15 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
       return 0;
     }
   }
-  
+
+  if (!pts_mv.isempty()) {
+    if (((pts_mv.getm() % 3) != 0)&&((pts_mv.getn() % 3) == 0)) pts_mv.transpose();
+    if (pts_mv.getm() % 3 != 0) {
+      printf("Pts_mv matrix must have (multiple-of-3)xn - %dx%d provided\n", pts_mv.getm(), pts_mv.getn());
+      return 0;
+    }
+  }
+
   if (!fac.isempty()) {
     if ((fac.getm() != 3)&&(fac.getn()==3)) fac.transpose();
     if (fac.getm() != 3) {
@@ -1189,77 +1206,17 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
     }
   }
   
+  int num_element_types = 0;
+  if (!fac.isempty()) num_element_types++;
+  if (!seg.isempty()) num_element_types++;
+  if (!tet.isempty()) num_element_types++;
+
+  if (num_element_types > 1 || num_element_types == 0) {
+    printf("Must only specify one of fac (%sspeficied), seg (%sspecified), or tetra (%sspecified)\n", (fac.isempty() ? "not " : ""), (seg.isempty() ? "not " : ""), (tet.isempty() ? "not " : ""));
+    return 0;
+  }
+
   if (!pts.isempty()) {
-    if (!fac.isempty()) {
-      if (!seg.isempty() || !tet.isempty()) {
-        printf("Can only specify one of pts, fac, or tetra\n");
-        return 0;
-      }
-      // load fac data
-      geom->SetupMap3dSurfElements(fac.getnumelements()/3, 3);
-      long* elements = new long[geom->numelements*3];
-      fac.getnumericarray(elements, geom->numelements*3);
-
-      // allow for 0-based files if there is a zero in the file
-      for (int i = 0; i < geom->numelements; i++) {
-        if (elements[i*3+0] == 0 || elements[i*3+1] == 0 || elements[i*3+2] == 0)
-            base = 0;
-      }
-
-      for (int i = 0; i < geom->numelements; i++) {
-        geom->elements[i][0] = elements[i*3+0]-base;
-        geom->elements[i][1] = elements[i*3+1]-base;
-        geom->elements[i][2] = elements[i*3+2]-base;
-      }
-
-      delete[] elements;
-    }
-    else if (!seg.isempty()) {
-      if (!tet.isempty()) {
-        printf("Can only specify one of pts, fac, or tetra\n");
-        return 0;
-      }
-      // load seg data
-      geom->numelements = seg.getnumelements()/2;
-      geom->SetupMap3dSurfElements(geom->numelements, 2);
-      long* elements = new long[geom->numelements*2];
-      seg.getnumericarray(elements, geom->numelements*2);
-
-      // allow for 0-based files if there is a zero in the file
-      for (int i = 0; i < geom->numelements; i++) {
-        if (elements[i*3+0] == 0 || elements[i*3+1] == 0)
-            base = 0;
-      }
-
-      for (int i = 0; i < geom->numelements; i++) {
-        geom->elements[i][0] = elements[i*2+0]-base;
-        geom->elements[i][1] = elements[i*2+1]-base;
-      }
-      delete[] elements;
-    }
-    else if (!tet.isempty()) {
-      // load tetra data
-      geom->SetupMap3dSurfElements(geom->numelements, 4);
-      long* elements = new long[geom->numelements*4];
-      tet.getnumericarray(elements, geom->numelements*4);
-
-      // allow for 0-based files if there is a zero in the file
-      for (int i = 0; i < geom->numelements; i++) {
-        if (elements[i*3+0] == 0 || elements[i*3+1] == 0 || elements[i*3+2] == 0 || elements[i*3+3] == 0)
-            base = 0;
-      }
-
-      for (int i = 0; i < geom->numelements; i++) {
-        geom->elements[i][0] = elements[i*4+0]-base;
-        geom->elements[i][1] = elements[i*4+1]-base;
-        geom->elements[i][2] = elements[i*4+2]-base;
-        geom->elements[i][3] = elements[i*4+3]-base;
-      }
-      delete[] elements;
-      
-    }
-    
-    // load pts data
     geom->numpts = pts.getnumelements()/3;
     geom->points[geom->geom_index] = Alloc_fmatrix(geom->numpts, 3);
     float** points = geom->points[geom->geom_index];
@@ -1273,11 +1230,74 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
     delete[] elements;
     
   }
+  else if (!pts_mv.isempty()) {
+    // m is # columns, n is # nodes.  Each group of 3 columns is an x,y,z point
+    int numcols = pts_mv.getm();
+    geom->numpts = pts_mv.getn();
+    int num_timesteps = numcols/3;
+    printf("Reading time-based point array, m(cols)=%d, n(pts)=%d (timesteps=%d)\n", numcols, geom->numpts, num_timesteps);
+
+    geom->points.resize(num_timesteps);
+
+    float* elements = new float[geom->numpts*numcols];
+    pts_mv.getnumericarray(elements, geom->numpts*numcols);
+
+    for (int timestep = 0; timestep < num_timesteps; timestep++) {
+      geom->points[timestep] = Alloc_fmatrix(geom->numpts, 3);
+      float** points = geom->points[timestep];
+      for (int i = 0; i < geom->numpts; i++) {
+        for (int j = 0; j < 3; j++) {
+          points[i][j] = elements[i*numcols + timestep*3 + j];
+        }
+      }
+    }
+    delete[] elements;
+  }
   else {
     printf("Empty or non-existent pts array\n");
     return 0;
   }
-  
+
+  int pts_per_element = 0;
+  matlabarray* element_array = NULL;
+  if (!fac.isempty()) {
+    pts_per_element = 3;
+    element_array = &fac;
+  }
+  else if (!seg.isempty()) {
+    pts_per_element = 2;
+    element_array = &seg;
+  }
+  else if (!tet.isempty()) {
+    pts_per_element = 4;
+    element_array = &tet;
+  }
+  else {
+    printf("Non-existent fac, seg, or tet array\n");
+    return 0;
+  }
+
+  geom->SetupMap3dSurfElements(element_array->getn(), pts_per_element);
+  long* elements = new long[geom->numelements*pts_per_element];
+  element_array->getnumericarray(elements, geom->numelements*pts_per_element);
+
+  // allow for 0-based files if there is a zero in the file
+  for (int i = 0; i < geom->numelements; i++) {
+    for (int j = 0; j < pts_per_element; j++) {
+      if (elements[i*pts_per_element+j] == 0) {
+        base = 0;
+      }
+    }
+  }
+
+  for (int i = 0; i < geom->numelements; i++) {
+    for (int j = 0; j < pts_per_element; j++) {
+      geom->elements[i][j] = elements[i*pts_per_element+j]-base;
+    }
+  }
+
+  delete[] elements;
+    
   geom->channels = (long*) calloc(sizeof(long), geom->numpts);
   if (!cha.isempty()) {
     long* elements = new long[geom->numpts];
@@ -1755,6 +1775,7 @@ Input:
         surfdata->ts_end = filenum2;
         surfdata->ts_start = filenum1;
         surfdata->ts_sample_step = filestep;
+        surfdata->ts_available_frames = filenum2;
         
       }
       

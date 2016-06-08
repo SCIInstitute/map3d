@@ -13,6 +13,7 @@
 #include <vector>
 
 struct Land_Mark;
+class Surf_Data;
 
 class Map3d_Geom   /*** Geometry for a single surface. ***/
 {
@@ -22,9 +23,9 @@ public:
   void destroy();
   void init();
   //static Map3d_Geom *AddAMap3dGeom(Map3d_Geom * map3dgeom, long numpts);
-  long SetupMap3dSurfPoints(long numpts);
   long SetupMap3dSurfElements(long numelts, long eltsize);
   void SetTimestep(int data_timestep);
+  void UpdateTimestep(Surf_Data* data); // based on what frame the data is on
   int CheckPointValidity();
   int CheckElementPoints();
   int CheckElementDoubles();

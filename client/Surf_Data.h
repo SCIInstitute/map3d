@@ -24,6 +24,7 @@ public:
   void ChangeReferenceMean(Map3d_Geom * onemap3dgeom);
   void ChangeBackReference(Map3d_Geom * onemap3dgeom);
   void setUnits(int localunits);
+  int getRealFrameNum() { return framenum * ts_sample_step + ts_start;}
   bool qgotpots;  /*** True if there pots for this surface ***/
   bool qgotgrads; /*** True if there pots for this surface ***/
   long surfnum; /*** Surface number for this set of potentials ***/
@@ -39,6 +40,7 @@ public:
   long ts_start;       /*** Starting frame of the display ***/
   long ts_end;         /*** Ending frame of the display ***/
   long ts_sample_step; /*** Step between frames of the display ***/
+  long ts_available_frames; /*** Total number of available frames ***/
   long user_step;      /*** The original step for selecting from commandline*/
   float timestart;     /*** Starting time of the display ***/
   long zerotimeframe; /*** The frame number that we have as zero ***/

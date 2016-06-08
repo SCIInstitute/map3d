@@ -33,6 +33,7 @@ Surf_Data::Surf_Data()
   frametime = 0.0f;
   ts_start = 0;
   ts_end = 0;
+  ts_available_frames = 0;
   user_step = 0;
   ts_sample_step = 0;
   timestart = 0.0f;
@@ -189,6 +190,7 @@ Surf_Data *Surf_Data::AddASurfData(Surf_Data * surfdata, long newsurfnum, long n
   surfdata[newsurfnum].frametime = 0.0;
   surfdata[newsurfnum].ts_start = 0;
   surfdata[newsurfnum].ts_end = 0;
+  surfdata[newsurfnum].ts_available_frames = 0;
   surfdata[newsurfnum].ts_sample_step = 1;
   surfdata[newsurfnum].timestart = 0.0;
   surfdata[newsurfnum].zerotimeframe = 0;

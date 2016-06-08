@@ -720,6 +720,10 @@ void GeomWindow::UpdateAndRedraw()
   for (; loop < length; loop++) {
     Mesh_Info *mesh = meshes[loop];
 
+    //if animated geom, update the frame here
+    if (mesh->data)
+      mesh->geom->UpdateTimestep(mesh->data);
+
     if (!mesh->cont)
       mesh->cont = new Contour_Info(mesh);
     mesh->cont->buildContours();
