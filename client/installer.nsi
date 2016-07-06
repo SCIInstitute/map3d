@@ -53,6 +53,12 @@ Section "Install"
   File winfix\MSVCR110.DLL
   File winfix\MSVCP110.DLL
 
+  ; Qt Dependencies for platforms
+  CreateDirectory $INSTDIR\platforms
+  SetOutPath $INSTDIR\platforms
+  File $%QTDIR%\plugins\platforms\qwindows.dll
+  SetOutPath $INSTDIR
+
   ;Store installation folder in the registry for the uninstaller to use:
   WriteRegStr HKCU "Software\map3d" "" $INSTDIR
   
