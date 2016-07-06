@@ -1,17 +1,12 @@
 Building on windows
-Prereq: Install MS Visual C++ Express 2010
-Prereq: Install Qt 4.8 (that was built with C++ 2010)
+Prereq: Install MS Visual C++ Express 2012
+Prereq: Install Qt 5.4 (that was built with C++ 2012)
 Prereq: Install NSIS
 * Open a MS Visual Studio command prompt
 * set QTDIR=C:\Qt\<version>
 * set PATH=%QTDIR%\path;C:\Program Files (x86)\NSIS;%PATH%;
-* if you haven't retrieved the thirdparty directory yet:
-   git clone https://github.com/SCIInstitute/map3d-thirdparty.git thirdparty
-* qmake -r
-* nmake
-* cd client
-* makensis client\installer.nsi
-* executable is in client/release/map3d.exe and creates map3d installer
+* Run buildWin32Installer.bat
+* executable is in client/release/map3d.exe and creates map3d installer in working directory
 
 Building on mac
 Prereq: Install xcode
@@ -27,7 +22,7 @@ Building on linux
 5) make
 
 Building from source
-1) Qt 4.7 or greater must be installed
+1) Qt 5.4 or greater must be installed
 2) Untar the map3d source tarball
 3) cd into the map3d source
 4) Run <path-to-Qt>/bin/qmake
