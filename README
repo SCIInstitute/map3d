@@ -1,3 +1,6 @@
+Current edition of User's Manual:
+https://github.com/SCIInstitute/map3d/releases/download/v7.2.2/map3d-user-manual.pdf
+
 Building on windows
 Prereq: Install MS Visual C++ Express 2012
 Prereq: Install Qt 5.4 (that was built with C++ 2012)
