@@ -31,6 +31,7 @@ class FileDialogWidget : public QWidget, public Ui::FileDialogWidget
   Q_OBJECT;
 public:
   FileDialogWidget(QWidget* parent, Mesh_Info* mesh);
+  ~FileDialogWidget();
 
 public slots:
   // auto-connect slots
@@ -62,6 +63,12 @@ public:
 
   bool reload_geom;
   bool reload_data;
+
+
+  int numseries;
+  std::vector<int> numFramesPerSeries;
+  std::vector<std::string> timeSeriesLabels;
+  MatlabIO::matlabarray* dataArray;
 };
 
 void filesDialogCreate(bool show = true);

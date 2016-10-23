@@ -12,6 +12,8 @@ class GenericWindow;
 #include "MeshList.h"
 #include <vector>
 
+namespace MatlabIO { class matlabarray; }
+
 typedef std::vector < Mesh_Info * >Mesh_List;
 
 #define RELOAD_NONE 0
@@ -35,9 +37,10 @@ int DetectFileType(char *);
 const char *GetExtension(const char *s);
 char *GetBase(char *s);
 unsigned GetNumGeoms(char *s);
-unsigned GetNumTimeSeries(char *s);
-unsigned GetNumFrames(char *s, int series);
-void GetTimeSeriesLabel(char *s, int series, char* name);
+
+// try to minimize calls to matlabarray stuff.  Caller is responsible for freeing matlabarray
+void GetDataFileInfo(std::string filename, int& numTimeSeries, std::vector<int>& numFramesPerSeries, std::vector<std::string>& timeSeriesLabels, MatlabIO::matlabarray*& outArray);
+
 void ComputeTriNormals(Map3d_Geom * m);
 void ComputeTetNormals(Map3d_Geom * m);
 void ComputeGeomStatistics(Map3d_Geom * m);

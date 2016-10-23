@@ -12,10 +12,14 @@
 #include "pickinfo.h"
 #include "ContourDialog.h"
 #include "Contour_Info.h"
+
+#include "matlabarray.h"
+
 #include <math.h>
 
 #include <QFileDialog>
 #include <QDebug>
+
 
 FileDialog* filedialog;
 //extern SaveDialog *savedialog;
@@ -56,16 +60,16 @@ void FileDialogWidget::on_geomIndexComboBox_activated ( const QString & text )
 void FileDialogWidget::on_dataLineEdit_editingFinished ()
 {
   QString filename = dataLineEdit->text();
+  if (filename == "")
+    return;
+
+  GetDataFileInfo(filename.toStdString(), numseries, numFramesPerSeries, timeSeriesLabels, dataArray);
 
   if (filename.endsWith(".tsdfc") || filename.endsWith(".mat"))
-  {
-    int numseries = GetNumTimeSeries(filename.toLatin1().data());
-    
+  {    
     QStringList items;
     for(int i = 0; i < numseries; i++){
-      char label[100];
-      GetTimeSeriesLabel(filename.toLatin1().data(), i, label);
-      items << label;
+      items << QString::fromStdString(timeSeriesLabels[i]);
     }
 
     dataIndexComboBox->clear();
@@ -73,7 +77,7 @@ void FileDialogWidget::on_dataLineEdit_editingFinished ()
   }
   
   int ds = 0;  // if changing the first filename, always grab the first index
-  int numframes = GetNumFrames(filename.toLatin1().data(), ds);
+  int numframes = numFramesPerSeries[ds];
   startFrameSpinBox->setRange(1, numframes);
   endFrameSpinBox->setRange(1, numframes);
 
@@ -94,7 +98,7 @@ void FileDialogWidget::on_dataIndexComboBox_activated ( const QString & text )
   if(strcmp(filename,"")!=0)
   {  
     int ds = dataIndexComboBox->currentIndex();    
-    int numframes = GetNumFrames(filename, ds);
+    int numframes = numFramesPerSeries[ds];
 
     startFrameSpinBox->setRange(1, numframes);
     endFrameSpinBox->setRange(1, numframes);
@@ -268,6 +272,8 @@ void FileDialog::addRow(Mesh_Info* mesh)
 
 void FileDialogWidget::updateRMS()
 {
+  // as much as it would be nice to use the same code here and in updateFiles, we can't because,
+  //   the RMS needs to load the entire range, and the updateFiles needs to limit based on the frame selection
   char geom[256];
   char data[256];
   char ch[256];
@@ -278,7 +284,9 @@ void FileDialogWidget::updateRMS()
   int gs = geomIndexComboBox->currentIndex() + 1;
   if (gs == geomIndexComboBox->count())
     gs = 0;
-    
+  
+  if (dataLineEdit->text().toLatin1() == "")
+    return;
   strncpy(data, dataLineEdit->text().toLatin1().data(), 256);
   int ds = 0;
   
@@ -290,7 +298,7 @@ void FileDialogWidget::updateRMS()
   
   strncpy(ch, channelsLineEdit->text().toLatin1().data(), 256);
     
-  int numframes = GetNumFrames(data, ds);
+  int numframes = numFramesPerSeries[ds];
   
   // we need to load separate surfaces here so the user can browse different data while keeping
   // the originals displayed.
@@ -312,6 +320,8 @@ void FileDialogWidget::updateRMS()
     input->ts_end = numframes-1;
     input->ts_start = 0;
     
+    input->preloadedDataArray = dataArray;
+
     Mesh_Info* mesh = new Mesh_Info;
     Mesh_List currentMeshes;
     currentMeshes.push_back(mesh);
@@ -341,6 +351,12 @@ void FileDialogWidget::updateRMS()
 bool FileDialogWidget::updateFiles()
 {
   bool successfulNewSurf = true;
+
+  // we don't need this anymore, since we pushed apply.
+  if (rmsWidget->mesh)
+	  delete rmsWidget->mesh;
+  rmsWidget->mesh = NULL;
+
     
   bool meshNotLoaded = (mesh->mysurf == NULL);
   // as far as I can tell, surf, ds, dstart and dend are 1-based to the user,
@@ -419,11 +435,20 @@ bool FileDialogWidget::updateFiles()
     input->ts_end = dend;
     input->ts_start = dstart;
     input->ts_sample_step = dstep;
+
+    input->preloadedDataArray = dataArray;
+
     map3d_info.scale_frame_set = 0;
     
     Mesh_List currentMeshes;
     currentMeshes.push_back(mesh);
     Mesh_List returnedMeshes = FindAndReadGeom(input,currentMeshes,RELOAD_NONE);
+
+	// at this point, we don't need it anymore, and get rid of the memory as soon as we can
+    delete input->preloadedDataArray;
+    input->preloadedDataArray = NULL;
+    dataArray = NULL;
+
     if (returnedMeshes.size() > 0) {
       if (win >= numGeomWindows()) {
         // new window as well
@@ -496,11 +521,20 @@ bool FileDialogWidget::updateFiles()
     strcpy(mesh->mysurf->llfilename, ll);
     strcpy(mesh->mysurf->lmfilename, lm);
     strcpy(mesh->mysurf->fidfilename, fi);
-    
+
+	mesh->mysurf->preloadedDataArray = dataArray;
+
     mesh->mysurf->geomsurfnum = gs;
     printf("Reloading Geom: Surf %d: Win %d, %s@%d, %s@%d, %d-%d\n",surf, win, geom, gs, data, ds, dstart, dend);
     Mesh_List currentMeshes = mesh->gpriv->findMeshesFromSameInput(mesh);
     Mesh_List returnedMeshes = FindAndReadGeom(mesh->mysurf, currentMeshes, RELOAD_GEOM);
+
+	// at this point, we don't need it anymore, and get rid of the memory as soon as we can
+	delete mesh->mysurf->preloadedDataArray;
+	mesh->mysurf->preloadedDataArray = NULL;
+	dataArray = NULL;
+
+
     if (returnedMeshes.size() > 0) {
       // TODO - change the name of the surface in the save and contour dialogs
 
@@ -625,4 +659,17 @@ FileDialogWidget::FileDialogWidget(QWidget* parent, Mesh_Info* mesh) : QWidget(p
   reload_geom = 0;
   reload_data = 0;
   mesh = 0;
+  dataArray = NULL;
+}
+
+FileDialogWidget::~FileDialogWidget()
+{
+  if (dataArray)
+  {
+    delete dataArray;
+    dataArray = NULL;
+  }
+  if (rmsWidget->mesh)
+	  delete rmsWidget->mesh;
+  rmsWidget->mesh = NULL;
 }

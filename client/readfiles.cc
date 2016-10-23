@@ -446,15 +446,22 @@ Return:	    pointer to updated surf_data array or NULL for error
     return NULL;
   }
   
-  matlabfile mf;
   matlabarray ma;
   string name;
   
-  // open the matlab file and get the root array
-  mf.open(datafilename, "r");
-  ma = mf.getmatlabarray(0);
+  if (sinputlist->preloadedDataArray == NULL)
+  {
+    // open the matlab file and get the root array
+    // DON'T assign back to dataMA here like in other places, we'll be done with it soon
+	matlabfile mf; // let it go out of scope here - it will save the file's baggage so we don't compound here
+	mf.open(datafilename, "r");
+    ma = mf.getmatlabarray(0);
+  }
+  else
+    ma = *(sinputlist->preloadedDataArray);
+
   name = ma.getname();
-  
+
   /*** Set the datapath if we have one for the data files. ***/
   
   if (sinputlist->parent->datapathname) {
@@ -610,8 +617,9 @@ Return:	    pointer to updated surf_data array or NULL for error
   
   /*** Allocate the memeory we need.  ***/
   /*** First, the data storage buffer. ***/
-  databuff = (float *)calloc((size_t) (numfileleads * numfileframes), sizeof(float));
-  
+  //databuff = (float *)calloc((size_t) (numfileleads * numfileframes), sizeof(float));
+  databuff = new float[numfileleads*numfileframes];
+
   if (databuff == NULL) {
     fprintf(stderr, "*** In ReadMatlabDataFile I cannot get enough" " dynamic memory to buffer the data\n");
     return 0;
@@ -889,10 +897,19 @@ Return:	    pointer to updated surf_data array or NULL for error
     Surf_Data* surf = &surfdata[displaysurfnum];
     numsurfnodes = map3d_geom[displaysurfnum].numpts;
     
+    if (numfileleads < numsurfnodes)
+    {
+      fprintf(stderr, "*** MAP3D ERROR: In ReadMatlabDataFile\n"
+        "    For surface #%ld \n"
+        "    Num Leads (%ld) < Geom Points (%ld)\n", surf->surfnum + 1, numfileleads, numsurfnodes);
+
+    }
+
     for (framenum = framestart, modelframenum = 0; framenum <= frameend;
          framenum += framestep, modelframenum++) {
       for (nodenum = 0; nodenum < numsurfnodes; nodenum++) {
-        if (map3d_geom[displaysurfnum].channels[nodenum] > -1) {
+        if (map3d_geom[displaysurfnum].channels[nodenum] > -1 && 
+            map3d_geom[displaysurfnum].channels[nodenum] < numfileleads ) { // don't read higher nodes than your geom
           index = framenum * numfileleads + map3d_geom[displaysurfnum].channels[nodenum];
           if (index > maxindex || index < 0) {
             fprintf(stderr, "*** MAP3D ERROR: In ReadMatlabDataFile\n"

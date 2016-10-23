@@ -1362,104 +1362,102 @@ unsigned GetNumGeoms(char *s)
     return (1);
 }
 
-unsigned GetNumTimeSeries(char *s)
+void GetDataFileInfo(std::string filename, int& numTimeSeries, std::vector<int>& numFramesPerSeries, std::vector<std::string>& timeSeriesLabels, MatlabIO::matlabarray*& outArray)
 {
-  // default - if a file read fails or if we know a file type only has 1
-  long numseries = 1; 
-  if (strcmp(GetExtension(s),".mat") == 0) {
-    try {
-      matlabfile mf(s, "r");
-      matlabarray ma = mf.getmatlabarray(0);
-      if (!ma.isempty() && (ma.isstruct() || ma.iscell()))
-        numseries = ma.getnumelements();
-    } catch (...) {
-      // do nothing - warning will appear when we try to read the data
-    }
-  }
-  return numseries;
-}
+  numTimeSeries = 1;
+  numFramesPerSeries.clear();
+  timeSeriesLabels.clear();
+  outArray = NULL;
 
-// this is to grab the label name of a time series for a 
-// tsdfc or matlab file
-void GetTimeSeriesLabel(char *s, int ds, char* name)
-{
-  // default label - 
-  sprintf(name, "%d", ds+1);
-  if (strcmp(GetExtension(s),".mat") == 0) {
+  if (strcmp(GetExtension(filename.c_str()),".mat") == 0) {
     try {
-      matlabfile mf(s, "r");
-      matlabarray ma = mf.getmatlabarray(0);
-      if (!ma.isempty()) {
-        if (ma.isstruct()) {
-          if (ds < ma.getnumelements() && ma.isfieldCI("label")){
-            strcpy(name, ma.getfieldCI(ds, "label").getstring().c_str());
+      outArray = new matlabarray;
+      matlabfile mf(filename, "r");
+
+      *outArray = mf.getmatlabarray(0);
+      if (!outArray->isempty() && (outArray->isstruct() || outArray->iscell()))
+        numTimeSeries = outArray->getnumelements();
+
+      for (int i = 0; i < numTimeSeries; i++)
+      {
+        // series labels
+        // default label - number to string
+        std::string name = std::to_string(i);
+        if (!outArray->isempty()) {
+          if (outArray->isstruct()) {
+            if (i < outArray->getnumelements() && outArray->isfieldCI("label")) {
+              name = outArray->getfieldCI(i, "label").getstring();
+            }
+          }
+          if (outArray->iscell()) {
+            if (i < outArray->getnumelements() && outArray->getcell(i).isfieldCI("label")) {
+              name = outArray->getcell(i).getfieldCI(0, "label").getstring();
+            }
           }
         }
-        if (ma.iscell()) {
-          if (ds < ma.getnumelements() && ma.getcell(ds).isfieldCI("label")) {
-            strcpy(name, ma.getcell(ds).getfieldCI(0,"label").getstring().c_str());
+
+        timeSeriesLabels.push_back(name);
+
+        // num frames
+        int numframes = 1;
+        matlabarray temp,cell;
+        if (outArray->isstruct()) {
+          if (outArray->isfieldCI("potvals")) temp = outArray->getfieldCI(i, "potvals");
+          if (outArray->isfieldCI("data")) temp = outArray->getfieldCI(i, "data");
+          if (outArray->isfieldCI("field")) temp = outArray->getfieldCI(i, "field");
+          if (outArray->isfieldCI("scalarfield")) temp = outArray->getfieldCI(i, "scalarfield");
+
+          if (!temp.isempty())
+          {
+            numframes = temp.getn();
           }
         }
-      }
-    } catch (...) {
-      // do nothing if matlab file fails, just use the default series label
-      // (a warning will appear when you actually try to read the data
-    }
-  }
-}
-unsigned GetNumFrames(char *s, int ds)
-{
-  long numframes = 1;
-  matlabarray temp;
-  matlabarray cell;
+        else if (outArray->iscell()) {
+          cell = outArray->getcell(i);
+          if (cell.isstruct())
+          {
+            if (cell.isfieldCI("potvals")) temp = cell.getfieldCI(0, "potvals");
+            if (cell.isfieldCI("data")) temp = cell.getfieldCI(0, "data");
+            if (cell.isfieldCI("field")) temp = cell.getfieldCI(0, "field");
+            if (cell.isfieldCI("scalarfield")) temp = cell.getfieldCI(0, "scalarfield");
 
-
-  // if we're not a data file or there is an opening problem...
-  if (strcmp(GetExtension(s),".mat") == 0) {
-    try {
-      matlabfile mf(s, "r");
-      matlabarray ma = mf.getmatlabarray(0);
-      if (ma.isstruct()) {
-        if (ma.isfieldCI("potvals")) temp = ma.getfieldCI(ds,"potvals");
-        if (ma.isfieldCI("data")) temp = ma.getfieldCI(ds,"data");
-        if (ma.isfieldCI("field")) temp = ma.getfieldCI(ds,"field");
-        if (ma.isfieldCI("scalarfield")) temp = ma.getfieldCI(ds,"scalarfield");
-        
-        if (!temp.isempty())
-	  {
-	    numframes = temp.getn();
-	  }
-      }
-      else if (ma.iscell()) {
-        cell = ma.getcell(ds);
-        if (cell.isstruct())
-	  {
-	    if (cell.isfieldCI("potvals")) temp = cell.getfieldCI(0,"potvals");
-	    if (cell.isfieldCI("data")) temp = cell.getfieldCI(0,"data");
-	    if (cell.isfieldCI("field")) temp = cell.getfieldCI(0,"field");
-	    if (cell.isfieldCI("scalarfield")) temp = cell.getfieldCI(0,"scalarfield");
-  	  
-	    if (!temp.isempty())
-	      {
-	        numframes = temp.getn();
-	      }
-	  }
-      }
-      else if (ma.isdense())
-        { 
-	  temp = ma;
-	  numframes = temp.getn();	
+            if (!temp.isempty())
+            {
+              numframes = temp.getn();
+            }
+          }
         }
+        else if (outArray->isdense())
+        {
+          numframes = outArray->getn();
+        }
+
+        numFramesPerSeries.push_back(numframes);
+      }
     } catch (...) {
       // do nothing - warning will appear when we try to read the data
+      delete outArray;
+      outArray = NULL;
+      numFramesPerSeries.clear();
+      timeSeriesLabels.clear();
+      // defaults on failure
+      numFramesPerSeries.push_back(1);
+      timeSeriesLabels.push_back("1");
+
     }
   }
-  else if (strcmp(GetExtension(s),".pot") == 0) {
+
+  else if (strcmp(GetExtension(filename.c_str()),".pot") == 0) {
     // find faster way of doing this?
     // strip off the .pot and the numbers before it, and increment numbers
     // until we find a file that doesn't exist
+
+    numTimeSeries = 1;
+    timeSeriesLabels.push_back("1");
+    int numframes = 1;
+
     char basefilename[256];
-    strcpy(basefilename, s);
+    strcpy(basefilename, filename.c_str());
     StripExtension(basefilename);
     basefilename[strlen(basefilename)-3] = 0;
     int filenum;
@@ -1472,8 +1470,16 @@ unsigned GetNumFrames(char *s, int ds)
     }
     if (filenum > 0)
       numframes = filenum;
+
+    numFramesPerSeries.push_back(numframes);
   }
-  return numframes;
+
+  // sane defaults - old code used to expect numframes 1 and label "1" if they weren't valid
+  if (numFramesPerSeries.size() == 0)
+    numFramesPerSeries.push_back(1);
+  if (timeSeriesLabels.size() == 0)
+    timeSeriesLabels.push_back("1");
+
 }
 
 void ComputeGeomStatistics(Map3d_Geom * m)

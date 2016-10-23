@@ -29,6 +29,8 @@ class LegendWindow;
 class PickWindow;
 class Texture;
 
+namespace MatlabIO { class matlabarray; }
+
 #define LOCK_FULL 2
 #define LOCK_GROUP 1
 #define LOCK_OFF 0
@@ -121,6 +123,7 @@ struct Surf_Input
   long lead_sphere, lead_mark;
   long size_ll; /*** Size of leadlinks ***/
 
+  MatlabIO::matlabarray* preloadedDataArray;
 };
 typedef Surf_Input *Surf_Input_p;
 
