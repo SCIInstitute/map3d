@@ -18,7 +18,7 @@ public:
   static PickWindow* PickWindowCreate(int _width, int _height, int _x, int _y);
 
   void initializeGL();
-  void paintGL();
+  virtual void paintGL();
   void Destroy();
 
   virtual void keyPressEvent ( QKeyEvent * event );

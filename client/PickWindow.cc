@@ -178,7 +178,9 @@ void PickWindow::Destroy()
 
 void PickWindow::paintGL()
 {
-  if (pick == NULL || mesh == NULL)
+	if (mesh == NULL)
+		return;
+  if (!rms && pick == NULL)
     return;
   glViewport(0, 0, width(), height());
   glMatrixMode(GL_PROJECTION);
