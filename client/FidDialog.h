@@ -3,9 +3,37 @@
 
 #include "dialogs.h"
 #include "ui_FidDialog.h"
+#include "ui_FidDialogWidget.h"
 
 class QCheckBox;
 class QRadioButton;
+
+class FidDialogWidget : public QWidget, public Ui::FidDialogWidget
+{
+	Q_OBJECT;
+public:
+	FidDialogWidget(Mesh_Info* mesh, QWidget* parent);
+public slots:
+	void pickColor();
+	void pickSize();
+
+	void applySettings();
+private:
+	Mesh_Info* _currentMesh;
+
+	QList<QLabel*> _fiducialLabels;
+	QList<ColorWidget*> _fiducialColors;
+	QList<SizeWidget*> _fiducialSizes;
+	QList<QRadioButton*> _fiducialMapRadio;
+	QList<QCheckBox*> _fiducialContourCheckBox;
+
+	QList<int> _origContourSpacing;
+	QList<int> _origSelectedMap;
+
+	QList<QList<QColor> > _origContourColors;
+	QList<QList<float> > _origContourSizes;
+	QList<QList<bool> > _origSelectedContours;
+};
 
 class FidDialog : public QDialog, public Ui::FidDialog 
 {
@@ -16,26 +44,9 @@ public:
 public slots:
   void on_applyButton_clicked();
   void on_cancelButton_clicked();
-  void on_surfComboBox_currentIndexChanged(int index);
 
-  void pickColor();
-  void pickSize();
 private:
-  Mesh_Info* _currentMesh;
-
-  QList<QLabel*> _fiducialLabels;
-  QList<ColorWidget*> _fiducialColors;
-  QList<SizeWidget*> _fiducialSizes;
-  QList<QRadioButton*> _fiducialMapRadio;
-  QList<QCheckBox*> _fiducialContourCheckBox;
-
-  QList<int> _origContourSpacing;
-  QList<int> _origSelectedMap;
-
-  QList<QList<QColor> > _origContourColors;
-  QList<QList<float> > _origContourSizes;
-  QList<QList<bool> > _origSelectedContours;
-
+  QList<FidDialogWidget*> _fidWidgets;
 };
 
 #if 0

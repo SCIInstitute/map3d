@@ -1792,7 +1792,7 @@ Input:
         surfdata->ts_end = filenum2;
         surfdata->ts_start = filenum1;
         surfdata->ts_sample_step = filestep;
-        surfdata->ts_available_frames = filenum2;
+        surfdata->ts_available_frames = numframes;
         
       }
       

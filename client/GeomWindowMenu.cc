@@ -1153,6 +1153,7 @@ bool GeomWindow::MenuGlobalOptions(int menu)
       {
         FidDialog dialog;
         dialog.exec();
+		Broadcast(MAP3D_UPDATE, 0);
       }
       break;
 

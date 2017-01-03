@@ -27,118 +27,20 @@ FidDialog::FidDialog(QWidget* parent) : QDialog(parent)
   
   for (MeshIterator mi(0,0); !mi.isDone(); ++mi)
   {
-    surfComboBox->addItem(QString::number(mi.getMesh()->geom->surfnum));
-  }
-
-  on_surfComboBox_currentIndexChanged(0);
-}
-
-void FidDialog::on_surfComboBox_currentIndexChanged(int index)
-{
-  // clear
-  dataLabel->setText("No Data");
-  spacingSpinBox->setValue(1);
-
-  foreach (QLabel* widget, _fiducialLabels)
-    widget->deleteLater();
-  foreach (ColorWidget* widget, _fiducialColors)
-    widget->deleteLater();
-  foreach (SizeWidget* widget, _fiducialSizes)
-    widget->deleteLater();
-  foreach (QCheckBox* widget, _fiducialContourCheckBox)
-    widget->deleteLater();
-  foreach (QRadioButton* widget, _fiducialMapRadio)
-    widget->deleteLater();
-  
-  _fiducialLabels.clear();
-  _fiducialColors.clear();
-  _fiducialSizes.clear();
-  _fiducialContourCheckBox.clear();
-  _fiducialMapRadio.clear();
-
-  // reset
-  int i = 0;
-  MeshIterator mi(0,0); 
-  for (; !mi.isDone() && i < index; ++mi, i++)
-  {
-    // just iterate until we get to index
-  }
-
-  if (!mi.isDone())
-  {
-    _currentMesh = mi.getMesh();
-    if (_currentMesh->data)
-    {
-      Surf_Data* data = _currentMesh->data;
-      dataLabel->setText(_currentMesh->mysurf->potfilename);
-
-      if (data->fids.leadfids == 0)
-      {
-        QLabel* label = new QLabel("No fiducials", fidFrame);
-        _fiducialLabels.append(label);
-        gridLayout->addWidget(label, 1, Fiducial, 1, 1);
-      }
-      else
-      {
-        int selectedMap = 0;
-        if (_currentMesh->drawfidmap > 0)
-          selectedMap = _currentMesh->drawfidmap;
-
-        int row = 1;
-        for(int j = 0; j < data->fids.numfidtypes; j++)
-        {
-          QLabel* label = new QLabel(QString(data->fids.fidnames[j]) + " " + data->fids.fidlabel, fidFrame);
-          _fiducialLabels.append(label);
-          gridLayout->addWidget(label, row, Fiducial, 1, 1);
-
-          ColorWidget* cw = new ColorWidget(this, QColor(_currentMesh->fidConts[row-1]->fidcolor));
-          _fiducialColors.append(cw);
-          gridLayout->addWidget(cw, row, ContColor, 1, 1);
-		connect(cw, SIGNAL(doubleClicked()), this, SLOT(pickColor()));
-
-          SizeWidget* sw = new SizeWidget(this, _currentMesh->fidConts[row-1]->fidContSize);
-          _fiducialSizes.append(sw);
-          gridLayout->addWidget(sw, row, ContSize, 1, 1);
-		connect(sw, SIGNAL(doubleClicked()), this, SLOT(pickSize()));
-
-          QRadioButton* rb = new QRadioButton(this);
-          _fiducialMapRadio.append(rb);
-          gridLayout->addWidget(rb, row, DrawMap, 1, 1);
-
-          if (row-1 == selectedMap)
-            rb->setChecked(true);
-
-          QCheckBox* cb = new QCheckBox(this);
-          _fiducialContourCheckBox.append(cb);
-          cb->setChecked(_currentMesh->drawFidConts[row-1]);
-          gridLayout->addWidget(cb, row, DrawContour, 1, 1);
-
-          // TODO - size widget
-          row++;
-        }
-      }
-    }
+	  FidDialogWidget* fdw = new FidDialogWidget(mi.getMesh(), fidWidgetFrame);
+	  fidFrameLayout->addWidget(fdw);
+	  _fidWidgets.append(fdw);
   }
 }
-
 
 void FidDialog::on_applyButton_clicked()
 {
-  for (int i = 0; i < _fiducialLabels.size(); i++)
-  {
-    _currentMesh->fidConts[i]->fidcolor = _fiducialColors[i]->colorAsQColor();
-    _currentMesh->fidConts[i]->fidContSize = (float) _fiducialSizes[i]->_size;
-    _currentMesh->drawFidConts[i] = _fiducialContourCheckBox[i]->isChecked();
-    
-    if (_fiducialMapRadio[i]->isChecked())
-    {
-      _currentMesh->drawfidmap = i;
-      _currentMesh->fidMaps[i]->fidcontourspacing = (float) spacingSpinBox->value();
-    }
-  }
+	foreach(FidDialogWidget* fdw, _fidWidgets)
+	{
+		fdw->applySettings();
+	}
 
-  
-  close();
+	close();
 }
 
 void FidDialog::on_cancelButton_clicked()
@@ -146,7 +48,87 @@ void FidDialog::on_cancelButton_clicked()
   close();
 }
 
-void FidDialog::pickColor()
+FidDialogWidget::FidDialogWidget(Mesh_Info* mesh, QWidget* parent) : QWidget(parent), _currentMesh(mesh)
+{
+	setupUi(this);
+
+	surfHeaderLabel->setText(QString("Surface #%1").arg(mesh->geom->surfnum));
+	// clear
+	spacingSpinBox->setValue(1);
+
+	if (mesh->data)
+	{
+		Surf_Data* data = mesh->data;
+		dataLabel->setText(mesh->mysurf->potfilename);
+
+		if (data->fids.leadfids == 0)
+		{
+			noFidLabel->show();
+			spacingHeaderLabel->hide();
+			spacingSpinBox->hide();
+			fidFrame->hide();
+		}
+		else
+		{
+			noFidLabel->hide();
+			int selectedMap = 0;
+			if (mesh->drawfidmap > 0)
+				selectedMap = mesh->drawfidmap;
+
+			int row = 1;
+			for (int j = 0; j < data->fids.numfidtypes; j++)
+			{
+				QLabel* label = new QLabel(QString(data->fids.fidnames[j]) + " " + data->fids.fidlabel, fidFrame);
+				_fiducialLabels.append(label);
+				gridLayout->addWidget(label, row, Fiducial, 1, 1);
+
+				ColorWidget* cw = new ColorWidget(this, QColor(mesh->fidConts[row - 1]->fidcolor));
+				_fiducialColors.append(cw);
+				gridLayout->addWidget(cw, row, ContColor, 1, 1);
+				connect(cw, SIGNAL(doubleClicked()), this, SLOT(pickColor()));
+
+				SizeWidget* sw = new SizeWidget(this, mesh->fidConts[row - 1]->fidContSize);
+				_fiducialSizes.append(sw);
+				gridLayout->addWidget(sw, row, ContSize, 1, 1);
+				connect(sw, SIGNAL(doubleClicked()), this, SLOT(pickSize()));
+
+				QRadioButton* rb = new QRadioButton(this);
+				_fiducialMapRadio.append(rb);
+				gridLayout->addWidget(rb, row, DrawMap, 1, 1);
+
+				if (row - 1 == selectedMap)
+					rb->setChecked(true);
+
+				QCheckBox* cb = new QCheckBox(this);
+				_fiducialContourCheckBox.append(cb);
+				cb->setChecked(mesh->drawFidConts[row - 1]);
+				gridLayout->addWidget(cb, row, DrawContour, 1, 1);
+
+				// TODO - size widget
+				row++;
+			}
+		}
+	}
+}
+
+
+void FidDialogWidget::applySettings()
+{
+	for (int i = 0; i < _fiducialLabels.size(); i++)
+	{
+		_currentMesh->fidConts[i]->fidcolor = _fiducialColors[i]->colorAsQColor();
+		_currentMesh->fidConts[i]->fidContSize = (float)_fiducialSizes[i]->_size;
+		_currentMesh->drawFidConts[i] = _fiducialContourCheckBox[i]->isChecked();
+
+		if (_fiducialMapRadio[i]->isChecked())
+		{
+			_currentMesh->drawfidmap = i;
+			_currentMesh->fidMaps[i]->fidcontourspacing = (float)spacingSpinBox->value();
+		}
+	}
+}
+
+void FidDialogWidget::pickColor()
 {
 	ColorWidget* cw = dynamic_cast<ColorWidget*>(sender());
 	Q_ASSERT(cw);
@@ -154,7 +136,7 @@ void FidDialog::pickColor()
 	PickColor(cw->_color, true);
 }
 
-void FidDialog::pickSize()
+void FidDialogWidget::pickSize()
 {
 	SizeWidget* sw = dynamic_cast<SizeWidget*>(sender());
 	Q_ASSERT(sw);

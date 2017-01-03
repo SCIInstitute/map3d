@@ -57,10 +57,10 @@ include (../options.pri)
 FORMS += forms/FileDialog.ui \
          forms/FileDialogWidget.ui \
          forms/FidDialog.ui \
+         forms/FidDialogWidget.ui \
          forms/ContourDialog.ui \
          forms/ImageControlDialog.ui \
          forms/ScaleDialog.ui \
-
 
 macx {
   ICON = map3d-icon.icns
