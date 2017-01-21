@@ -15,6 +15,6 @@ bool ReadMap3drc(int& argc, char**& argv);
 // saving a script and saving state is that a script contains 
 // information for each surface, and is a complete map3d command line,
 // and state is only a set of options.
-void SaveSettings(char* filename, bool map3drc, bool windows);
+void SaveSettings(const char* filename, bool map3drc, bool windows);
 
 #endif

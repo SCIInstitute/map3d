@@ -538,7 +538,7 @@ void SizePicker::sizeSelected()
   update();
 }
 
-void PickSize(float *storage, float factor, char* str, bool modal)
+void PickSize(float *storage, float factor, const char* str, bool modal)
 {
   float *orig = new float;
   *orig = *storage;

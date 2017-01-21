@@ -125,8 +125,8 @@ char   *ReadLine(char *instring, FILE *luin_p );
 char   *ReadNextLine( FILE *luin );
 long   ReadLong( const long defaultval );
 char  *ReadString( const char *defaultval );
-void   ReportError(char *function, char *message, long returnvalue,
-            char *optionalstring);
+void   ReportError(const char *function, const char *message, long returnvalue,
+            const char *optionalstring);
 void   StripExtension (char *filename );
 int    Trulen (const char *string);
 char   *Uppercase( char *string );

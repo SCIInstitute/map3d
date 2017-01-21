@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "usage.h"
 
-char *usage =
+const char *usage =
   "map3d [FILENAME]\n"
   "map3d [OPTIONS]\n\n"
   "FILENAME:\n"

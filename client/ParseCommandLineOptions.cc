@@ -310,7 +310,7 @@ void option_copy(char *a, double &d)
   d = atof(a);
 }
 
-void option_error(char *s, int i)
+void option_error(const char *s, int i)
 {
   printf("MAP3D ERROR: %s needs %d argument(s)", s, i);
   exit(-1);

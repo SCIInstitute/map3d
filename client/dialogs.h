@@ -50,7 +50,7 @@ QString PickFile(QWidget* parent, bool save);
 void QStringToCharPtr(QString in, char* out, int size);
 
 void PickColor(float *, bool modal = false);
-void PickSize(float *storage, float factor, char* str, bool modal = false);
+void PickSize(float *storage, float factor, const char* str, bool modal = false);
 void incrSize(float *storage, float maxChange, float midpoint, float inc);
 
 // --------------------------- //

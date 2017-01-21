@@ -7,7 +7,7 @@
 ScaleDialog *scaledialog = NULL;
 extern Map3d_Info map3d_info;
 
-char* valueProperty = "Value";
+const char* valueProperty = "Value";
 
 // ------------------- //
 // scale picker dialog callbacks, create, and accessor functions

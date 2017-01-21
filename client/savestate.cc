@@ -189,7 +189,7 @@ void outputMeshInfo(FILE* f, char* cont, Mesh_Info* mesh)
 
 }
 
-void SaveSettings(char* filename, bool map3drc, bool windows)
+void SaveSettings(const char* filename, bool map3drc, bool windows)
 {
   // loop through meshes
 

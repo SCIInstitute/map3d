@@ -231,7 +231,7 @@ public:
 
   // for time display in the time series window
   int frames_per_time_unit; // num of (s, ms, us, ns) per frame
-  char* time_unit;  // s, ms, us, ns
+  const char* time_unit;  // s, ms, us, ns
 
 
   bool same_scale;

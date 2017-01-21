@@ -3,8 +3,8 @@
 #include "cutil.h"
 #include <string.h>
 
-void ReportError(char *function, char *message, long returnvalue,
-            char *optionalstring)
+void ReportError(const char *function, const char *message, long returnvalue,
+            const char *optionalstring)
 {
  /*** Error reporting mechanism for any errors in the program code. ***/
     char output[256];

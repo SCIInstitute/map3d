@@ -53,7 +53,7 @@ void SaveScreen()
 
   // make the serialized filename
   int suffix = map3d_info.imagesuffix;
-  char* fill = "";
+  const char* fill = "";
   for (; suffix <= INT_MAX; suffix++) {
     strcpy(filename, map3d_info.imagefile);
     StripExtension(filename);

@@ -125,7 +125,7 @@ void option_copy(char *, bool &);
 void option_copy(char *, long &);
 void option_copy(char *, float &);
 void option_copy(char *, double &);
-void option_error(char *, int);
+void option_error(const char *, int);
 
 /*************************************
 *

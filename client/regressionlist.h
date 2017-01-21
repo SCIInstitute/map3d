@@ -4,7 +4,7 @@
 #define _REGRESSIONLIST_H
 
 //#ifdef REGRESSION_TEST
-char *menulist[] = { "",
+const char *menulist[] = { "",
 		     "surface_color_rainbow", "surface_color_red2green", "surface_color_grayscale", "surface_color_jet",
 		     "surface_color_invert", "surface_render_none", "surface_render_flat",
 		     "surface_render_gouraud", "surface_render_banded",

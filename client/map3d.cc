@@ -18,7 +18,7 @@
 Map3d_Info map3d_info;
 
 
-char *units_strings[5] = { "mV", "uV", "ms", "V", "mVms" };
+const char *units_strings[5] = { "mV", "uV", "ms", "V", "mVms" };
 
 void dump()
 {
