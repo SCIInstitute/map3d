@@ -81,7 +81,7 @@ public:
   int drawmesh;                 /* indicates how to render the geometry (mesh) */
   bool qshowpnts;               /* Draw node marks */
   long shadingmodel;            /* GOURAUD, FLAT, or SHADE_BANDED, or SHADE_NONE */
-  long fidshadingmodel;            /* GOURAUD, FLAT, or SHADE_BANDED, or SHADE_NONE */
+  bool shadefids;               /* if true, shade fids instead of pots */
   long gouraudstyle;            /* Use real_gouraud or textures ***/
   Landmark_Draw landmarkdraw;   /* Info for drawing landmarks (colors, toggling, etc.)*/
 

@@ -111,7 +111,7 @@ void GeomWindow::paintGL()
     Transform(curmesh, 0);
     
     /* draw the color mapped surface */
-    if (curmesh->shadingmodel != SHADE_NONE && curmesh->geom->points[curmesh->geom->geom_index] && 
+    if (curmesh->shadingmodel != SHADE_NONE && curmesh->geom->points[curmesh->geom->geom_index] && !curmesh->shadefids && 
         curmesh->data && curmesh->drawmesh != RENDER_MESH_ELTS && curmesh->drawmesh != RENDER_MESH_ELTS_CONN) {
       glEnable(GL_POLYGON_OFFSET_FILL);
       DrawSurf(curmesh);
@@ -121,7 +121,7 @@ void GeomWindow::paintGL()
     /* draw fiducial map surface*/
     if (curmesh->data && curmesh->drawfids){
       if(curmesh->drawfidmap < curmesh->fidMaps.size()){
-        if (curmesh->fidshadingmodel != SHADE_NONE ){
+        if (curmesh->shadefids && curmesh->shadingmodel != SHADE_NONE){
           glEnable(GL_POLYGON_OFFSET_FILL);
           DrawFidMapSurf(curmesh,curmesh->fidMaps[curmesh->drawfidmap]);
           glDisable(GL_POLYGON_OFFSET_FILL);
@@ -164,10 +164,8 @@ void GeomWindow::paintGL()
         if (curmesh->drawFidConts[i])
           DrawFidCont(curmesh,curmesh->fidConts[i]);
       }
-      if(curmesh->drawfidmap < curmesh->fidMaps.size() && !curmesh->drawcont){
-        if (curmesh->fidshadingmodel == SHADE_NONE ){
-          DrawFidMapCont(curmesh,curmesh->fidMaps[curmesh->drawfidmap]);
-        }
+      if(curmesh->drawfids && curmesh->drawfidmap < curmesh->fidMaps.size() && !curmesh->drawcont){
+        DrawFidMapCont(curmesh,curmesh->fidMaps[curmesh->drawfidmap]);
       }
     }
     
@@ -879,7 +877,7 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
   
   bool use_textures = false;
   // gouraud shading
-  if (curmesh->fidshadingmodel == SHADE_GOURAUD) {
+  if (curmesh->shadingmodel == SHADE_GOURAUD) {
     use_textures = curmesh->gouraudstyle == SHADE_TEXTURED && 
     (curmesh->cmap->type == RAINBOW_CMAP || curmesh->cmap->type == JET_CMAP);
     
@@ -893,16 +891,16 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
     else
       glShadeModel(GL_SMOOTH);
   }
-  else if (curmesh->fidshadingmodel == SHADE_FLAT)
+  else if (curmesh->shadingmodel == SHADE_FLAT)
     glShadeModel(GL_FLAT);
   
-  if (curgeom->elementsize == 3 && curmesh->fidshadingmodel != SHADE_BANDED) {
+  if (curgeom->elementsize == 3 && curmesh->shadingmodel != SHADE_BANDED) {
     length = curgeom->numelements;
     glBegin(GL_TRIANGLES);
     
     float fidval;
     for (loop2 = 0; loop2 < length; loop2++) {
-      if (curmesh->fidshadingmodel == SHADE_GOURAUD) {
+      if (curmesh->shadingmodel == SHADE_GOURAUD) {
         // avoid repeating code 3 times
         for (loop3 = 0; loop3 < 3; loop3++) {
           index = curgeom->elements[loop2][loop3];
@@ -954,7 +952,7 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
     }
     glEnd();
   }
-  else if (curgeom->elementsize == 4 && curmesh->fidshadingmodel != SHADE_BANDED) {
+  else if (curgeom->elementsize == 4 && curmesh->shadingmodel != SHADE_BANDED) {
     length = curgeom->numelements;
     glBegin(GL_TRIANGLES);
     for (loop2 = 0; loop2 < length; loop2++) {
@@ -977,7 +975,7 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
           idx2 = loop3;
           idx3 = loop2 + 1;
         }
-        if (curmesh->fidshadingmodel == SHADE_GOURAUD) {
+        if (curmesh->shadingmodel == SHADE_GOURAUD) {
           index = curgeom->elements[loop2][idx1];
           glNormal3fv(ptnormals[index]);
           glVertex3fv(modelpts[index]);
@@ -1001,7 +999,7 @@ void DrawFidMapSurf(Mesh_Info * curmesh,Contour_Info *cont)
   }
   
   //band shading
-  if (curmesh->fidshadingmodel == SHADE_BANDED) {
+  if (curmesh->shadingmodel == SHADE_BANDED) {
     //if (curmesh->lighting)
     //glShadeModel(GL_SMOOTH);
     

@@ -95,7 +95,7 @@ Mesh_Info::Mesh_Info()
   curpicknode = 0;
   this->qshowpnts = 1;
   shadingmodel = SHADE_NONE;
-  fidshadingmodel = SHADE_NONE;
+  shadefids = false;
   gouraudstyle = SHADE_TEXTURED;
 }
 

@@ -650,7 +650,7 @@ void GeomWindow::HandleKeyPress(QKeyEvent* event)
     break;
 
   case 'P':
-    menu_data = fid_map_toggle;//pick_info_display;
+    menu_data = fid_map_shade_toggle;//pick_info_display;
     HandleMenu(menu_data);
 	loop = length; // this is so that the change happens n*n times (when 
 	// the general lock is on) - n times in this loop and n times

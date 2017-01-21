@@ -149,28 +149,15 @@ void GeomWindow::HandleMenu(int menu_data)
         if (mesh->legendwin != 0)
           lpriv->update();
         break;
-      case fid_map_toggle:
-        switch (mesh->fidshadingmodel) {
-          case SHADE_NONE:
-            mesh->fidshadingmodel = SHADE_GOURAUD;
-            mesh->drawcont = true;
-            break;
-          case SHADE_FLAT:
-            mesh->fidshadingmodel = SHADE_GOURAUD;
-            mesh->drawcont = true;
-            break;
-          case SHADE_GOURAUD:
-            mesh->fidshadingmodel = SHADE_BANDED;
-            mesh->drawcont = true;
-            break;
-          case SHADE_BANDED:
-            mesh->fidshadingmodel = SHADE_NONE;
-            mesh->drawcont = false;
-            break;
-        }
+      case fid_map_shade_toggle:
+        if (mesh->fidMaps.size() == 0)
+          break;
+        mesh->shadefids = !mesh->shadefids;
         break;
       case fid_draw_fid:
         mesh->drawfids = !mesh->drawfids;
+        if (!mesh->drawfids)
+          mesh->shadefids = false;
         break;
       case scaling_group_one:
         updateGroup(mesh, 0);
@@ -1270,7 +1257,7 @@ int GeomWindow::OpenMenu(QPoint point)
   bool all_node_sphere = false, ext_node_sphere = false, pick_node_sphere = false, lead_node_sphere = false;
   bool all_value = false;
   int all_node_num = 0, ext_node_num = 0, pick_node_num = 0, lead_node_num = 0;
-  bool draw_fids = false;
+  bool draw_fids = false, shade_fids = false;
   bool lighting = false; 
   for (unsigned i = 0; i < meshes.size(); i++) {
     Mesh_Info* mesh = meshes[i];
@@ -1289,6 +1276,7 @@ int GeomWindow::OpenMenu(QPoint point)
     if (mesh->mark_ts_sphere) pick_node_sphere = true;
     if (mesh->mark_lead_sphere) lead_node_sphere = true;
     if (mesh->drawfids) draw_fids = true;
+    if (mesh->shadefids) shade_fids = true;
     if (mesh->lighting) lighting = mesh->lighting;
     all_node_num = mesh->mark_all_number;
     ext_node_num = mesh->mark_extrema_number;
@@ -1335,6 +1323,9 @@ int GeomWindow::OpenMenu(QPoint point)
 
   action = submenu->addAction("Draw Fiducials");
   action->setData(fid_draw_fid); action->setCheckable(true); action->setChecked(draw_fids);
+
+  action = submenu->addAction("Shade Fiducial Map");
+  action->setData(fid_map_shade_toggle); action->setCheckable(true); action->setChecked(shade_fids);
 
 
   //
