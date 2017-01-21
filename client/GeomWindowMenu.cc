@@ -1324,7 +1324,7 @@ int GeomWindow::OpenMenu(QPoint point)
   action = submenu->addAction("Draw Fiducials");
   action->setData(fid_draw_fid); action->setCheckable(true); action->setChecked(draw_fids);
 
-  action = submenu->addAction("Shade Fiducial Map");
+  action = submenu->addAction("Shade Fiducial Map (p)");
   action->setData(fid_map_shade_toggle); action->setCheckable(true); action->setChecked(shade_fids);
 
 

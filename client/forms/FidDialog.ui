@@ -58,7 +58,7 @@ border-left-width: 1px;
         <x>0</x>
         <y>0</y>
         <width>722</width>
-        <height>329</height>
+        <height>310</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -189,6 +189,16 @@ border-left-width: 1px;
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="hintLabel">
+     <property name="styleSheet">
+      <string notr="true">#hintLabel { color: #666; }</string>
+     </property>
+     <property name="text">
+      <string>Hint: to draw the Fiducial Map contours, toggle contours. To draw shaded Fiducial Map surface, toggle &quot;Shaded Fidicual Map&quot;</string>
+     </property>
     </widget>
    </item>
    <item>
