@@ -15,7 +15,7 @@ void *calloc(size_t, size_t);
 
 extern vector<Surface_Group> surf_group;
 extern Map3d_Info map3d_info;
-extern char *units_strings[5];
+extern const char *units_strings[5];
 
 Surf_Data::Surf_Data()
 {

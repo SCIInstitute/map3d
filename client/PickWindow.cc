@@ -41,7 +41,7 @@
 #define PICK_RIGHT   3
 
 extern Map3d_Info map3d_info;
-extern char *units_strings[5];
+extern const char *units_strings[5];
 extern int fstep, cur, fstart, fend;
 extern int key_pressed;
 extern int pick;
