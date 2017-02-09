@@ -9,7 +9,6 @@ INCLUDEPATH += ../thirdparty/fi
 INCLUDEPATH += ../thirdparty/fids
 INCLUDEPATH += ../thirdparty/gfilelib
 INCLUDEPATH += ../thirdparty/MatlabIO
-INCLUDEPATH += ../thirdparty/zlib
 INCLUDEPATH += $$QMAKE_INCDIR_QT/../src/3rdparty/zlib
 
 CONFIG += console link_prl
@@ -19,6 +18,8 @@ include (../options.pri)
 LIBS += -lMatlabIO
 LIBS += -lfids -lfi -lgfilelib -lcutil
 win32 {
+    # make sure we don't accidentally use the wrong one for non-windows
+    INCLUDEPATH += ../thirdparty/zlib
     LIB_DIR=/release
     debug {
         LIB_DIR=/debug

@@ -8,7 +8,7 @@ extern "C"
 {
 #endif
 
-#define VERSION "7.2.3"
+#define VERSION "7.2.3a"
 
   void PrintUsageStatement(bool versiononly);
 
