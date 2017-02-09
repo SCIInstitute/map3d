@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-CONFIG += ordered
+CONFIG += ordered c++11
 
 SUBDIRS = thirdparty \
           client     
