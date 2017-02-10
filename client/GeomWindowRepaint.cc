@@ -1429,7 +1429,7 @@ void GeomWindow::DrawInfo()
 {
   int nummesh = meshes.size();
   int surfnum = 0;
-  float position[3] = { -1.f, (height() - 15.0), 0.f };
+  float position[3] = { -1.f, static_cast<float>(height() - 15.0), 0.f };
   Mesh_Info *dommesh = 0;
   
   glMatrixMode(GL_MODELVIEW);
