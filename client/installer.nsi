@@ -1,7 +1,7 @@
   !include "MUI.nsh"
 
   Name "map3d"
-  OutFile "map3d-win32-7.2.3c.exe"
+  OutFile "map3d-win32-7.2.3d.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\map3d"
@@ -55,6 +55,7 @@ Section "Install"
 
   ; Qt interface to opengl functions
   File winfix\libEGL.dll
+  File winfix\libGLESv2.dll
   File winfix\opengl32sw.dll
 
   ; Qt Dependencies for platforms
