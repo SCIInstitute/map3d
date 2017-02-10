@@ -1,7 +1,7 @@
   !include "MUI.nsh"
 
   Name "map3d"
-  OutFile "map3d-win32-7.2.3a.exe"
+  OutFile "map3d-win32-7.2.3b.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\map3d"
@@ -52,6 +52,7 @@ Section "Install"
   ; Install Microsoft Runtime libraries
   File winfix\vcruntime140.DLL
   File winfix\msvcp140.DLL
+  File winfix\opengl32sw.dll
 
   ; Qt Dependencies for platforms
   CreateDirectory $INSTDIR\platforms
