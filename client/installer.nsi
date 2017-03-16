@@ -45,18 +45,21 @@ Section "Install"
   File $%QTDIR%\bin\Qt5Gui.dll
   File $%QTDIR%\bin\Qt5OpenGL.dll
   File $%QTDIR%\bin\Qt5Widgets.dll
-  ; File $%QTDIR%\bin\icuin53.dll
-  ; File $%QTDIR%\bin\icuuc53.dll
-  ; File $%QTDIR%\bin\icudt53.dll
+  ;File $%QTDIR%\bin\icuin53.dll
+  ;File $%QTDIR%\bin\icuuc53.dll
+  ;File $%QTDIR%\bin\icudt53.dll
 
   ; Install Microsoft Runtime libraries
-  File winfix\vcruntime140.DLL
-  File winfix\msvcp140.DLL
+  ; File winfix\vcruntime140.DLL - VS 2015
+  ; File winfix\msvcp140.DLL - VS 2015
+  File winfix\MSVCR120.DLL
+  File winfix\MSVCP120.DLL
 
-  ; Qt interface to opengl functions
-  File winfix\libEGL.dll
-  File winfix\libGLESv2.dll
-  File winfix\opengl32sw.dll
+
+  ; Qt interface to opengl functions, in Qt 5.7 or greater, ignore for now
+  ; File winfix\libEGL.dll
+  ; File winfix\libGLESv2.dll
+  ; File winfix\opengl32sw.dll
 
   ; Qt Dependencies for platforms
   CreateDirectory $INSTDIR\platforms
