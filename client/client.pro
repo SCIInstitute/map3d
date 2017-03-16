@@ -40,7 +40,7 @@ win32 {
 }
 
 win32 {
-    LIBS += -lzlib -lopengl32 -lglu32
+    LIBS += -lzlib
 	QMAKE_LFLAGS += /LARGEADDRESSAWARE
 } else {
     LIBS += -lz
