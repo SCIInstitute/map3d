@@ -608,7 +608,7 @@ void DelNode(Mesh_Info * curmesh, int nodenum)
     FrameMinMax();
 
     // redraw legend window as well
-    curmesh->legendwin->updateGL();
+    curmesh->legendwin->update();
   }
   geom->modified = true;
 }
@@ -684,7 +684,7 @@ void GeneratePick(PickInfo * pick)
   mesh->pickstack[mesh->pickstacktop] = pick;
 
   ppriv->show();
-  ppriv->updateGL();
+  ppriv->update();
 
 }
 

@@ -11,13 +11,14 @@
 #define HORIZ (map3d_info.borderWidth + map3d_info.borderWidth)
 #define VERTICAL (map3d_info.borderWidth + map3d_info.borderWidth + map3d_info.titleHeight)
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
+//#include <QOpenGLFunctions>
 
 #include <QMap>
 #include <QPair>
 #include <QFont>
 
-class Map3dGLWidget : public QGLWidget {
+class Map3dGLWidget : public QOpenGLWidget /*, public QOpenGLFunctions*/ {
 public:
   Map3dGLWidget(QWidget* parent);  // this one should ONLY be called from the RMS Pick window in the File Dialog
   Map3dGLWidget(QWidget* parent, int type, const char* title, int min_width, int min_height);

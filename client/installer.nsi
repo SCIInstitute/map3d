@@ -1,7 +1,7 @@
   !include "MUI.nsh"
 
   Name "map3d"
-  OutFile "map3d-win32-7.2.3g.exe"
+  OutFile "map3d-win32-7.2.3h.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\map3d"

@@ -5,14 +5,8 @@
 #  pragma warning(disable:4505)
 #  undef TRACE
 #endif
-#ifdef OSX
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
 
 #include <gtk/gtk.h>
-#include <GL/gl.h>
 #include "ColorPicker.h"
 #include "WindowManager.h"
 #include "eventdata.h"
