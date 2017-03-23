@@ -56,10 +56,10 @@ Section "Install"
   File winfix\MSVCP120.DLL
 
 
-  ; Qt interface to opengl functions, in Qt 5.7 or greater, ignore for now
-  ; File winfix\libEGL.dll
-  ; File winfix\libGLESv2.dll
-  ; File winfix\opengl32sw.dll
+  ; Qt interface to opengl functions, when using Qt OpenGL Dynamic
+  File $%QTDIR%\bin\libEGL.dll
+  File $%QTDIR%\bin\libGLESv2.dll
+  File $%QTDIR%\bin\opengl32sw.dll
 
   ; Qt Dependencies for platforms
   CreateDirectory $INSTDIR\platforms
