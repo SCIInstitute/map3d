@@ -2,12 +2,13 @@ Current edition of User's Manual:
 https://github.com/SCIInstitute/map3d/releases/download/v7.2.2/map3d-user-manual.pdf
 
 Building on windows
-Prereq: Install MS Visual C++ Express 2012
-Prereq: Install Qt 5.4 (that was built with C++ 2012)
+Prereq: Install MS Visual C++ Express 2013
+Prereq: Install Qt 5.4 (that was built with C++ 2013, OpenGL, 64bit)
 Prereq: Install NSIS
 * Open a MS Visual Studio command prompt
 * set QTDIR=C:\Qt\<version>
 * set PATH=%QTDIR%\path;C:\Program Files (x86)\NSIS;%PATH%;
+* ( example in win64-start-map3d-build-env.bat )
 * Run buildWin32Installer.bat
 * executable is in client/release/map3d.exe and creates map3d installer in working directory
 

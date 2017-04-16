@@ -1,7 +1,7 @@
   !include "MUI.nsh"
 
   Name "map3d"
-  OutFile "map3d-win32-7.2.3h.exe"
+  OutFile "map3d-win32-7.2.3i.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\map3d"
@@ -45,21 +45,28 @@ Section "Install"
   File $%QTDIR%\bin\Qt5Gui.dll
   File $%QTDIR%\bin\Qt5OpenGL.dll
   File $%QTDIR%\bin\Qt5Widgets.dll
-  ;File $%QTDIR%\bin\icuin53.dll
-  ;File $%QTDIR%\bin\icuuc53.dll
-  ;File $%QTDIR%\bin\icudt53.dll
+
+  ; 5.4 needs these; 5.7 does not
+  File $%QTDIR%\bin\icuin53.dll
+  File $%QTDIR%\bin\icuuc53.dll
+  File $%QTDIR%\bin\icudt53.dll
 
   ; Install Microsoft Runtime libraries
-  ; File winfix\vcruntime140.DLL - VS 2015
-  ; File winfix\msvcp140.DLL - VS 2015
+  ;File winfix\vcruntime140.DLL
+  ;File winfix\msvcp140.DLL
+
   File winfix\MSVCR120.DLL
   File winfix\MSVCP120.DLL
+  ;File winfix\32bit\MSVCR120.DLL
+  ;File winfix\32bit\MSVCP120.DLL
+  ;File winfix\32bit\MSVCR110.DLL
+  ;File winfix\32bit\MSVCP110.DLL
 
 
-  ; Qt interface to opengl functions, when using Qt OpenGL Dynamic
-  File $%QTDIR%\bin\libEGL.dll
-  File $%QTDIR%\bin\libGLESv2.dll
-  File $%QTDIR%\bin\opengl32sw.dll
+  ; Qt interface to opengl functions, when using Qt OpenGL Dynamic - 5.7 junk
+  ; File $%QTDIR%\bin\libEGL.dll
+  ; File $%QTDIR%\bin\libGLESv2.dll
+  ; File $%QTDIR%\bin\opengl32sw.dll
 
   ; Qt Dependencies for platforms
   CreateDirectory $INSTDIR\platforms

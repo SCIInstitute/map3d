@@ -44,8 +44,6 @@ int main(int argc, char **argv)
   if (!ParseCommandLineOptions(argc, argv, globalInput))
     exit(1);
 
-  // make it so Qt automatically shares the contexts among opengl windows
-  QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
   QApplication app(argc, argv);
 

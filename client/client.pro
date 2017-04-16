@@ -19,7 +19,7 @@ LIBS += -lMatlabIO
 LIBS += -lfids -lfi -lgfilelib -lcutil
 win32 {
     # make sure we don't accidentally use the wrong one for non-windows
-    INCLUDEPATH += ../thirdparty/zlib
+    INCLUDEPATH += ../thirdparty/zlib/64bit/vc12
     LIB_DIR=/release
     debug {
         LIB_DIR=/debug
@@ -30,7 +30,7 @@ win32 {
     PRE_TARGETDEPS *= ../thirdparty/cutil$$LIB_DIR/cutil.lib
     PRE_TARGETDEPS *= ../thirdparty/MatlabIO$$LIB_DIR/MatlabIO.lib
     DEFINES += NOMINMAX
-    QMAKE_LIBDIR += ../thirdparty/zlib
+    QMAKE_LIBDIR += ../thirdparty/zlib/64bit/vc12
 } else {
     PRE_TARGETDEPS *= ../thirdparty/fids/libfids.a
     PRE_TARGETDEPS *= ../thirdparty/fi/libfi.a

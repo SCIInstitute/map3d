@@ -16,7 +16,6 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QList>
-#include <QPainter>
 
 #include <stdio.h>
 
@@ -25,6 +24,7 @@ extern Map3d_Info map3d_info;
 
 static int font_size[] = {4, 6, 8, 10, 12, 14, 18, 24, 36, 48 };
 
+Map3dGLWidget* Map3dGLWidget::sharedWidget = NULL;
 QMap<QPair<int, char>, int> Map3dGLWidget::fontTextures;
 
 // in Qt, the x,y coords of a toplevel widget are the window coordinates.  The width and the height
@@ -33,18 +33,21 @@ QMap<QPair<int, char>, int> Map3dGLWidget::fontTextures;
 //   figure this out, so we'll create our first window blindly, and then adjust it afterward.
 static QList<Map3dGLWidget*> windowsToAdjust;
 
-Map3dGLWidget::Map3dGLWidget(QWidget* parent) : QOpenGLWidget(parent, NULL), wintype(RMSWINDOW)
+Map3dGLWidget::Map3dGLWidget(QWidget* parent) : QGLWidget(parent, NULL), wintype(RMSWINDOW)
 {
   winid = -1;
 }
 
 Map3dGLWidget::Map3dGLWidget(QWidget* parent, int type, const char* title, int min_width, int min_height) 
-  : QOpenGLWidget(parent), startHidden(false)
+  : QGLWidget(parent, sharedWidget), startHidden(false)
 {
   wintype = type;
   winid = -1;
   poplevel = 9999;
   
+  if (sharedWidget == NULL)
+    sharedWidget = this;
+
   winid = AssociateWindow(this);
   if (wintype == GEOMWINDOW)
     AssociateGeomWindow((GeomWindow*)this);
