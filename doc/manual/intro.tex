@@ -15,6 +15,8 @@
 %    - for version 6.3
 % Last update: Fri Feb 16 08:24:13 2007 by Rob Macleod
 %    - verison 6.5
+% Last update: Fri Jul 22 16 22:15:11 2016 by Bryan Worthen
+%    - release 7.2.2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
@@ -42,8 +44,8 @@ There have been many many more papers that use \map{} and the list keeps
 growing.\cite{RSM:Mac93,RSM:Mac93a,RSM:Mac94d,RSM:Mac94c,RSM:Mac94f,RSM:Mac95d,RSM:Mac97,RSM:Mac98,RSM:Mac2000a,RSM:Mac2001,RSM:Pun98,RSM:Pun99,RSM:Tac92,RSM:Tac92b,RSM:Tac94,RSM:Tac96,RSM:Tac96b,RSM:Tac97b,RSM:Ni98,RSM:Ni99,RSM:Ni2000b,RSM:Lux96,RSM:Lux2001,CRJ:Joh93b,CRJ:Joh93d,CRJ:Joh94,CRJ:Joh94b,RSM:Pun2003,RSM:Ser2002}
 
 As with our past versions, this edition of \map{} is completely open
-source.  Anyone can download not only the executable for the major
-platforms (OSX, Windoze, and Linux) but also the complete source code for
+source.  Anyone can download not only the executable for some major
+platforms (OSX, Windoze) but also the complete source code for
 the program.  Please note that we do not have a good way yet to incorporate
 changes people outside our little group make to the program.  If you do
 wish to change and then contribute back, please let us know as soon as
@@ -72,7 +74,8 @@ in the middle of this big conversion project, moving support to OpenGL and
 adding lots of power as we convert functionality.  The reason for the
 version 6.x, was the move to gtk as the GUI library with which we create
 all the dialog and display elements of the program.  This move has allowed
-us to extend dramatically the set of dialog boxes \map{} offers and this
+us to extend dramatically the set of dialog boxes \map{} offers. 
+Version 7.x moved again to the Qt toolkit, preserving the spirit of the dialogs of the Gtk+ version, and this
 newest version~\version{} contains many examples.
 
 There are some people who have been instrumental in the process and deserve
@@ -172,23 +175,19 @@ DEALINGS IN THE SOFTWARE.
 \map{} incorporates the functionality of several external libraries.  They
 are:
 \begin{itemize}
-  \item \htmladdnormallink{GTK}{http://www.gtk.org} - The GIMP Toolkit -
-    Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh
-    MacDonald 
-  \item \htmladdnormallink{GtkGLExt}{http://gtkglext.sourceforge.net/} -
-    GtkGLExt - OpenGL Extension to GTK+ Copyright (C) 2002-2004  Naofumi
-    Yasufuku 
+  \item \htmladdnormallink{Qt}{https://www.qt.io} - Qt -
+    Copyright (C) 2016 The Qt Company
   \item \htmladdnormallink{PNG}{http://www.libpng.org} - Copyright (c)
     1998-2002 Glenn Randers-Pehrson 
   \item \htmladdnormallink{Jpeglib}{http://www.ijg.org} - Copyright (C)
     1991-1998, Thomas G. Lane.
 \end{itemize}
 
-We use GTK and GtkGLExt to interface with the window manager to give us
+We use Qt to interface with the window manager to give us
 windows with OpenGL capability, as well as giving us widgets we need for
 interactive control.  We use PNG and JpegLib to be able to save
 \texttt{.png} and \texttt{.jpg} images of \map{}.
-All four of these libraries are covered by the \htmladdnormallink{GNU
+All of these libraries are covered by the \htmladdnormallink{GNU
 LGPL}{http://www.gnu.org/licenses/lgpl.html}, which is included in the
 distribution of \map{}.
 

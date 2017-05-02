@@ -19,21 +19,22 @@
 %    - for version 6.4
 % Last update: Fri Feb 16 08:32:27 2007 by Rob Macleod
 %    - version 6.5
+% Last update: Fri Jul 22 16 22:15:11 2016 by Bryan Worthen
+%    - release 7.2.2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Installation}
 
 \subsection{System requirements}
 
-\map{} is written in standard C/C++ and uses the OpenGL and GTK+ libraries, 
-both choices made to ensure broad portability of the program.
+\map{} is written in standard C/C++ and uses the OpenGL and Qt, both choices made to ensure broad portability of the program.
 
-Note: As of \map{} 6.4 or greater, GTK+ version 2.4 or greater is required
+Note: As of \map{} 7.1 or greater, Qt version 5.4.0 or greater is required
 to run \map{}.  Please update your dependencies according the the 
 Windows, Linux, or Mac sections below.
 
   \begin{description}
     \item [All platforms: ]  OpenGL now comes standard on most systems.  
-          Instructions on how to install GTK+ are described in detail below
+          Instructions on how to install Qt are described in detail below
           based on which platform you are installing.
           described below\mbox{}\\
           \begin{center}
@@ -51,10 +52,11 @@ Windows, Linux, or Mac sections below.
           \end{center}
 
             
-    \item [Linux (i386): ] \map{} requires the OpenGL library, which is
-              available 
+    \item [Linux (i386): ] we do not supply binaries for Linux, but \map{} should 
+	       be able to be built from source.
+	       It requires the OpenGL library, which is available 
           as the mesa library at \htmladdnormallink{www.mesa3d.org}
-          {http://www.mesa3d.org} for any Linux platform.  For better
+          {http://www.mesa3d.org} for any Linux platform, and Qt 5.4 or greater.  For better
           performance, graphics cards from companies such as nVidia 
           \htmladdnormallink{(www.nvidia.com)}
           {http://www.nvidia.com/} usually provide OpenGL libraries.  \\
@@ -62,7 +64,7 @@ Windows, Linux, or Mac sections below.
           \begin{tabular}{|l|l|} \hline
             \multicolumn{2}{|c|}{Requirements} \\ \hline
               Operating System & kernel 2.2.x\\
-              Architecture & i386 (+ maybe PPC)\\
+              Architecture & x64 \\
               Applications Binary Interface  &  libc2.1 \\
               \hline
             \multicolumn{2}{|c|}{Recommendations} \\ \hline
@@ -76,9 +78,8 @@ Windows, Linux, or Mac sections below.
           \begin{center}
           \begin{tabular}{|l|l|} \hline
             \multicolumn{2}{|c|}{Requirements} \\ \hline
-              Operating System & W2K/NT4.0/9x\\
-              Architecture & i386\\
-              Applications Binary Interface  &  win32 \\
+              Operating System & XP/7/8/10\\
+              Architecture & x64\\
               \hline
             \multicolumn{2}{|c|}{Recommendations} \\ \hline
             Hardware & 3D graphics card (nVidia, 3dfx, ati)\\
@@ -90,8 +91,8 @@ Windows, Linux, or Mac sections below.
           \begin{center}
           \begin{tabular}{|l|l|} \hline
             \multicolumn{2}{|c|}{Requirements} \\ \hline
-              Operating System & Mac OS 10.3.9\\
-              Architecture & PPC or Intel\\
+              Operating System & Mac OS 10.8 and newer \\
+              Architecture & Intel\\
               \hline
             \multicolumn{2}{|c|}{Recommendations} \\ \hline
             Hardware & 3D graphics card (nVidia, 3dfx, ati)\\
@@ -108,9 +109,9 @@ Windows, Linux, or Mac sections below.
   
 \subsection{General Installation}
 
-Unfortunately, with our move to GTK+ for window support, it is not as easy
-as past versions, which required just the download of an executable.  We
-hope (in vain, perhaps) to be able to do that again in the future, but for
+With \map{} moving to Qt for window support, Mac and Windows installers
+are available which should just install.  It is still not as easy
+as past versions, which required just the download of an executable, but for
 now we will attempt to make installation as easy as we can.  Simplified
 instructions will be in a README file which comes with each package, and
 are also listed below:

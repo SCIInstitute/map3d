@@ -23,6 +23,8 @@
 %    - for version 6.4
 % Last update: Fri Feb 16 08:16:29 2007 by Rob Macleod
 %    - for version 6.5
+% Last update: Fri Jul 22 16 22:15:11 20016 by Bryan Worthen
+%    - release 7.2.2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{What's New?}
@@ -33,34 +35,24 @@ In this section, we highlight the latest additions to \map{} in the
 and be able to quickly make use of the latest and greatest that the program
 offers.
 
-\subsection{Version~\version{}: March, 2007}
+\subsection{Version~\version{}}
 
-This is the sixth version of the ``new'' \map{} with a GTK-based GUI.  We
-are way beyond the complete functionality of the old GL
-based version in almost all aspects, although it is sobering to notice that
-some things that were easy in GL are still too hard in OpenGL. 
+This is the seventh version of the ``new'' \map{} with a Qt-based GUI.
 
 Some of the specific additions that you should notice over previous versions
 include:
 %
 \begin{description}
-  \item [GUI improvements: ] Some improvements in the GUIs, particularly in the
-    fiducial control and contour spacing control.  See 
-    Section~\ref{sec:interactive}.
-  \item[Fiducial support:] fiducials are time markers that we often add to
-    the time signals that we record or compute and suppoort for them in the
-    new verison is hugely improved.  The first piece is the support for
-    storing fiducials in the MATLAB files (see
-    Section~\ref{sec:matlabdata}) (and also the CVRTI container files,
-    Section~\ref{sec:tsdfcfile}) and the second part is the display features.
-    It is now possible to visualize fiducials superimposed on potentials or
-    to view them as separate fiducial maps.  This may all sound a little
-    arcane but if you need this support, you will be very happy to see it.
-  \item [Saving Matlab Geometry: ] This version allows the user to save matlab 
-    geometry files, single or multiple surfaces per file.
-  \item [Displaying an image inline with the Geometry] \map{} allows an
-    image to be drawn in the background of the geometry.  See
-    Section~\ref{sec:bgimage} for more details.
+  \item [GUI improvements: ] \map{} 7.0 was rewritten in Qt.
+    This was largely to help cross-platform issues that were
+    arising and the deprecation of some features being relied
+    on.
+    Most main windows are preserved, but some GUI dialogs have
+    received a face lift.
+  \item [old format deprecation: ] \map{} has deprecated the old .tsdf, .data, and .tsdfc data files, in favor of matlab.
+  \item [0-based or 1-based indiced: ] .fac or .mat geometries can refer to points in a 0-based or 1-based manner.
+  \item [Time-dependent geometry: ] \map{} 7.2.2 has introduced time-dependent geometry.  See Section~\ref{sec:timegeom}
+  \item [64bit Windows support: ] \map{} 7.2.4 has introduced 64bit binaries for Windows, enabling the use of large datasets.
   \item [Bug fixes: ] not that the previous version had any bugs, but we
     found a few(!) more things to fix.
 \end{description}
