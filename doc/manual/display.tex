@@ -112,6 +112,16 @@ none of them will look out of place.  If you're trying to get all triangles to f
 the same direction, then it's best to render the mesh as Elements and 
 Connectivities, as back-facing triangles will explicitly be drawn as connectivities.
 
+\subsubsection{Animated Mesh Rendering}
+\label{sec:animated-mesh}
+
+Sometimes a geometry's nodes change locations over time. \map{} supports rendering
+animated geometry.  See Section~\ref{sec:matlabgeom} for the file 
+specification.  The animated nodes work hand in hand with the surface data frames,
+and are divided proportionally, thus if there are 1000 data frames and 100 animated
+geometry node sets, each node set will display for 10 frames.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Surface Data Display} 
@@ -136,7 +146,6 @@ combination.  For surface shading, there are several basic rendering modes:
         with any of the three modes above.  Contours are lines that trace
         iso-values over the surface of the geometry.
 \end{description}
-
 
 \subsubsection{Data scaling}
 \label{sec:scaling} 

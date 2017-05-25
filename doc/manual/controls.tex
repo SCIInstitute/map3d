@@ -267,7 +267,8 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
         \multicolumn{2}{|c|}{\textbf{Regular keyboard}} \\ \hline
         a/A-key   &       Switch colour tables \\ \hline
 %        B-key  &       Toggle clipping plane \\ \hline
-        c-key   &       Toggle contour draw \\ \hline
+        c-key   &       Toggle contour draw  (also, when fiducial display
+	is active, toggles betwen fiducial contours and scalar data contours \\ \hline
         d-key   &       Toggle depth cuing\\ \hline
 %        E-key   &       Toggle back-facing visibility\\ \hline
         f-key   &       Toggle frame lock (also in Time signal window)\\ \hline
@@ -281,7 +282,8 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
         n-key   &       Toggle display of node labels (some node marking
         must be selected)\\ \hline 
 %        O-key   &       Toggle ortho/perspective views \\ \hline
-        p-key   &       Toggle information in time signal (pick) window
+        p-key   &       Toggles whether surface shading affects scalar data map or
+	fiducial map
          (also in Time Signal Window)\\ \hline 
          q-key   &       Quit or destroy a sub-window - Legend Window and
          Time Signal Window only (Escape quits the 
@@ -291,7 +293,7 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
 %       S-key   &       Saves a .pts and a .fac file of the current 
 %       geometry \\ \hline
         s/S-key   &      Cycle through the various surface data draw 
-        options \\ \hline
+        options (affecting either the scalar data map or the fiducial map - see p-key)\\ \hline
         t-key   &       Toggle transformation lock \\ \hline
 %        T-key   &       Whatever Rob is currently testing \\ \hline
 %       U-key   &       Toggle locking of clipping planes \\ \hline

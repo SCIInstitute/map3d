@@ -146,6 +146,10 @@ organized according to the following guidelines:
         $3 \times N$ array (although \map{} will check and accept either $3
         \times N$ or its transpose, $N \times 3$), where $N$ is the number
         of nodes.
+      \item \emph{.pts_mv} contains animated node locations, usually in a
+        $multiple-of-3 \times N$ array (although \map{} will check the transpose like with pts). 
+	pts_mv and pts are mutually exclusive.  See Section~\ref{{sec:animated-mesh}} for the description.
+	Each set of 3 columns will be the node locations for a particular index of time.
       \item \emph{.fac or .face} contains the triangle connectivities,
         usually in a $3 \times M$ array (again, \map{} will accept the
         transpose)\, where $M$ is the number of triangles.
