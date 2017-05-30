@@ -23,7 +23,7 @@
    <item>
     <widget class="QFrame" name="headerFrame">
      <property name="styleSheet">
-      <string notr="true">QLabel {
+      <string notr="true">#surfHeaderLabel, #occlusionLabel, #lowHeaderLabel, #highHeaderLabel, #fixedHeaderLabel, #numHeaderLabel, #spacingHeaderLabel {
 padding: 4px;
 border: 1px solid black;
 border-left-width: 0px;
