@@ -22,8 +22,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%  Figures used in this file %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %begin{latexonly}
+  \graphicspath{ {figures/} }
   \newcommand{\mouseaction}%
-  {\centerline{\includegraphics[height=2in]{figures/mouse.pdf}}}
+  {\centerline{\includegraphics[height=2in]{mouse.pdf}}}
   \newcommand{\filesdialogone}%
   {\centerline{\includegraphics[width=\columnwidth]
       {figures/filesdialog1.pdf}}}
@@ -31,51 +32,52 @@
   {\centerline{\includegraphics[width=\columnwidth]
       {figures/filesdialog3.pdf}}}
   \newcommand{\savedialog}%
-  {\centerline{\includegraphics[height=4in]{figures/savedialog.pdf}}}
+  {\centerline{\includegraphics[height=4in]{savedialog}}}
   \newcommand{\fiducialswindow}%
-  {\centerline{\includegraphics[width=\columnwidth]{figures/fidwindows.pdf}}} 
-  \newcommand{\fidexamples}%
-  {\centerline{\includegraphics[width=\columnwidth]{figures/fidexamples.pdf}}} 
+  {\centerline{\includegraphics[width=\columnwidth]{fidwindows}}} 
+  \newcommand{\fidexamples.pdf}%
+  {\centerline{\includegraphics[width=\columnwidth]{fidexamples}}} 
   \newcommand{\scaledialog}%
-  {\centerline{\includegraphics[height=2.5in]{figures/scaledialog.pdf}}}
+  {\centerline{\includegraphics[height=2.5in]{scaledialog}}}
   \newcommand{\contourdialog}%
-  {\centerline{\includegraphics[height=2.5in]{figures/contourdialog.pdf}}}
+  {\centerline{\includegraphics[height=2.5in]{contourdialog}}}
   \newcommand{\colorpicker}%
-  {\centerline{\includegraphics[height=1in]{figures/colorpicker.pdf}}}
+  {\centerline{\includegraphics[height=1in]{colorpicker}}}
   \newcommand{\sizepicker}%
-  {\centerline{\includegraphics[height=1in]{figures/sizepicker.pdf}}}
+  {\centerline{\includegraphics[height=1in]{sizepicker}}}
 %end{latexonly}
 \begin{htmlonly}
+  \graphicspath{ {../figures/} }
   \newcommand{\mouseaction}{%
   \htmladdimg[align=top,width=371,alt="mouse action"]
-  {../figures/mouse.jpg}}
+  {mouse.jpg}}
   \newcommand{\filesdialogone}{%
   \htmladdimg[align=top,width=600,alt="Files Dialog"]
-  {../figures/filesdialog1.gif}}
+  {filesdialog1}}
   \newcommand{\filesdialogthree}{%
   \htmladdimg[align=top,width=605,alt="Empty Files Dialog"]
-  {../figures/filesdialog3.gif}}
+  {filesdialog3}}
   \newcommand{\savedialog}{%
   \htmladdimg[align=top,width=576,alt="Save Dialog"]
-  {../figures/savedialog.gif}}
+  {savedialog}}
   \newcommand{\fiducialswindow}{%
   \htmladdimg[align=top,alt="Fiducials Window"]
-  {../figures/fidwindows.jpg}}
+  {fidwindows}}
   \newcommand{\fidexamples}{%
   \htmladdimg[align=top,width=731,alt="Fiducial Display Examples"]
-  {../figures/fidexamples.jpg}}
+  {fidexamples.jpg}}
   \newcommand{\scaledialog}{%
   \htmladdimg[align=top,width=791,alt="Scaling Dialog"]
-  {../figures/scaledialog.gif}}
+  {scaledialog}}
   \newcommand{\contourdialog}{%
   \htmladdimg[align=top,width=717,alt="Contour Dialog"]
-  {../figures/contourdialog.gif}}
+  {contourdialog}}
   \newcommand{\colorpicker}{%
   \htmladdimg[align=top,width=568,alt="Color Picker"]
-  {../figures/colorpicker.gif}}
+  {colorpicker}}
   \newcommand{\sizepicker}{%
   \htmladdimg[align=top,width=532,alt="Size Picker"]
-  {../figures/sizepicker.gif}}
+  {sizepicker}}
 \end{htmlonly}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
@@ -408,7 +410,7 @@ OpenGL convention.  Below is a series of tables of the menu layout for
       \multicolumn{2}{|c|}{\textbf{Overview of Geometry Window menus}} \\
       \hline \hline 
       Files & Opens the Files Window (see Section~\ref{sec:fileswindow}) \\
-      Save & Opens the Save Window (see Section~\ref{sec:saving})  \\
+      Save & Various saving options
       Contours & number or spacing and display features of the contours \\
       Fiducials & Fiducial display features - Currently only opens the fiducial
         dialog.  (See Section~\ref{sec:fiducialswindow})\\
@@ -431,6 +433,41 @@ OpenGL convention.  Below is a series of tables of the menu layout for
   \end{center}
 \end{table}
 
+\paragraph{Saving Settings}
+\label{sec:savesettings}
+
+\map{} saves two types of settings files.  There is the .map3drc file,
+which acts as a settings file which (if in your home directory or in the
+directory in which you run map3d) will load a list of options at
+start-time, so \map{} can behave similarly each time you run it without
+having to reset options manually.
+
+The other type of setting file is a script (or batch) file (See
+Section~sec:scripts).  \map{} will attempt to save exactly what you have
+loaded, including all files and window positions.  The difference between a
+script and a batch file is that a batch file is designed for MS Windows,
+and a script is designed for everything else.
+
+The only real difference between scripts and the .map3drc file is that the
+.map3drc file saves global options and the options set on the first surface
+(which then will apply to all surfaces), and scripts save information about
+all surfaces.  The options they save are the same, so they are grouped
+together.
+
+\begin{table}[ht]
+\caption{\label{table:saving}Menus for saving options.}
+  \begin{center}
+    \begin{tabular}{|l|l|p{3 in}|} \hline
+      \multicolumn{3}{|c|}{\textbf{Contour Menus}} \\ \hline
+    Image/Animations & &  Opens the Save Window (see Section~\ref{sec:saving})  \\
+    Settings & & Saves a .map3drc file from the currently used settings \\
+    Script file & & Saves a script file (bash) that loads all the files and
+        applies all the settings to recreate the current view \\
+    Windows batch file & & Saves a windows batch file that loads all the files
+        and applies all the settings to recreate the current view \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
 \begin{table}[ht]
 \caption{\label{table:contours}Menus for contour spacing/number.}
@@ -957,11 +994,15 @@ will close, but opening it again will reveal the same content.
          If there is more than one surface in the geometry
          file, an associated drop-down  menu selects which one to 
          insert.   \\ \hline
-    Time Series File      &   Name of the data file of this surface.
+    Geom Save (disk icon) &      Allows saving of the current geometry ( see
+         Section~\ref{sec:savegeom}).
+    Data File      &   Name of the data file of this surface.
          As with geometry  clicking on the ... button launches 
          a file browser to select a time-series data file.
          Selecting the ``Mesh$\Rightarrow$Reload Data'' reloads
          the data. \\ \hline
+    Data Selection &   If more than one time series is present in the data
+         file, the selection will allow you to choose between them \\ \hline
     Start Frame           &   Start reading data at this frame. 
          Left-clicking 
          in the graph section and dragging will also  select the
@@ -969,12 +1010,13 @@ will close, but opening it again will reveal the same content.
     End Frame             &       Finish reading data at this frame.
          Middle-clicking in the graph section and dragging 
          will  select the correct frame. \\ \hline 
+    Frame Step            &       If larger than 1, \map{} will load every nth frame \\ \hline 
     Graph     &       Graph of the root-mean-square signal calculated
          from all signals in the time series.    Left- or
          middle-clicking in this graph selects the data window that
          \map{} will read and display. \\ \hline 
-    Other Files           &       This button will pop open another
-         window in which to view/modify the channels, leadlinks, 
+    Other Files (+)       &       This button will expand another section
+         in which to view/modify the channels, leadlinks, 
          landmarks, or fiducial file to use with this surface. \\ \hline 
 \end{tabular}
 \end{center}
@@ -994,51 +1036,37 @@ In this case an empty file window appears, as in Figure~\ref{fig:file3} so
 that the user can select all the files for display and set up the display
 interactively.
 
+\paragraph{Saving Geometry}
+\label{sec:savegeom}
 
-\subsubsection{Saving Files}
+% If the second check box (labeled Transform?)
+% is checked, then \map{} will save the geometry will be saved with the
+% current transformations (translations and rotations) applied.
+
+Make sure to modify the filename or the current filename will be replaced.  
+Files can be named with .mat, .fac, or .pts extensions. If the filename ends
+in the extension .fac, it will save filename.fac and filename.pts.  If the
+filename ends in .geom, it will save the file in the CVRTI binary file
+format (see Section~\ref{sec:geomfile}). 
+%If Transforms is selected and
+%there is a landmarks file, then a filename.lmark.
+
+\subsubsection{Saving Images/Animations}
 \label{sec:saving}
 
 \begin{figure}[htb]
   \begin{makeimage}
   \end{makeimage}
   \savedialog
-  \caption{\label{fig:save1} Saving Dialog.}
+  \caption{\label{fig:save1} Image Control Dialog.}
 \end{figure}
 
-
-The ``Save...'' Window will appear if after selecting ``Window
-Attributes$\Rightarrow$Save...''  from the main \map{} menu.  The first
-section is for saving geometry files, the second is for images, and the third
-for settings.
-
-\paragraph{Saving Geometry}
-\label{sec:savegeom}
-
-The Geometry section displays each surface number with its current geometry
-filename and next to each is a check box.  If that check box is checked
-when the user clicks one of the save buttons, then that surface will be one
-of a set that is saved.  If the second check box (labeled Transform?)
-is checked, then \map{} will save the geometry will be saved with the
-current transformations (translations and rotations) applied.
-
-Make sure to modify the filename or the current filename will be replaced (
-clicking on ... launches a browser for a filename).  If the filename ends
-in the extension .fac, it will save filename.fac and filename.pts.  If the
-filename ends in .geom, it will save the file in the CVRTI binary file
-format (see Section~\ref{sec:geomfile}). If Transforms is selected and
-there is a landmarks file, then a filename.lmark.
-
-Clicking on the ``Save in 1 geom file'' button will save all of the
-geometry into one CVRTI binary file (see Section~\ref{sec:geomfile}),
-choosing the filename of the first entry, which must have a .geom
-extension.  Clicking ``Save individually'' will save each in its own
-filename.  There is currently a known bug with saving .geom files under
-Windows and reading them back in again.
 
 \paragraph{Saving Images}
 \label{sec:saveimages}
 
-In the image section, select a filename (you can click on ... to browse for
+The Image Control dialog is used to control the base filename for saved images
+and whether to save animations.  Select a filename (you can click on ... to browse for
 a filename) and click save. The filename may have the extension .ppm, ,png,
 or .jpg to save in one of those formats.  The final filename also appends a
 4-digit number before the extension, representing a number in a sequence of
@@ -1060,7 +1088,8 @@ key will have the same effect as clicking the ``Save Image'' button.
 \paragraph{Saving Animations}
 \label{sec:saveanimations}
 
-This section allows you to control automatic frame saving to put images 
+Checking the "Automatically save image when changes occur" box
+allows you to control automatic frame saving to put images 
 together into movies.  While \map{} is not yet sophisticated enough to 
 actually create the movies, this control can save the images you need and
 then you can use some external software to make a movie from them.
@@ -1068,7 +1097,7 @@ See Section~\ref{sec:animation} for links to instructions of how to make
 movies from sets of images. 
 
 \medskip
-There are four controls to select when an image will be saved.  
+There are three changes types that determine whether an image will be saved.  
 %
 \begin{enumerate}
   \item Save Frame on Transformation - will save a frame (image) every
@@ -1080,113 +1109,11 @@ There are four controls to select when an image will be saved.
   \item Save Frame on Other Events - will save a frame when you interact with
         with the Geometry Window in any other way, via keyboard commands or 
         menu controls.
-  \item Save Frame Every x milliseconds - A frame will be saved approximately
-        every x milliseconds, depending on whether \map{} is doing something 
-        else (like saving an image for one of the other controls).  This option
-        will only take effect if you select it while animations are not being
-        saved.  
 \end{enumerate}
 \medskip
 
-Naturally, animations start recording when you click the ``Start saving 
-animations'' button, and end when you click the ``Stop saving animations'' 
-button.  If you close the window while animations are being saved, they
-will keep recording (this is useful if the Save... window gets in the way
-of the images you want to save).
-
-
-\paragraph{Saving Settings}
-\label{sec:savesettings}
-
-\map{} saves two types of settings files.  There is the .map3drc file,
-which acts as a settings file which (if in your home directory or in the
-directory in which you run map3d) will load a list of options at
-start-time, so \map{} can behave similarly each time you run it without
-having to reset options manually.
-
-The other type of setting file is a script (or batch) file (See
-Section~sec:scripts).  \map{} will attempt to save exactly what you have
-loaded, including all files and window positions.  The difference between a
-script and a batch file is that a batch file is designed for MS Windows,
-and a script is designed for everything else.
-
-To save a script/batch file, click on the appropriate button and select a
-filename.  If you choose to save a .map3drc file, you cannot change the
-filename.
-
-The only real difference between scripts and the .map3drc file is that the
-.map3drc file saves global options and the options set on the first surface
-(which then will apply to all surfaces), and scripts save information about
-all surfaces.  The options they save are the same, so they are grouped
-together.
-
-These options are added to the command line.  For the script, the options
-are saved as command line arguments, and for the .map3drc file the options
-are saved to a file and when \map{} is executed, the options get inserted
-into the command line before any other arguments.  Note that this also
-happens when you run \map{} from a script.  Also note that the options set
-in the .map3drc file may be overridden by subsequent arguments.
-(Naturally, both the .map3drc file and the script file may be edited by
-hand.)
-
-These are three types of options that \map{} can save: global options,
-which are set independent of any surface; surface transformations, which
-will save the rotation, translation, and scaling of the surfaces; and other
-surface options, which save everything else.  You may select or de-select
-any of these three items as you wish.  Note, if none of them is selected
-and save a .map3drc file, it will be empty.  If none is selected and you
-save a script, then it will save the filenames and the window information.
-
-The options are as follows (some of these are mentioned in the usage -
-Section~\ref{sec:usage}).  Some of the values are unclear (like the -sc
-scaling option) as to what the result will be if you edit it by hand.
-Future versions of \map{} will make this more clear.  See
-Section~\ref{sec:display} for more information on these features.
-
-\begin{table}[htbp]
-\begin{center}
-\begin{tabular}{|l|p{4in}|} \hline
-        \multicolumn{2}{|c||}{\textbf{Global Options}} \\ \hline
-        -b              &       Run \map{} in borderless mode \\
-        -nw             &       Assign each surface its own window \\ \hline
-        -sc range function mapping   &   Sets the global range, function,
-        and mapping based on each number. 
-                                         Range can be a number from 0-7,
-        function from 0-4, mapping from 0-2. \\ \hline 
-        -l general transform frame   &   general, transform, and frame are
-        0 or 1 based on whether or not 
-                                         the general, transform, and frame
-        locks are set, respectively. \\ \hline 
-        -rl level       &       Sets the report level to level \\ \hline
-        -pm mode        &       Sets the pick mode to mode (mode is a
-        number from 0-12). \\ \hline 
-        \multicolumn{2}{|c||}{\textbf{Surface Transformation Options}} \\ \hline
-        -rq w x y z     &       Rotation Quaternion.  These are 4
-        floating-point values which represent the rotation info \\ 
-        -tc x y z       &       x, y, z translation coordinates \\ \hline
-        -zf factor      &       Zoom factor.  This really applies to the
-        window as opposed to the surface\\ \hline 
-        \multicolumn{2}{|c||}{\textbf{Other Surface Options}} \\ \hline
-        -c r g b        &       Mesh Color, red, green, blue values \\
-        -sm mode        &       Shading model (flat, Gouraud, banded) -
-        mode is a number between 0-3 \\ 
-        -rm mode        &       Mesh render mode (dots, connectivity, etc.)
-        - mode is a number between 0-5 \\ 
-        -ic mode        &       Inverted Colormap - 1 for true, 0 for false\\
-        -slw mode       &       Show colormap legend window - 1 for true, 0
-        for false \\ 
-        -el mode        &       Lighting enabled - 1 for true, 0 for false \\
-        -ef mode        &       Fogging (depth cue) - 1 for true, 0 for false \\
-        -sco mode       &       Contours shown - 1 for true, 0 for false \\
-        -nc mode        &       Negative contours dashed - 1 for true, 0
-        for false \\ 
-        -x mode         &       Axes drawn - 1 for true, 0 for false \\
-        -xc r g b       &       Axes Color, red, green, blue values\\ \hline
-\end{tabular}
-\end{center}
-\caption{\label{table:settingsoptions} Settings options}
-
-\end{table}
+Naturally, animations start recording when you check the box, and stop 
+when you uncheck the box.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1335,22 +1262,27 @@ the contours.  Alternatively, it could change the range of the scaling,
 interdependence of the control parameters can make this dialog somewhat
 obscure but it does allow broad flexibility of settings.
 
-There are two controls that affect the interplay among features.  The bar
-at the top contain two buttons: ``Keep spacing constant'' and ``Keep num
-contours constant''.  The choice between these two will determine which
+There are two controls that affect the interplay among features - when the range
+changes, adjust either: Contour Spacing or Num Contours.
+The choice between these two will determine which
 parameter will remain constant when the range changes (the range can change
 by selecting a different contour or by setting the range explicitly).
 
-A second, related control is the ``Default Range'' check box on each row.
+A second, related control is the ``Fixed Range'' check box on each row.
 If it is checked, then changing the contour spacing will affect the number
-of contours and vice-versa.  If it is unchecked, then changing the number
+of contours and vice-versa.  If it is checked, then changing the number
 of contours or the spacing will affect the range, and changing the range
-will affect the feature that is not held selected in the top bar.  Also,
-unselecting ``Default Range'' will set the scaling range for this surface
+will affect either the number of contours or the contour spacing.  Also,
+unselecting ``Fixed Range'' will set the scaling range for this surface
 to the range specified in the contour dialog and will not reflect the
 default range parameter.
 
-Upon pressing ``Preview'' or ``Okay'', the changes will take effect.  Note that
+The occlusion gradient is used to ignore data on triangles whose gradient
+exceeds the number specified.  This is useful if there would be too many
+contours present.  The default number is the total range of the entire dataset,
+in effect disabling the feature.
+
+Upon pressing ``Apply'', the changes will take effect.  Note that
 the exact contour spacing will only take effect if the scaling function is 
 set to Linear and the mapping is set to True.  Otherwise, an approximate 
 contour spacing will result. 
@@ -1372,15 +1304,14 @@ tended toward flexibility.
   \caption{\label{fig:fid1} The Fiducials Control Windows.}
 \end{figure}
 
-There are two windows that allow control of the display of temporal
-fiducials in \map{}.  Fiducials are time markers in the signals, for
+Fiducials are time markers in the signals, for
 example, indicating the time of activation or the start and end of the QRS
 complex in an ECG.  Because the main application domain of \map{} is
 cardiac electrophysiology, the selection of support fiducials is related to
 signals from the heart.  However, there is not reason one could not add new
 fiducials (contact \rob{}) 
 
-There are two dialogs because there are two ways of viewing fiducials.
+There are two ways of viewing fiducials.
 %
 \begin{description}
   \item [1) Single fiducial contour: ] in this mode, \map{} draws an
@@ -1401,8 +1332,8 @@ There are two dialogs because there are two ways of viewing fiducials.
     traditional model of fiducial map display in which the entire set of
     isochrone values maps up a map.  To enable simultaneous viewing of
     potential and fiducials in this mode, \map{} provides a number of
-    options controlled by the upper interface window in
-    Figure~\ref{fig:fid1}, the ``p''-key, and the ``s''-key.  With various
+    options controlled by
+    the ``p''-key, and the ``s''-key, and the other options in the Fiducials menu.  With various
     combinations, it is possible to display a) potentials as shaded maps
     with black isochrones, b) no potentials with colored isochrones, and c)
     potentials as black contours drawn over shaded color isochrone map.
@@ -1429,7 +1360,7 @@ of that fiducial map.  Panel B supports a more detailed analysis by
 allowing the user to step through time and see fiducial contours associated
 with each time value superimposed on the potentials.  In this way, the user
 can use spatial information to evaluate the quality of the fiducial values.
-For a more temporal view, the user can click on any number of time signals
+For a more temporal vie	w, the user can click on any number of time signals
 (see Figure~\ref{fig:scalar}) and see the fiducial markers superimposed as
 vertical lines that are color coded according to fiducial type.
 
