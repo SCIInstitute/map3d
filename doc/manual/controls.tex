@@ -26,16 +26,14 @@
   \newcommand{\mouseaction}%
   {\centerline{\includegraphics[height=2in]{mouse.pdf}}}
   \newcommand{\filesdialogone}%
-  {\centerline{\includegraphics[width=\columnwidth]
-      {figures/filesdialog1.pdf}}}
+  {\centerline{\includegraphics[width=\columnwidth]{filesdialog1}}}
   \newcommand{\filesdialogthree}%
-  {\centerline{\includegraphics[width=\columnwidth]
-      {figures/filesdialog3.pdf}}}
+  {\centerline{\includegraphics[width=\columnwidth]{filesdialog3}}}
   \newcommand{\savedialog}%
   {\centerline{\includegraphics[height=4in]{savedialog}}}
   \newcommand{\fiducialswindow}%
   {\centerline{\includegraphics[width=\columnwidth]{fidwindows}}} 
-  \newcommand{\fidexamples.pdf}%
+  \newcommand{\fidexamples}%
   {\centerline{\includegraphics[width=\columnwidth]{fidexamples}}} 
   \newcommand{\scaledialog}%
   {\centerline{\includegraphics[height=2.5in]{scaledialog}}}
@@ -410,7 +408,7 @@ OpenGL convention.  Below is a series of tables of the menu layout for
       \multicolumn{2}{|c|}{\textbf{Overview of Geometry Window menus}} \\
       \hline \hline 
       Files & Opens the Files Window (see Section~\ref{sec:fileswindow}) \\
-      Save & Various saving options
+      Save & Various saving options \\
       Contours & number or spacing and display features of the contours \\
       Fiducials & Fiducial display features - Currently only opens the fiducial
         dialog.  (See Section~\ref{sec:fiducialswindow})\\
@@ -995,7 +993,7 @@ will close, but opening it again will reveal the same content.
          file, an associated drop-down  menu selects which one to 
          insert.   \\ \hline
     Geom Save (disk icon) &      Allows saving of the current geometry ( see
-         Section~\ref{sec:savegeom}).
+         Section~\ref{sec:savegeom}). \\ \hline
     Data File      &   Name of the data file of this surface.
          As with geometry  clicking on the ... button launches 
          a file browser to select a time-series data file.
