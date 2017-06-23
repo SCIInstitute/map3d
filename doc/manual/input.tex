@@ -96,33 +96,6 @@ The characteristics of a .fac file are as follows:
         triangle is picked for interrogation.
 \end{enumerate}
 
-\subsubsection{Binary (.geom) geometry files}
-\label{sec:geomfile}
-
-
-At the \htmladdnormallink{CVRTI} {http://www.cvrti.utah.edu} we have
-developed a binary file system for efficient storage of complex geometry
-and associated attributes, a part of what we call the \graphicsio{}
-library.  Extensive documentation of this format is available from \rob{}
-(\htmladdnormallink{www.cvrti.utah.edu/\~{}macleod/docs}
-{http://www.cvrti.utah.edu/~macleod/docs}).
-
-Briefly, each \graphicsio{} geometry file contains one or more sets of
-node locations and, optionally, connectivities for polygonal elements
-composed from those nodes.  It is possible in \graphicsio{} files to
-associate scalar, vector, and tensor values to nodes or elements, the
-most relevant example of which are channel pointers, stored as a set of
-scalar values associated with the nodes of the geometry.  Each 
-\graphicsio{} geometry file can contain any number of sets of 
-geometries, each with different nodes and connectivities.  A typical
-example for \map{} would be a single .geom file that contains information
-from multiple surfaces that we might want to display together.
-
-
-\map{} is capable of reading surface geometry from either single surfaces
-or from all surfaces contained in a multi-surface geometry file. 
-Command line arguments controls the selection, as we describe in the next
-section.
 
 \subsubsection{MATLAB geometry file support}
 \label{sec:matlabgeom}
@@ -147,9 +120,9 @@ organized according to the following guidelines:
         \times N$ or its transpose, $N \times 3$), where $N$ is the number
         of nodes.
       \item \emph{.pts\textunderscore mv} contains animated node locations, usually in a
-%        multiple-of-3 \times N array (although \map{} will check the transpose like with pts). 
-%	pts_mv and pts are mutually exclusive.  See Section~\ref{sec:animated-mesh} for the description.
-%	Each set of 3 columns will be the node locations for a particular index of time.
+        $multiple-of-3 \times N$ array (although \map{} will check the transpose like with pts). 
+	pts_mv and pts are mutually exclusive.  See Section~\ref{{sec:animated-mesh}} for the description.
+	Each set of 3 columns will be the node locations for a particular index of time.
       \item \emph{.fac or .face} contains the triangle connectivities,
         usually in a $3 \times M$ array (again, \map{} will accept the
         transpose)\, where $M$ is the number of triangles.
@@ -201,7 +174,7 @@ found.  Starting from the filename that follows -f, which may or may not
 include a file extension, the program looks for all possible candidate
 geometry files and queries the user for resolution of any ambiguities.
 Thus, with the arguments {\tt map3d -f myfile}, \map3d{} looks for
-\texttt{myfile.geom}, \texttt{myfile.mat}, \texttt{myfile.pts},
+\texttt{myfile.mat}, \texttt{myfile.pts},
 \texttt{myfile.fac}, \etc{} and tries to resolve things so that a valid
 geometry description is found.  It is possible to direct this process by
 typing the geometry filename with an extension according to the following
@@ -211,33 +184,26 @@ rules:
 \begin{tabular}{|l|p{4in}|} \hline
 \multicolumn{1}{|c|}{Extension} &
 \multicolumn{1}{|c|}{Effect} \\ \hline
-none & look for files with the extensions .pts, .fac, .tetra, and .geom and
-if an incompatible set are present (\eg{} both .pts and .geom), ask user
+none & look for files with the extensions .pts, .fac, .tetra, and .mat, and
+if an incompatible set are present (\eg{} both .pts and .mat), ask user
 which to take \\ 
-.pts & take only the .pts file and ignore any connectivity or .geom file \\
-.fac & take .pts and .fac and ignore any .geom files present. \\
-.geom & take the graphicsio geometry file and ignore any others present. \\
+.pts & take only the .pts file and ignore any connectivity or .mat file \\
+.fac & take .pts and .fac and ignore any .mat files present. \\
 .mat & take the MATLAB file and ignore any others present. \\ \hline
 \end{tabular}
 \end{center}
 
-A further way to read geometry into \map{} is to use the geometry filename
-that can be optionally contained within the time series file (see
-Section~\ref{sec:datafiles}) that contains the potentials.  This requires
-that the .tsdf file be created with the geometry filename
-included; adding this after the fact is difficult.  Note that even if a
-geometry filename is found in the .tsdf file, it can be overridden
-by the geometry file name specified in the argument list of \map{}.
+Note that a MATLAB file could contain both geometry and potentials;
+it just has to be referenced as a geometry file and a potentials file.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Scalar data files}
 \label{sec:datafiles} 
 
-There are three ways of storing scalar values (typically electric potential
+There are two ways of storing scalar values (typically electric potential
 in our applications) so that \map{} can recognize and read them.  One is a
-simple ASCII file, one is a binary format developed at the
-CVRTI\@, and the third is MATLAB. 
+simple ASCII file, and the other is MATLAB. 
 
 \subsubsection{.pot files}
 \label{sec:potfiles} 
@@ -270,78 +236,13 @@ The rules for .pot files are:
   \item The extension .pot {\em must\/} be used.
 \end{enumerate}
 
-
-\subsubsection{CVRTI data (.tsdf and .tsdfc) format files}
-\label{sec:tsdffile} 
-
-One efficient and flexible way to store scalar values is by means of the
-time-series data file format developed at the CVRTI, also as part of the
-\graphicsio{} library.  Each time series data file (.tsdf files) holds an
-entire sequence, or \emph{time series} of scalar data in a single file,
-along with some information about the contents, type, units, and global
-(\ie{} that apply to all channels) temporal fiducials from the time series.
-For more details on this file format see
-\htmladdnormallink{www.cvrti.utah.edu/\~{}macleod/docs/graphicsio}
-{http://www.cvrti.utah.edu/~macleod/docs/graphicsio}.
-
-Here are some concepts of the time series data file structure that are
-relevant to the different modes of operation described in this manual.
-%
-\begin{description}
-  \item [Links to geometry]  The
-        links between the channels of data in the .tsdf file and the nodes
-        of the surface[s] over which they are displayed is established via
-        {\em channel\/} array information, which is available stored as
-        associated scalars to the nodes in the geometry file (see
-        Section~\ref{sec:geomfiles}) or in explicit channels files (see
-        Section~\ref{sec:leadfiles}).
-  \item [Frames]  By {\em frames\/} of data, we mean instants in the data
-        stream representing single moments in time.  For each frame, there
-        is a set of values that for a spatial distribution or map and
-        \map{} needs to know what subset of frames are to be 
-        included in the display.  To explicitly specify frame numbers, use
-        the \texttt{-s} and \texttt{-i} options described in
-        Section~\ref{sec:usage}.  As an example, the command line
-\begin{verbatim}
-        map3d -w -f geomfile.geom@1 -p datafile.tsdf -s 10 130 -i 2
-\end{verbatim}
-        specifies that surface 1 from the geometry file {\tt geomfile.geom}
-        should be used to display frames 10 to 130, taking every second
-        frame, from run 2 of the time series data file {\tt datafile.tsdf}.
-\end{description}
-
-
-\paragraph{Time series container files (tsdfc): } 
-\label{sec:tsdfcfile}
-
-There is an extension to the \graphicsio{} library that defines a container
-file format for a set of time series data (.tsdf) files, and
-can contain parameters extracted from the associated time series.  These
-files are actually small databases and we use a modified (patched actually)
-version of the GNU Database Library (GDBL) to manage them.  
-
-Examples of programs and libraries that provide support for .tsdfc
-files include Everett, a program by Ted Dustman for initial processing of
-mapping data,  \htmladdnormallink{Matmap}
-{http://www.cvrti.utah.edu/~jeroen/matmap/}, a set of MATLAB uilities by
-Jeroen Stinstra with a similar functionality, and \texttt{tsdflib} (as yet
-undocumented), a library created by Ted Dustman, Rob MacLeod, Jenny
-Simpons, and Jeroen Stinstra that provides C-language access to container
-files.
-
-For more information on container files, see the documentation for the
-graphicsio library at
-\htmladdnormallink{www.cvrti.utah.edu/\~{}macleod/docs/graphicsio/}
-{http://www.cvrti.utah.edu/~macleod/docs/graphicsio/}. 
-
 \subsubsection{MATLAB data file support}
 \label{sec:matlabdata}
 
 You can also store and read scalar values in .mat files, as a structure
 with a single field called ``.potvals'', that contains a $N \times M$ array,
 where $N$ is the number of data channels and $M$ is the number of time
-instants.  There are additional fields in the structure that mimic the
-information available in the graphicsio .tsdf file so---the complete list is
+instants.  There are additional fields in the structure ---the complete list is
 as follows:
 %
 \begin{itemize}
@@ -380,8 +281,7 @@ an array \texttt{sockinfo} in MATLAB to a file called
 \subsubsection{Fiducial (ascii) files}
 \label{sec:fidfiles}
 
-A fiducial can be input currently also in three ways: via a .tsdfc file,
-where the potential and fiducial values are stored together, via a .fids
+A fiducial can be input currently also in two ways: via a .fids
 file, a simple ASCII file containing the values for each node, or by means
 of the MATLAB file that contains the time series data.
 
@@ -507,7 +407,7 @@ without channel mapping, the only possible assumption is that each node $i$
 in the geometry corresponds to the same time signal $i$ in the data file.
 Any other linkage of geometry and data channel requires there to be channel
 information, typically either from a separate .channels file or stored with
-the binary .geom file as an associated scalar value for each node.
+the binary .mat file as an associated scalar value for each node.
 
 \begin{figure}[htb]
    \begin{makeimage}
@@ -603,13 +503,6 @@ details.
 
 The sources of channels, leadlinks, and channellinks information are
 files, or parts of files, as outlined in the following paragraphs.
-
-\paragraph{In .geom files}
-
-Information for the {\em channels\/} array is stored as an associated
-scalar with the information in the standard .geom files.  At
-present, there is no leadlinks array stored in the .geom file but
-this could change in the future.
 
 \paragraph{In .mat geometry files}
 

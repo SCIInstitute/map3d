@@ -56,7 +56,7 @@
   \htmladdimg[align=top,width=605,alt="Empty Files Dialog"]
   {filesdialog3}}
   \newcommand{\savedialog}{%
-  \htmladdimg[align=top,width=576,alt="Save Dialog"]
+  \htmladdimg[align=top,width=415,alt="Save Dialog"]
   {savedialog}}
   \newcommand{\fiducialswindow}{%
   \htmladdimg[align=top,alt="Fiducials Window"]
@@ -283,8 +283,7 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
         must be selected)\\ \hline 
 %        O-key   &       Toggle ortho/perspective views \\ \hline
         p-key   &       Toggles whether surface shading affects scalar data map or
-	fiducial map
-         (also in Time Signal Window)\\ \hline 
+	fiducial map \\ \hline 
          q-key   &       Quit or destroy a sub-window - Legend Window and
          Time Signal Window only (Escape quits the 
                          whole program) \\ \hline
@@ -303,7 +302,7 @@ Tables~\ref{table:keys}--\ref{table:keypad}.
                         base filename (before the extension).  The base 
                         filename can be set at start-time with the -if flag 
                         (see Section~\ref{sec:usage-global}), or in the 
-                        Save... Dialog (Section~\ref{sec:saving}).  \\ \hline
+                        Image/Animation Control Dialog (Section~\ref{sec:saving}).  \\ \hline
         x-key   &       Draw axis \\ \hline
 %        Z-key   &       Rotate about z-axis in steps \\ \hline
         Escape  &       Quit the program, if pressed in a Geometry Window, 
@@ -431,38 +430,19 @@ OpenGL convention.  Below is a series of tables of the menu layout for
   \end{center}
 \end{table}
 
-\paragraph{Saving Settings}
-\label{sec:savesettings}
-
-\map{} saves two types of settings files.  There is the .map3drc file,
-which acts as a settings file which (if in your home directory or in the
-directory in which you run map3d) will load a list of options at
-start-time, so \map{} can behave similarly each time you run it without
-having to reset options manually.
-
-The other type of setting file is a script (or batch) file (See
-Section~sec:scripts).  \map{} will attempt to save exactly what you have
-loaded, including all files and window positions.  The difference between a
-script and a batch file is that a batch file is designed for MS Windows,
-and a script is designed for everything else.
-
-The only real difference between scripts and the .map3drc file is that the
-.map3drc file saves global options and the options set on the first surface
-(which then will apply to all surfaces), and scripts save information about
-all surfaces.  The options they save are the same, so they are grouped
-together.
-
 \begin{table}[ht]
 \caption{\label{table:saving}Menus for saving options.}
   \begin{center}
     \begin{tabular}{|l|l|p{3 in}|} \hline
-      \multicolumn{3}{|c|}{\textbf{Contour Menus}} \\ \hline
+      \multicolumn{3}{|c|}{\textbf{Save Menu}} \\ \hline
     Image/Animations & &  Opens the Save Window (see Section~\ref{sec:saving})  \\
-    Settings & & Saves a .map3drc file from the currently used settings \\
+    Settings & & Saves a .map3drc file from the currently used settings. This
+        file goes in your home directory nad loads each time you run \map{}, so
+	it will behave similarly each time. \\
     Script file & & Saves a script file (bash) that loads all the files and
-        applies all the settings to recreate the current view \\
+        applies all the settings to recreate the current view (see Section~\ref{sec:scripts}) \\
     Windows batch file & & Saves a windows batch file that loads all the files
-        and applies all the settings to recreate the current view \\ \hline
+        and applies all the settings to recreate the current view (see Section~\ref{sec:scripts})\\ \hline
     \end{tabular}
   \end{center}
 \end{table}
@@ -988,7 +968,7 @@ will close, but opening it again will reveal the same content.
         selecting the ``Mesh$\Rightarrow$Reload Geometry'' 
         menu entry. \\ \hline
     Geom\#     &      Number of surface within the geometry file (see
-         Section~\ref{sec:geomfile}). 
+         Section~\ref{sec:geomfiles}). 
          If there is more than one surface in the geometry
          file, an associated drop-down  menu selects which one to 
          insert.   \\ \hline
@@ -1043,9 +1023,7 @@ interactively.
 
 Make sure to modify the filename or the current filename will be replaced.  
 Files can be named with .mat, .fac, or .pts extensions. If the filename ends
-in the extension .fac, it will save filename.fac and filename.pts.  If the
-filename ends in .geom, it will save the file in the CVRTI binary file
-format (see Section~\ref{sec:geomfile}). 
+in the extension .fac, it will save filename.fac and filename.pts.
 %If Transforms is selected and
 %there is a landmarks file, then a filename.lmark.
 

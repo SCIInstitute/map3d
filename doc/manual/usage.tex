@@ -70,7 +70,7 @@ Here are some typical examples of using \map{}:
       map3d
       map3d -f geomfilename.pts
       map3d -f geomfilename.fac
-      map3d -f geomfilename.geom
+      map3d -f geomfilename.mat
 
   \end{verbatim}
   \vspace{-.2in}
@@ -80,9 +80,9 @@ Here are some typical examples of using \map{}:
   The first form with arguments reads only the node points (.pts file
   extension) while the second form also reads the connectivities from a
   .fac file and displays both mesh and nodes.  The third form assumes that
-  a binary geometry file (.geom extension) exists that contains both nodes
+  a matlab geometry file (.mat extension) exists that contains both nodes
   and connectivities.  We describe all these forms of geometry files in
-  Section~\ref{sec:geomfile}.
+  Section~\ref{sec:geomfiles}.
   
   \item Map scalar values from a single time instant stored in a ``pot''
   file (described in Section~\ref{sec:potfiles}):
@@ -101,28 +101,28 @@ Here are some typical examples of using \map{}:
   \item To display a \emph{time series} of scalar values on the geometry, 
   the basic format is the same
   \begin{verbatim}
-      map3d -f geomfilename.fac -p datafilename.tsdf
+      map3d -f geomfilename.fac -p datafilename.mat
   \end{verbatim}
   \vspace{-.2in}
   with the time series stored in a datafile described in
-  Section~\ref{sec:tsdffile}.
+  Section~\ref{sec:datafiles}.
 
-  \item Geometry can also be stored in a binary file in the CVRTI 
-  format (described in Section~\ref{sec:geomfile}).  The command 
+  \item Geometry can also be stored in a matlab file (in a format 
+  described in Section~\ref{sec:matlabgeom}).  The command 
   format is essentially unchanged
   \begin{verbatim}
-      map3d -f geomfilename.geom -p datafilename.tsdf
+      map3d -f geomfilename.mat -p datafilename.mat
   \end{verbatim}
   \vspace{-.2in}
   except that channel information is usually contained in the .geom 
   file and thus seldom needs to be specified explicitly.
   
-  \item A time series data file (.tsdf) contains a sequence of 
-  potentials, as described in Section~\ref{sec:tsdffile}.
+  \item A time series data matlab file (.mat) contains a sequence of 
+  potentials, as described in Section~\ref{sec:matlabdata}.
   To select a subset of the time series for display, append the 
   parameters \texttt{-s} and, optionally,  \texttt{-i}, for example,
   \begin{verbatim}
-      map3d -f geomfilename.fac -p datafilename.tsdf -s 1 100 -i 2
+      map3d -f geomfilename.fac -p datafilename.mat -s 1 100 -i 2
   \end{verbatim}
   \vspace{-.2in}
   to select time instants 1 to 100 with an increment between instants 
@@ -136,15 +136,15 @@ Here are some typical examples of using \map{}:
       map3d -f geomfilename.fac -p mapdata -s 1 9 
   \end{verbatim}
   
-  \item Geometry files can contain more than one geometry 
+  \item Matlab geometry files can contain more than one geometry 
   so that we need to select a specific collection of nodes and 
   connectivities for the display, by means of an ``@'' suffix to the 
   geometry filename specification.  Calling 
   \begin{verbatim}
-      map3d -f geomfilename.geom@2 -p datafilename.tsdf
+      map3d -f geomfilename.mat@2 -p datafilename.mat
   \end{verbatim}
   \vspace{-.2in}
-  will select geometry \#2 from the file \texttt{geomfilename.geom}.
+  will select geometry \#2 from the file \texttt{geomfilename.mat}.
 
   \item Multiple instances of \texttt{-f} create multiple surfaces, which by
   default all appear in the same  window.  Adding the \texttt{-nw} option
@@ -298,7 +298,7 @@ connectivities as a ``meta-surface'', which we generally refer to as a
 ``surface''.  For each such surface, \map{} needs the set of node locations
 in three-dimensional space and usually some connectivity information that
 defines the (meta) surface.  The geometries must exist in discrete form and
-be stored in files that \map{} can read (see Section~\ref{sec:geomfile} for
+be stored in files that \map{} can read (see Section~\ref{sec:geomfiles} for
 details of the file formats).  There is no provision at present for
 analytically defined geometries.
 
@@ -323,16 +323,12 @@ next occurrence of \texttt{-f} refer to the current surface.
         \textbf{both} the connectivities and the nodes (provided
         both exist and share the same root filename);
         
-      \item binary geometry (.geom) file contains both nodes and 
-        connectivity information and may also contain channel
-        mapping.  At present, multi-surface geometry files must
-        include a specific indication of the desired surface
-        (\texttt{@surfnum}); otherwise, \map{} reads all surfaces
-        in the file.  
       \item binary matlab geometry (.mat) file contains both nodes and 
         connectivity information and may also contain channel
-        mapping.  If there are multiple surfaces in the matlab
-        file, the same restrictions apply as in the .geom files.
+        mapping.  At present, multi-surface geometry files must
+	include a specific indication of the desired surface
+	(\texttt{@surfnum}); otherwise, \map{} reads all surfaces
+	in the file.
     \end{enumerate}
     Note: by specifying a root filename without any extension, \map{} will
     look for all valid geometry files and try and construct the most
@@ -463,16 +459,9 @@ following options:
       \item Pot files (.pot) (see Section~\ref{sec:potfiles} are 
         text-based files which contain one file per time instance.
         
-      \item Time-series data files (.tsdf) are binary files where all
-        time instants are stored in one file. 
-        
       \item matlab files (.mat) are also stored in binary format.  
         Matlab files can also contain multiple time series. 
         
-      \item Time-series container files (.tsdfc), contain references
-        to at least one .tsdf file, along with other information
-        about the time series.  See Section~\ref{sec:tsdfcfile}
-        for more information.
     \end{enumerate}
     
     The \texttt{-s} option determines how many frames to load. 
@@ -482,7 +471,7 @@ following options:
     and end frame numbers to be read from the file.  With no
     \texttt{-s} option, \map{} will read in all time instants from
     the file.  Note also that if you omit the extension, as with
-    geometry files, it will try to match a .pot, .tsdf, .mat, or .tsdfc
+    geometry files, it will try to match a .pot or .mat
     extension for you. \\
 
     For files with multiple time series (matlab or tsdf containers),
@@ -505,7 +494,7 @@ following options:
     expands to:\\
     \mbox{\hspace{1in}}
     {\tt good-map001.pot good-map002.pot good-map003.pot}\\
-    If we are reading from a time series (.tsdf) data file, \map{} will
+    If we are reading from a matlab (.mat) data file, \map{} will
     read frames {\tt num1} to {\tt num2} from the file.
     
   \item[{\tt-i increment}] = difference between each frame number.
@@ -599,8 +588,9 @@ following options:
 
 \subsection{Other usage parameters}
 \map{} accepts many other command-line parameters to customize the display.
-These are optimally used in a script, but here is a reference of options
-not described above.
+These are optimally used in a script, but the following sections showcase
+some of the options not described above.  Some of these options will
+only be pertinent when used from a script file (see Section~\ref{sec:scripts}).
 
 \subsubsection{Additional global parameters}
 These parameters affect all surfaces or windows in \map{}.
@@ -759,7 +749,8 @@ would need to type to execute the same task from the system prompt.
 
 \subsection{Automatically generating script files}
 The easiest way to make a script file is to have \map{} do it for you.  Open a set
-of surface, and arrange things how like them, and select ``Save...'' from the main menu.
+of surface, and arrange things how like them, and select ``Script file'' or ``Windows batch file'' 
+Save menu.
 In the script section of the dialog, select a filename and the type of script file, and 
 push ``save''.  This will generate a script file that, when run, will open \map{} very closely
 (if not identical) to how you had it before.
@@ -955,6 +946,20 @@ Below are some sample scripts, from simple, to fairly complex:
                -p $basedir/data/pace-center.tsdf@1 \
                -s 65 380 
 \end{verbatim}
+
+\paragraph{A note on scripting on Windows}
+Windows scripting is a little different.
+\begin{description}
+  \item Windows environment variables can be set as follows:
+  \begin{verbatim}
+  set VAR=VALUE
+  \end{verbatim}
+  and referred to as \%VAR\% later.
+  \item The \map{} command must all be on one line - it will not accept \\ as a continuation character
+  \item File paths must be specified with \\ as a directory separator instead of /
+\end{description}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
