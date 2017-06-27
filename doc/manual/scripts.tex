@@ -127,114 +127,6 @@ Likewise,
 defines and ``exports'' the environment variable used by map3d to find
 .pak files. 
 
-\subsection{Examples}
-
-Below are some sample scripts, from simple, to fairly complex:
-
-\paragraph{Set the geometry, data, and window size and location}
-
-\begin{verbatim}
-         map3d -f ${HOME}/torso/geom/dal/daltorso.fac \
-               -as 100 500 300 700 \
-               -p ${HOME}/maprodxn/andy3/10feb95/data/cooling.tsdf \
-               -s 1 1000
-\end{verbatim}
-
-\paragraph{\texttt{map3d-tank1.sh}, included with this distribution}
-
-\begin{verbatim}
-       MAP3D=../map3d
-       GEOM=../geom/tank
-       DATA=../data/tank
-
-       $MAP3D -nw -f ${GEOM}/25feb97_sock.fac \
-               -p ${DATA}/cool1-atdr_new.tsdf@1 -s 1 1000 \
-               -ch ${GEOM}/sock128.channels \
-               -f ${GEOM}/25feb97_sock_closed.geom \
-               -p ${DATA}/cool1-atdr_new.tsdf@2 -s 1 1000\
-               -ch ${GEOM}/sock128.channels
-\end{verbatim}
-
-\paragraph{\texttt{map3d-tank2.sh}, included with this distribution}
-
-\begin{verbatim}
-       MAP3D=../map3d
-       GEOM=../geom/tank
-       DATA=../data/tank
-
-       $MAP3D -nw  -f ${GEOM}/25feb97_sock.fac \
-               -as 200 600 400 800 \
-               -p ${DATA}/cool1-atdr_new.tsdf@1 -s 1 476 \
-               -at 200 600 200 420 -t 9\
-               -ch ${GEOM}/sock128.channels \
-               -f ${GEOM}/25feb97_sock_closed.geom \
-               -as 590 990 400 800 \
-               -p ${DATA}/cool1-atdr_new.tsdf@2 -s 1 476 \
-               -at 590 990 200 420 -t 126 \
-               -ch ${GEOM}/sock128.channels
-\end{verbatim}
-
-\paragraph{\texttt{map3d-torso1.sh}, included with this distribution}
-
-\begin{verbatim}
-       MAP3D=../map3d
-       GEOM=../geom/torso
-       DATA=../data/torso
-
-       $MAP3D -f ${GEOM}/daltorso.geom -p ${DATA}/dipole2.tsdf -s 1 6
-\end{verbatim}
-
-\paragraph{\texttt{map3d-torso2.sh}, included with this distribution}
-
-\begin{verbatim}
-       MAP3D=../map3d
-       GEOM=../geom/torso
-       DATA=../data/torso
-
-       $MAP3D -f ${GEOM}/daltorsoepi.geom@1 \
-               -p ${DATA}/p2_3200_77_torso.tsdf -s 1 200 \
-               -f ${GEOM}/daltorsoepi.geom@2 \
-               -p ${DATA}/p2_3200_77_epi.tsdf -s 1 200
-
-\end{verbatim}
-
-
-\paragraph{Set some environment variables, then layout the whole display}
-
-\begin{verbatim}
-       #!/bin/sh
-       # A script for the spmag 1996 article
-       #
-       ######################################################################
-       map3d=/usr/local/bin/map3d
-       map3d=${ROBHOME}/gl/map3d/map3d.sh
-       MAP3D_DATAPATH=/scratch/bt26mar91pack/
-       export MAP3D_DATAPATH
-       echo "MAP3D_DATAPATH = $MAP3D_DATAPATH"
-       basedir=/u/macleod/maprodxn/plaque/26mar91
-       $map3d -b -nw \
-               -f $basedir/geom/525sock.geom \
-               -as 150 475 611 935 \
-               -at 150 475 485 610 -t 237 \
-               -p $basedir/data/pace-center.tsdf@1 \
-               -s 65 380 \
-               -f $basedir/geom/525sock.geom \
-               -as 476 800 611 935 \
-               -at 476 800 485 610 -t 237 \
-               -p $basedir/data/pace-center.tsdf@1 \
-               -s 65 380 \
-               -f $basedir/geom/525sock.geom \
-               -as 150 475 176 500 \
-               -at 150 475 50 175 -t 237 \
-               -p $basedir/data/pace-center.tsdf@1 \
-               -s 65 380 \
-               -f $basedir/geom/525sock.geom \
-               -as  476 800 176 500 \
-               -at  476 800 50 175 -t 237 \
-               -p $basedir/data/pace-center.tsdf@1 \
-               -s 65 380 
-\end{verbatim}
-
 \paragraph{A note on scripting on Windows}
 Windows scripting is a little different.
 \begin{description}
@@ -246,7 +138,7 @@ Windows scripting is a little different.
   \item The \map{} command must all be on one line - it will not accept \textbackslash as a continuation character
 \end{description}
 
-
+\input{script-examples}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
