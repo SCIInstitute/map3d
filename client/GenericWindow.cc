@@ -13,8 +13,10 @@
 #include "dot.h"
 #include "glprintf.h"
 
+#include <QApplication>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QDesktopWidget>
 #include <QList>
 
 #include <stdio.h>
@@ -59,7 +61,10 @@ Map3dGLWidget::Map3dGLWidget(QWidget* parent, int type, const char* title, int m
 
 void Map3dGLWidget::resizeGL()
 {
-  glViewport(0, 0, width(), height());
+  // this compensates for the "Retina" display ratio.  See http://doc.qt.io/qt-5/highdpi.html
+  //  (for some reason the picking doesn't need this)
+  int factor = QApplication::desktop()->devicePixelRatio();
+  glViewport(0, 0, width()*factor, height()*factor);
 }
 
 

@@ -34,6 +34,9 @@
 #include <QKeyEvent>
 #include <QMenu>
 #include <QDebug>
+#include <QApplication>
+#include <QDesktopWidget>
+
 
 #define PICK_INSIDE  0
 #define PICK_OUTSIDE 1
@@ -182,7 +185,10 @@ void PickWindow::paintGL()
 		return;
   if (!rms && pick == NULL)
     return;
-  glViewport(0, 0, width(), height());
+  // this compensates for the "Retina" display ratio.  See http://doc.qt.io/qt-5/highdpi.html
+  //  (for some reason the picking doesn't need this)
+  int pixelFactor = QApplication::desktop()->devicePixelRatio();
+  glViewport(0, 0, width()*pixelFactor, height()*pixelFactor);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   

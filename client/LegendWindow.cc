@@ -32,6 +32,8 @@
 #include <QMenu>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QApplication>
+#include <QDesktopWidget>
 
 // keep the cont_xx in order so we can use math
 enum { vertical, horizontal, cont_match, cont_0, cont_1, cont_2, cont_3, cont_4, cont_5, cont_6 };
@@ -157,7 +159,10 @@ void LegendWindow::paintGL()
   glClearColor(bgcolor[0], bgcolor[1], bgcolor[2], 1);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glViewport(0, 0, width(), height());
+  int pixelFactor = QApplication::desktop()->devicePixelRatio();
+  // this compensates for the "Retina" display ratio.  See http://doc.qt.io/qt-5/highdpi.html
+  //  (for some reason the picking doesn't need this)
+  glViewport(0, 0, width()*pixelFactor, height()*pixelFactor);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluOrtho2D(0, width(), 0, height());

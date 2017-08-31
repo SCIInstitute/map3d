@@ -44,6 +44,9 @@ using std::set;
 #include "GeomWindowMenu.h"
 #include "scalesubs.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
+
 extern Map3d_Info map3d_info;
 #define CHAR_WIDTH .07
 #define CHAR_HEIGHT .07
@@ -1127,7 +1130,10 @@ void GeomWindow::Transform(Mesh_Info * curmesh, float factor)
   GLdouble front_plane[] = { 0, 0, 1, clip->front };
   GLdouble back_plane[] = { 0, 0, -1, clip->back };
   
-  glViewport(0, 0, width(), height());
+  int pixelFactor = QApplication::desktop()->devicePixelRatio();
+  // this compensates for the "Retina" display ratio.  See http://doc.qt.io/qt-5/highdpi.html
+  //  (for some reason the picking doesn't need this)
+  glViewport(0, 0, width()*pixelFactor, height()*pixelFactor);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
