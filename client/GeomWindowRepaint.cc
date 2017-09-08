@@ -111,7 +111,7 @@ void GeomWindow::paintGL()
       glEnable(GL_FOG);
     
     /* compute the mesh position (rotations, translations, etc.) */
-    Transform(curmesh, 0);
+    Transform(curmesh, 0, true);
     
     /* draw the color mapped surface */
     if (curmesh->shadingmodel != SHADE_NONE && curmesh->geom->points[curmesh->geom->geom_index] && !curmesh->shadefids && 
@@ -190,7 +190,7 @@ void GeomWindow::paintGL()
     curmesh = (meshes[loop]);
     
     /* compute the mesh position (rotations, translations, etc.) */
-    Transform(curmesh, 0);
+    Transform(curmesh, 0, true);
     
     if (curmesh->fogging)
       glEnable(GL_FOG);
@@ -1123,16 +1123,22 @@ void DrawFidCont(Mesh_Info * curmesh, Contour_Info *cont)
 
 
 
-void GeomWindow::Transform(Mesh_Info * curmesh, float factor)
+void GeomWindow::Transform(Mesh_Info * curmesh, float factor, bool compensateForRetinaDisplay)
 {
   HMatrix mNow, cNow;           // arcball rotation matrices
   
   GLdouble front_plane[] = { 0, 0, 1, clip->front };
   GLdouble back_plane[] = { 0, 0, -1, clip->back };
   
-  int pixelFactor = QApplication::desktop()->devicePixelRatio();
-  // this compensates for the "Retina" display ratio.  See http://doc.qt.io/qt-5/highdpi.html
-  //  (for some reason the picking doesn't need this)
+
+  int pixelFactor = 1;
+
+  if (compensateForRetinaDisplay)
+  {
+    QApplication::desktop()->devicePixelRatio();
+    // this compensates for the "Retina" display ratio.  See http://doc.qt.io/qt-5/highdpi.html
+    //  (for some reason the picking doesn't need this)
+  }
   glViewport(0, 0, width()*pixelFactor, height()*pixelFactor);
 
   glMatrixMode(GL_PROJECTION);
@@ -1197,7 +1203,7 @@ void GeomWindow::DrawNodes(Mesh_Info * curmesh)
   /* set the transform for billboarding */
   Ball_Value(&curmesh->tran->rotate, mNow);
   TransposeMatrix16((float *)mNow, mNowI);
-  Transform(curmesh, 0.01f);
+  Transform(curmesh, 0.01f, true);
   glPushMatrix();
   
   //if (!cursurf)

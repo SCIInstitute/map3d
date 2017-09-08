@@ -97,7 +97,7 @@ public:
   bool Pick(int meshnum, int x, int y, bool del = false);
 
   // drawing helper functions
-  void Transform(Mesh_Info * curmesh, float factor);
+  void Transform(Mesh_Info * curmesh, float factor, bool compensateForRetinaDisplay);
   void DrawNodes(Mesh_Info * curmesh);
   void DrawInfo();
   void DrawLockSymbol(int which, bool full);

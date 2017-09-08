@@ -290,7 +290,7 @@ bool GeomWindow::Pick(int meshnum, int x, int y, bool del /*= false*/ )
   // FIX
   /* setup the transform for picking */
   makeCurrent();
-  Transform(curmesh, 0);
+  Transform(curmesh, 0, false);
   glRenderMode(GL_SELECT);
   glGetIntegerv(GL_VIEWPORT, viewport);
   glMatrixMode(GL_PROJECTION);
