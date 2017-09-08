@@ -1135,7 +1135,7 @@ void GeomWindow::Transform(Mesh_Info * curmesh, float factor, bool compensateFor
 
   if (compensateForRetinaDisplay)
   {
-    QApplication::desktop()->devicePixelRatio();
+    pixelFactor=QApplication::desktop()->devicePixelRatio();
     // this compensates for the "Retina" display ratio.  See http://doc.qt.io/qt-5/highdpi.html
     //  (for some reason the picking doesn't need this)
   }
