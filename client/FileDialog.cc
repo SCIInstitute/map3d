@@ -474,6 +474,7 @@ bool FileDialogWidget::updateFiles()
       delete mesh->mysurf;
       mesh->mysurf = 0;
     }
+    GlobalMinMax(); // needs to be called here, as the version in FindAndReadData only works on meshes added to windows
     return true;  // we don't need to (and shouldn't) go through the reload section
   }
   
@@ -579,6 +580,7 @@ bool FileDialogWidget::updateFiles()
     // FIX updateContourDialogValues(mesh);
     Broadcast(MAP3D_MENU, frame_reset);
   }
+  GlobalMinMax(); // needs to be called here, as the version in FindAndReadData only works on meshes added to windows
   return true;
 }
 
