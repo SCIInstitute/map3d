@@ -228,11 +228,17 @@ Surf_Data *Surf_Data::AddASurfData(Surf_Data * surfdata, long newsurfnum, long n
   return surfdata;
 }
 
-void Surf_Data::FrameAdvance(int delta_frames)
+void Surf_Data::FrameAdvance(int delta_frames, bool loopIfPastEnd /* = false */)
 {
   int newframe = framenum + delta_frames;
+  if (newframe < 0 && loopIfPastEnd)
+    newframe = newframe + numframes; // loop back to the end
+  else if (newframe >= numframes && loopIfPastEnd)
+    newframe = newframe - numframes; // loop to the beginning
+
+  // even if looping, sanity check against weird conditions like frame step being bigger than dataset
   if (newframe < numframes && newframe >= 0) {
-    framenum += delta_frames;
+    framenum = newframe;
   }
 }
 

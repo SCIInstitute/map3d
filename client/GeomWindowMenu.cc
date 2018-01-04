@@ -1085,6 +1085,9 @@ bool GeomWindow::MenuGlobalOptions(int menu)
     case frame_step_user:
       fstep = map3d_info.user_fstep;
       break;
+	case frame_loop:
+      map3d_info.frame_loop = !map3d_info.frame_loop;
+      break;
     case pick_mean_reference:
       // the other pick modes are in the global function
       // this one needs to be here because it changes the 
@@ -1339,6 +1342,9 @@ int GeomWindow::OpenMenu(QPoint point)
   submenu->addAction("Set time to zero")->setData(frame_zero);
   
   submenu->addAction("Set Frame Step...")->setData(frame_dialog);
+  action = submenu->addAction("Frame Looping");
+  action->setData(frame_loop); action->setCheckable(true); action->setChecked(map3d_info.frame_loop);
+
   submenu->addSeparator();
 
   bool user_fstep = (fstep == map3d_info.user_fstep);

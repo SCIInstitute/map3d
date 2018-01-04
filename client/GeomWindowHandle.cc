@@ -127,7 +127,7 @@ bool GeomWindow::HandleFrameAdvances()
     else if (key_pressed == Qt::Key_Right) 
       delta_frames = fstep;
 
-    sd->FrameAdvance(delta_frames);
+    sd->FrameAdvance(delta_frames, map3d_info.frame_loop);
 
     // if advancing in time only affects this surface
     if (map3d_info.scale_scope != GLOBAL_FRAME && map3d_info.scale_scope != GROUP_FRAME &&

@@ -76,6 +76,8 @@ int ParseCommandLineOptions(int argc, char **argv, Global_Input & globalInput)
       //OPTION_VALUE("-ds", globalInput.dominantsurf, globalInput.numgeomfiles    )
       /* -fs mode - sets the global frame step */
       OPTION_1("-fs", globalInput.framestep)
+      /* -fl - allows keyboard frame advancement to loop globally frame step */
+      OPTION_VALUE("-fl", globalInput.frameloop, true)
       /* -gp path name to geometry file */
       OPTION_1("-gp", globalInput.geompathname)
       /* -if output image base filename */

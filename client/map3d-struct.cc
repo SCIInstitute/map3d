@@ -48,6 +48,7 @@ void Init_Global_Input(Global_Input * s)
   s->lockframes = LOCK_FULL;
   s->pickmode = NEW_WINDOW_PICK_MODE;
   s->framestep = 1;
+  s->frameloop = false;
   s->report_level = 1;
   s->time_unit = 0;
   s->frames_per_time_unit = 1;
@@ -291,6 +292,7 @@ Map3d_Info::Map3d_Info()
   global_potmax = 0;
   global_potmin = 0;
   user_fstep = 1;
+  frame_loop = false;
   
   time_unit = "ms";
   frames_per_time_unit = 1;

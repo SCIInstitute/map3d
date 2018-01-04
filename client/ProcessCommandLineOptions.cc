@@ -118,6 +118,7 @@ int ProcessCommandLineOptions(Global_Input & g)
   map3d_info.frames_per_time_unit = g.frames_per_time_unit;
   map3d_info.same_scale = g.same_scale;
   fstep = g.framestep;
+  map3d_info.frame_loop = g.frameloop;
 
   /* if -b was indicated then create a main (composition) window */
   if (g.qnoborders) {

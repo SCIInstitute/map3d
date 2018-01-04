@@ -16,7 +16,10 @@ public:
   Surf_Data();
   ~Surf_Data();
   static Surf_Data *AddASurfData(Surf_Data * surfdata, long newsurfnum, long numframes, long numleads);
-  void FrameAdvance(int delta_frames);
+
+  //! Advance specified number of frames.  Loop is to largely be controlled by keyboard advancement IF global frame Loop
+  //! option is set
+  void FrameAdvance(int delta_frames, bool loopIfPastEnd = false);
   void get_minmax(float &min, float &max);
   void get_fid_minmax(float &min, float &max, int type);
   void MinMaxPot(Map3d_Geom * onemap3dgeom);

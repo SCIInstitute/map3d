@@ -272,22 +272,25 @@ void Broadcast(int message, Map3dGLWidget* widget, QEvent * event, int data)
     break;
 	    
     // called by GeomWindowKeyboard - forward in time (See also MAP3D_PICK_FRAMES)
+    // this is also the only one that should allow looping, as it should only be allowed with keyboard
     case MAP3D_FRAMES:
     {
-      ComputeLockFrameData();
+      if (!map3d_info.frame_loop) // because, in this case, we ignore it altogether
+        ComputeLockFrameData();
       int key = data;
       if (key != Qt::Key_Left && key != Qt::Key_Right)
-	break;
+        break;
       int multiplier = (key == Qt::Key_Left) ? -1 : 1; // multiply by -1 if left
-      if (cur + fstep*multiplier < fstart || cur + fstep*multiplier > fend)
-	break;
-      cur += fstep*multiplier;
+      if (!map3d_info.frame_loop && (cur + fstep*multiplier < fstart || cur + fstep*multiplier > fend))
+        break;
+      if (!map3d_info.frame_loop)
+        cur += fstep*multiplier;
       
       for (MeshIterator mi(0,0); !mi.isDone(); ++mi) {
-	Mesh_Info* mesh = mi.getMesh();
-	if (mesh->data && (map3d_info.selected_group == -1 || map3d_info.selected_group == mesh->groupid))
-	  mesh->data->FrameAdvance(multiplier*fstep);
-        // FIX updateContourDialogValues(mesh);
+        Mesh_Info* mesh = mi.getMesh();
+        if (mesh->data && (map3d_info.selected_group == -1 || map3d_info.selected_group == mesh->groupid))
+          mesh->data->FrameAdvance(multiplier*fstep, map3d_info.frame_loop);
+          // FIX updateContourDialogValues(mesh);
       }
     }
     Broadcast(MAP3D_UPDATE);

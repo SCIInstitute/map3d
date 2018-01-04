@@ -151,6 +151,7 @@ struct Global_Input
   int lockframes; /*** Whether Frames lock is enabled ***/
   int pickmode; /*** Pick Mode ***/
   int framestep;  // how many frames to advance when advancing time
+  bool frameloop; // whether the frames will loop
 
   int frames_per_time_unit; // num of (s, ms, us, ns) per frame
   char* time_unit;  // s, ms, us, ns
@@ -216,6 +217,7 @@ public:
   float global_potmax;
   float global_potmin;
   long user_fstep;
+  bool frame_loop; // Initially, we will not go to extraordinary measures to keep surfs with differing frame counts in sync
 
   // If a group is set to LOCK_GROUP, then this is the group number to work on.
   // Should be set when an event happens, as you can do events on multiple groups.
