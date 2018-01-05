@@ -19,7 +19,7 @@
 
 #include <QFileDialog>
 #include <QDebug>
-
+#include <QMenu>
 
 FileDialog* filedialog;
 //extern SaveDialog *savedialog;
@@ -167,11 +167,19 @@ void FileDialogWidget::on_landmarksBrowseButton_clicked ()
 
 void FileDialogWidget::on_geomSaveButton_clicked ()
 {
+  QMenu menu;
+  QAction* transformAction = menu.addAction("Apply transformations");
+  QAction* noTransformAction = menu.addAction("Ignore transformations");
+  QAction* selectedAction = menu.exec(QCursor::pos());
+
+  if (selectedAction == NULL)
+    return;
+
   QString newFile = QFileDialog::getSaveFileName(parentWidget(), "Select geometry file to save");
   QByteArray fileUTF = newFile.toUtf8(); // so char* will be in scope for function call to saveMeshes
 
   Mesh_List meshes = mesh->gpriv->findMeshesFromSameInput(mesh);
-  vector<bool> transforms(meshes.size(), false);
+  vector<bool> transforms(meshes.size(), selectedAction == transformAction);
   bool success = SaveMeshes(meshes, transforms, fileUTF.data());
 
   if (success)
