@@ -38,6 +38,7 @@ extern const short FI_REC;
 extern const short FI_REF;
 extern const short FI_JPT;
 extern const short FI_BL;
+extern const short FI_SUBSERIES;
 extern const short FI_UNKNOWN;
     
 /* Fiducial names. */
@@ -57,6 +58,7 @@ extern const char FI_RECMINUS_NAME[];
 extern const char FI_REC_NAME[];
 extern const char FI_REF_NAME[];
 extern const char FI_JPT_NAME[];
+extern const char FI_SUBSERIES_NAME[];
 extern const char FI_BL_NAME[];    
 
 /*-------------------------------------------------------------------------

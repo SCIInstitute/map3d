@@ -56,7 +56,7 @@ static Display *gDisplay;
 /* ***************************************************************** */
 /* The # of entries in the fiducial table. BE SURE TO UPDATE THIS    */
 /* VALUE IF NEW FIDUCIAL TYPES ARE ADDED. */
-#define gFiTableSize (17)
+#define gFiTableSize (18)
 /* ***************************************************************** */
 
 /* Fiducial types definitions. */
@@ -77,6 +77,7 @@ const short FI_REC = 13;
 const short FI_REF = 14;
 const short FI_JPT = 15;
 const short FI_BL = 16;
+const short FI_SUBSERIES = 17;
 const short FI_UNKNOWN = -1;
     
 /* Fiducial name definitions. */
@@ -96,6 +97,7 @@ const char FI_RECMINUS_NAME[] = "recminus";
 const char FI_REC_NAME[] = "rec";
 const char FI_REF_NAME[] = "ref";
 const char FI_JPT_NAME[] = "jpt";
+const char FI_SUBSERIES_NAME[] = "subseries";
 const char FI_BL_NAME[] = "baseline";
 
 /* The all important table of fiducial info. */
@@ -117,7 +119,8 @@ static FiducialInfo gFiTable[] = {
     { 0, 0, "Reference time, e.g. the time of pacing spike", "yellow", 255,
       255, 0 }, 
     { 0, 0, "J pt computed using lsd2", "slategray", 0, 0, 0 },
-    { 0, 0, "Baseline", "blue", 0, 0, 255 },
+	{ 0, 0, "Baseline", "blue", 0, 0, 255 },
+	{ 0, 0, "Frame indicating the start of a subseries", "turquoise", 0, 0, 255 },
 };
 
 /* Fiducial info table sorted by name. */
@@ -173,6 +176,7 @@ InitFiTable()
     gFiTable[i].name = FI_REF_NAME; gFiTable[i++].type = FI_REF;
     gFiTable[i].name = FI_JPT_NAME; gFiTable[i++].type = FI_JPT;
     gFiTable[i].name = FI_BL_NAME; gFiTable[i++].type = FI_BL;
+	gFiTable[i].name = FI_SUBSERIES_NAME; gFiTable[i++].type = FI_SUBSERIES;
     assert(i==gFiTableSize);
     for (i=0; i<gFiTableSize; i++) {
         gSortedFiTable[i] = &gFiTable[i];

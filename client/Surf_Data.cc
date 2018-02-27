@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <algorithm>
+
 void *calloc(size_t, size_t);
 
 extern vector<Surface_Group> surf_group;
@@ -549,3 +551,17 @@ void Surf_Data::setUnits(int localunits)
   }
   units = localunits;
 }
+
+void Surf_Data::SetupGlobalFids()
+{
+	// for the global fids that are subseries markers, organize and sort them
+	for (int i = 0; i < numglobalfids; i++)
+	{
+		if (globalfidtypes[i] == FI_SUBSERIES)
+		{
+			subseriesStartFrames.push_back((int)globalfids[i]);
+		}
+	}
+	// TODO - this asserts on win32 debug
+	//std::sort(subseriesStartFrames.begin(), subseriesStartFrames.end());
+};

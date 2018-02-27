@@ -32,7 +32,12 @@
 using std::string;
 using std::vector;
 
+// globals governing multi-surf frame advancement
 int fstart, fend, cur, fstep;
+bool allSurfsAtBeginning;
+bool allSurfsAtEnd;
+
+
 int current_winid = -1;
 extern Map3d_Info map3d_info;
 extern vector<Surface_Group> surf_group;
@@ -345,6 +350,8 @@ void ComputeLockFrameData()
   left = INT_MAX;
   right = INT_MAX;
   fstart = fend = cur = 0;
+  allSurfsAtEnd = true;
+  allSurfsAtBeginning = true;
   
   for (MeshIterator mi2(0,0); !mi2.isDone(); ++mi2) {
     Mesh_Info* mesh = mi2.getMesh();
@@ -355,7 +362,12 @@ void ComputeLockFrameData()
       left = MIN(left, cursurf->framenum);  // - cursurf->framenum % cursurf->ts_step);//-cursurf->ts_start);
 										//changed the -cursurf->ts_start from left to right
       right = MIN(right, cursurf->numframes - cursurf->framenum - 1);
-    }
+
+	  if (cursurf->framenum + fstep < cursurf->numframes)
+		  allSurfsAtEnd = false;
+	  if (cursurf->framenum - fstep >= 0)
+		  allSurfsAtBeginning = false;
+	}
   }
 	
   cur = left;

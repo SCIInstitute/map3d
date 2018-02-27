@@ -756,6 +756,21 @@ void PickWindow::DrawNode()
           index++;
         }
       }else{index+=data->fids.numfidtypes;}
+
+	  if (data->subseriesStartFrames.size() > 0)
+	  {
+		  glLineWidth(1);
+		  glColor3f(axiscolor[0], axiscolor[1], axiscolor[2]);
+		  glBegin(GL_LINES);
+
+		  for (int i = 0; i < data->subseriesStartFrames.size(); i++)
+		  {
+			  int subseriesStart = data->subseriesStartFrames[i];
+			  glVertex3f(left * width() + d * (float)subseriesStart, top * height(), 0);
+			  glVertex3f(left * width() + d * (float)subseriesStart, bottom * height(), 0);
+		  }
+		  glEnd();
+	  }
     }
     
     

@@ -26,6 +26,7 @@ public:
   void ChangeReference(long leadnum, Map3d_Geom * onemap3dgeom);
   void ChangeReferenceMean(Map3d_Geom * onemap3dgeom);
   void ChangeBackReference(Map3d_Geom * onemap3dgeom);
+  void SetupGlobalFids();
   void setUnits(int localunits);
   int getRealFrameNum() { return framenum * ts_sample_step + ts_start;}
   bool qgotpots;  /*** True if there pots for this surface ***/
@@ -81,9 +82,11 @@ public:
   MinMax_Frame *minmaxframes; /*** Potential extrema for each frame ***/
   int numglobalfids;
   float* globalfids; /*** Global fiducials, whatever that means! ***/
+  short* globalfidtypes;
   char** globalfidnames;
   Series_Fids fids; /*** All lead by lead fiducials for this surface ***/
   MinMax_Fids *minmaxfids; /*** Min and max values for all the fids. ***/
+  std::vector<int> subseriesStartFrames; /*** special type of global fid that represents when a subseries starts (eg, heartbeat) */
   Mesh_Info *mesh; /*** pointer to its owning mesh ***/
 };
 

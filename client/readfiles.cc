@@ -679,13 +679,21 @@ Return:	    pointer to updated surf_data array or NULL for error
       
       long numsfids = fids.getnumelements() - numgfids;
       
-      if (( surf->globalfids = (float *) calloc( (size_t) numgfids, sizeof( float ))) == NULL)
-      {
-        ReportError( "ReadMatlabDatafile", "error getting basic fid mem", 
-                     ERR_MEM, "");
-        return( NULL );
-      }
-      
+	  surf->numglobalfids = numgfids;
+	  if ((surf->globalfids = (float *)calloc((size_t)numgfids, sizeof(float))) == NULL)
+	  {
+		  ReportError("ReadMatlabDatafile", "error getting basic fid mem",
+			  ERR_MEM, "");
+		  return(NULL);
+	  }
+
+	  if ((surf->globalfidtypes = (short *)calloc((size_t)numgfids, sizeof(short))) == NULL)
+	  {
+		  ReportError("ReadMatlabDatafile", "error getting fidtypes mem",
+			  ERR_MEM, "");
+		  return(NULL);
+	  }
+
       if (( surf->globalfidnames = (char**) 
            calloc( (size_t) numgfids, sizeof( char* ) )) == NULL )
       {
@@ -760,7 +768,9 @@ Return:	    pointer to updated surf_data array or NULL for error
           // values should be size 1 here, based on presence in the gfidIndices list
           // set the actual value
           surf->globalfids[gfidnum] = values[0];
-          surf->globalfidnames[gfidnum] = name;
+		  surf->globalfidnames[gfidnum] = name;
+		  surf->globalfidtypes[gfidnum] = tmp->type;
+
           gfidnum++;
         }
         else
@@ -776,6 +786,7 @@ Return:	    pointer to updated surf_data array or NULL for error
         for (int i = 0; i < surf->numglobalfids; i++)
           printf(" %s = %f\n", surf->globalfidnames[i], surf->globalfids[i]);
       }
+	  surf->SetupGlobalFids();
 
       for(long leadnum = 0; leadnum <numsurfnodes; leadnum++){
         index = map3d_geom[displaysurfnum].channels[leadnum];
