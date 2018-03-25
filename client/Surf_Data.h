@@ -5,6 +5,8 @@
 
 #include "map3d-struct.h"
 
+#include <set>
+
 #define NUMCONTS 21
 
 class Map3d_Geom;
@@ -20,6 +22,10 @@ public:
   //! Advance specified number of frames.  Loop is to largely be controlled by keyboard advancement IF global frame Loop
   //! option is set
   void FrameAdvance(int delta_frames, bool loopIfPastEnd = false);
+  void SubseriesAdvance(int delta_subseries);
+  int CurrentSubseries();
+  void StackSubseries();
+  void UnstackSubseries();
   void get_minmax(float &min, float &max);
   void get_fid_minmax(float &min, float &max, int type);
   void MinMaxPot(Map3d_Geom * onemap3dgeom);
@@ -87,6 +93,7 @@ public:
   Series_Fids fids; /*** All lead by lead fiducials for this surface ***/
   MinMax_Fids *minmaxfids; /*** Min and max values for all the fids. ***/
   std::vector<int> subseriesStartFrames; /*** special type of global fid that represents when a subseries starts (eg, heartbeat) */
+  std::vector<int> subseriesToStack; /* this should be a set, but I get weird crashes on my compiler */
   Mesh_Info *mesh; /*** pointer to its owning mesh ***/
 };
 

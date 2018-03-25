@@ -64,7 +64,7 @@ static const int min_height = 100;
 static const int default_width = 328;
 static const int default_height = 144;
 
-enum pickmenu { axes_color, graph_color, full_screen, graph_width_menu};
+enum pickmenu { axes_color, graph_color, full_screen, graph_width_menu, toggle_subseries_mode};
 
 
 PickWindow::PickWindow(QWidget* parent) : Map3dGLWidget(parent)
@@ -286,9 +286,14 @@ void PickWindow::mousePressEvent(QMouseEvent* event)
     if (y < height() * topoffset && y > height() * bottomoffset &&
         x > width() * leftoffset && x < width() * rightoffset) {
       click = true;
-      distance = (x - width() * leftoffset) / (rightoffset - leftoffset) / width();
-      distance *= (mesh->data->numframes-1);
-      deltaFrames = -(mesh->data->framenum - distance);
+
+      int left, right;
+      getFrameRange(mesh->data->CurrentSubseries(), left, right);
+      int numFrames = right - left;
+
+      distance = (x - width() * leftoffset) / (rightoffset - leftoffset) / width(); // percentage of the graph the click is over
+      int newFrame = left + distance * (numFrames-1);
+      deltaFrames = -(mesh->data->framenum - newFrame);
 
       map3d_info.selected_group = (map3d_info.lockframes == LOCK_GROUP)
         ? mesh->groupid : -1;
@@ -395,11 +400,15 @@ void PickWindow::mouseMoveEvent(QMouseEvent* event)
   
   else if (event->buttons() == Qt::LeftButton && mesh->data) {
     //x -= width / 10;
-    distance = (x - width() * leftoffset) / (rightoffset - leftoffset) / width();
-    
-    distance = distance * (mesh->data->numframes-1);
-    
-    deltaFrames = -(mesh->data->framenum - distance);
+    int left, right;
+    getFrameRange(mesh->data->CurrentSubseries(), left, right);
+    int numFrames = right - left;
+
+    distance = (x - width() * leftoffset) / (rightoffset - leftoffset) / width(); // percentage of the graph the click is over
+    int newFrame = left + distance * (numFrames - 1);
+    deltaFrames = -(mesh->data->framenum - newFrame);
+
+    deltaFrames = -(mesh->data->framenum - newFrame);
     map3d_info.scale_frame_set = 0;
     
     map3d_info.selected_group = (map3d_info.lockframes == LOCK_GROUP)
@@ -556,10 +565,12 @@ void PickWindow::keyPressEvent(QKeyEvent* event)
     pick->show = 0;
     Destroy();
   }
-  else if (key == Qt::Key_Left || key == Qt::Key_Right || keyChar == 'f') {
+  else if (key == Qt::Key_Left || key == Qt::Key_Right || keyChar == 'f' || key == Qt::Key_Plus || key == Qt::Key_Minus)
+  {
     mesh->gpriv->keyPressEvent(event);
   }
 }
+
 
 void PickWindow::DrawNode()
 {
@@ -709,97 +720,153 @@ void PickWindow::DrawNode()
   }
   /* draw time signal */
   if (data) {
-    d = width() / (float)(data->numframes-1) * (right - left); //graph's domain
-    glEnable (GL_LINE_SMOOTH);
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
-    glLineWidth(graph_width);
-    glColor3f(graphcolor[0], graphcolor[1], graphcolor[2]);
-    glBegin(GL_LINE_STRIP);
-    for (loop = 0; loop < data->numframes; loop++) {
-      if(rms){
-        glVertex3f(left * width() + d * loop, data->rmspotvals[loop] * a + b, 0);
-      }
-      else{
-        glVertex3f(left * width() + d * loop, data->potvals[loop][pick->node] * a + b, 0);
-      }
-    }
-    glEnd();
-    glDisable(GL_LINE_SMOOTH);
-    glDisable(GL_BLEND);
-    
-    
-    //draw fiducial markers
-    if(wintype == TIMEWINDOW){
-      int index = 0;
-//    printf("mesh->fidConts.size() %d\n",mesh->fidConts.size());
-//    printf("1data->fids[fidsets].numfidleads %d\n", data->fids[fidsets].numfidleads);
 
-      if(pick->node < data->fids.numfidleads){
-//      printf("2data->fids.numfidleads %d\n", data->fids[fidsets].numfidleads);
-        for(int i = 0; i < data->fids.leadfids[pick->node].numfids;i++){
-          short fidType = data->fids.leadfids[pick->node].fidtypes[i];
-          for(unsigned j = 0; j<mesh->fidConts.size();j++){
-            if(mesh->fidConts[j]->datatype == fidType)
-              index = j;
-          }
-          glLineWidth(1);
-          glColor3f(mesh->fidConts[index]->fidcolor.redF(),
-                    mesh->fidConts[index]->fidcolor.greenF(),
-                    mesh->fidConts[index]->fidcolor.blueF());
-          glBegin(GL_LINES);
-          glVertex3f(left * width() + d * data->fids.leadfids[pick->node].fidvals[i], b+(.1f * height()), 0);
-          glVertex3f(left * width() + d * data->fids.leadfids[pick->node].fidvals[i], b - (.1f * height()), 0);
-          glEnd();
-//            printf("index %d i %d\n", index, i);
-          index++;
+    // this is a lambda because of all the dumb little variables we need
+    auto DrawPlot = [=](int leftFrame, int rightFrame)
+    {
+      float d = width() / (float)(rightFrame - leftFrame - 1) * (right - left); //graph's domain for each segment
+      glEnable(GL_LINE_SMOOTH);
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+      glLineWidth(graph_width);
+      glColor3f(graphcolor[0], graphcolor[1], graphcolor[2]);
+      glBegin(GL_LINE_STRIP);
+      // loop is which frame to draw, counter is which position to draw it at
+      for (int counter = 0, loop = leftFrame; loop <= rightFrame; loop++, counter++) {
+        // draw to the next frame if it exists
+        if (loop >= data->numframes)
+          break;
+        if (rms) {
+          glVertex3f(left * width() + d * counter, data->rmspotvals[loop] * a + b, 0);
         }
-      }else{index+=data->fids.numfidtypes;}
-
-	  if (data->subseriesStartFrames.size() > 0)
-	  {
-		  glLineWidth(1);
-		  glColor3f(axiscolor[0], axiscolor[1], axiscolor[2]);
-		  glBegin(GL_LINES);
-
-		  for (int i = 0; i < data->subseriesStartFrames.size(); i++)
-		  {
-			  int subseriesStart = data->subseriesStartFrames[i];
-			  glVertex3f(left * width() + d * (float)subseriesStart, top * height(), 0);
-			  glVertex3f(left * width() + d * (float)subseriesStart, bottom * height(), 0);
-		  }
-		  glEnd();
-	  }
-    }
-    
-    
-    
-    /* draw vertical frame line */
-    
-    if(wintype == TIMEWINDOW){
-      glLineWidth(1);
-      glColor3f(bgcolor[0] + coloroffset, bgcolor[1] + coloroffset, bgcolor[2] + coloroffset);
-      glBegin(GL_LINES);
-      glVertex3f(left * width() + d * (float)data->framenum, (top + .02f) * height(), 0);
-      glVertex3f(left * width() + d * (float)data->framenum, (bottom - .02f) * height(), 0);
+        else {
+          glVertex3f(left * width() + d * counter, data->potvals[loop][pick->node] * a + b, 0);
+        }
+      }
       glEnd();
+      glDisable(GL_LINE_SMOOTH);
+      glDisable(GL_BLEND);
+    };
+
+    if (wintype == TIMEWINDOW && map3d_info.subseries_mode && mesh->data->subseriesToStack.size() > 0)
+    {
+      // draw each stacked subseries on top of each other
+      // TODO - some transparency or something
+      // crashes: for (int subseriesNum : mesh->data->subseriesToStack)
+      for (int i = 0; i < mesh->data->subseriesToStack.size(); i++)
+      {
+        int subseriesNum = mesh->data->subseriesToStack[i];
+        int leftFrame, rightFrame;
+        getFrameRange(subseriesNum, leftFrame, rightFrame);
+        d = width() / (float)(rightFrame - leftFrame - 1) * (right - left); //graph's domain for each segment
+
+        DrawPlot(leftFrame, rightFrame);
+      }
+    }
+    else
+    {
+      int leftFrame, rightFrame;
+      // will draw everything if not in subseries node, else the current subseries
+      getFrameRange(mesh->data->CurrentSubseries(), leftFrame, rightFrame);
+      d = width() / (float)(rightFrame - leftFrame - 1) * (right - left); //graph's domain for each segment
+      DrawPlot(leftFrame, rightFrame);
+
+      //draw fiducial markers
+      if (wintype == TIMEWINDOW) {
+        int index = 0;
+        //    printf("mesh->fidConts.size() %d\n",mesh->fidConts.size());
+        //    printf("1data->fids[fidsets].numfidleads %d\n", data->fids[fidsets].numfidleads);
+
+        if (pick->node < data->fids.numfidleads) {
+          //      printf("2data->fids.numfidleads %d\n", data->fids[fidsets].numfidleads);
+          for (int i = 0; i < data->fids.leadfids[pick->node].numfids; i++) {
+            short fidType = data->fids.leadfids[pick->node].fidtypes[i];
+            for (unsigned j = 0; j < mesh->fidConts.size(); j++) {
+              if (mesh->fidConts[j]->datatype == fidType)
+                index = j;
+            }
+            glLineWidth(1);
+            glColor3f(mesh->fidConts[index]->fidcolor.redF(),
+              mesh->fidConts[index]->fidcolor.greenF(),
+              mesh->fidConts[index]->fidcolor.blueF());
+            glBegin(GL_LINES);
+            glVertex3f(left * width() + d * (data->fids.leadfids[pick->node].fidvals[i] - leftFrame), b + (.1f * height()), 0);
+            glVertex3f(left * width() + d * (data->fids.leadfids[pick->node].fidvals[i] - leftFrame), b - (.1f * height()), 0);
+            glEnd();
+            //            printf("index %d i %d\n", index, i);
+            index++;
+          }
+        }
+        else {
+          index += data->fids.numfidtypes;
+        }
+
+        if (data->subseriesStartFrames.size() > 0)
+        {
+          glLineWidth(1);
+          glColor3f(axiscolor[0], axiscolor[1], axiscolor[2]);
+          glBegin(GL_LINES);
+
+          for (int i = 0; i < data->subseriesStartFrames.size(); i++)
+          {
+            int subseriesStart = data->subseriesStartFrames[i];
+            glVertex3f(left * width() + d * ((float)subseriesStart - leftFrame), top * height(), 0);
+            glVertex3f(left * width() + d * ((float)subseriesStart - leftFrame), bottom * height(), 0);
+          }
+          glEnd();
+        }
+
+        // draw vertical frame line
+        glLineWidth(1);
+        glColor3f(bgcolor[0] + coloroffset, bgcolor[1] + coloroffset, bgcolor[2] + coloroffset);
+        glBegin(GL_LINES);
+        glVertex3f(left * width() + d * ((float)data->framenum - leftFrame), (top + .02f) * height(), 0);
+        glVertex3f(left * width() + d * ((float)data->framenum - leftFrame), (bottom - .02f) * height(), 0);
+        glEnd();
+
+      }
+      else if (wintype == RMSWINDOW) {
+        // vertical frame line
+        glLineWidth(1);
+        glColor3f(0, 1, 0);
+        glBegin(GL_LINES);
+
+        int start = fileWidget->startFrameSpinBox->value();
+        int end = fileWidget->endFrameSpinBox->value();
+        glVertex3f(left * width() + d * (start - 1), (top + .02f) * height(), 0);
+        glVertex3f(left * width() + d * (start - 1), (bottom - .02f) * height(), 0);
+        glColor3f(1, 0, 0);
+        glVertex3f(left * width() + d * (end - 1), (top + .02f) * height(), 0);
+        glVertex3f(left * width() + d * (end - 1), (bottom - .02f) * height(), 0);
+        glEnd();
+      }
     }
     
-    if(wintype == RMSWINDOW){
-      glLineWidth(1);
-      glColor3f(0, 1, 0);
-      glBegin(GL_LINES);
+  }
+}
 
-      int start = fileWidget->startFrameSpinBox->value();
-      int end = fileWidget->endFrameSpinBox->value();
-      glVertex3f(left * width() + d * (start - 1), (top + .02f) * height(), 0);
-      glVertex3f(left * width() + d * (start - 1), (bottom - .02f) * height(), 0);
-      glColor3f(1, 0, 0);
-      glVertex3f(left * width() + d * (end - 1), (top + .02f) * height(), 0);
-      glVertex3f(left * width() + d * (end - 1), (bottom - .02f) * height(), 0);
-      glEnd();
-    }
+// the range [left, right) - right is exclusive - as the condition of a for loop
+void PickWindow::getFrameRange(int subseriesNum, int& left, int& right)
+{
+  if (mesh->data == NULL)
+  {
+    left = right = 0;
+    return;
+  }
+  if (map3d_info.subseries_mode && subseriesNum < mesh->data->subseriesStartFrames.size())
+  {
+    left = mesh->data->subseriesStartFrames[subseriesNum];
+
+    if (subseriesNum < mesh->data->subseriesStartFrames.size() - 1)
+      right = mesh->data->subseriesStartFrames[subseriesNum + 1];
+    else
+      right = mesh->data->numframes;
+  }
+  else
+  {
+    left = 0;
+    right = mesh->data->numframes;
   }
 }
 
@@ -830,8 +897,11 @@ int PickWindow::OpenMenu(QPoint point)
   QMenu menu(this);
   menu.addAction("Axes Color")->setData(axes_color);
   menu.addAction("Graph Color")->setData(graph_color);
-  menu.addAction("Toggle Display Mode")->setData(full_screen);
   menu.addAction("Graph Width")->setData(graph_width_menu);
+  QAction* fullscreenAction = menu.addAction("Toggle Display Mode"); fullscreenAction->setData(full_screen);
+  fullscreenAction->setCheckable(true); fullscreenAction->setChecked(showinfotext == 0);
+  QAction* subseriesModeAction = menu.addAction("Toggle Subseries Mode"); subseriesModeAction->setData(toggle_subseries_mode);
+  subseriesModeAction->setCheckable(true); subseriesModeAction->setChecked(map3d_info.subseries_mode);
 
   QAction* action = menu.exec(point);
   if (action)
@@ -853,8 +923,13 @@ void PickWindow::MenuEvent(int menu_data)
     case graph_width_menu:
       PickSize(&graph_width, 10, "Graph Width");
       break;
+    case toggle_subseries_mode:
+      // Force redraw of all pick windows
+      map3d_info.subseries_mode = !map3d_info.subseries_mode;
+      Broadcast(MAP3D_UPDATE);
+      break;
     case full_screen:
-      SetStyle(showinfotext);
+      SetStyle(showinfotext == 1 ? 0 : 1); // pass the opposite of what it currently is
       break;
   }
   update();

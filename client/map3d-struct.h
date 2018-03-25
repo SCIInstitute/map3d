@@ -231,6 +231,8 @@ public:
   int imagesuffix; /*** suffix num for image file - 0, 1, etc, ***/
   bool saving_animations;
 
+  bool subseries_mode = false; // whether pick windows will only show the current subseries (beat)
+
   // for time display in the time series window
   int frames_per_time_unit; // num of (s, ms, us, ns) per frame
   const char* time_unit;  // s, ms, us, ns

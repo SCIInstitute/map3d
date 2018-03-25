@@ -191,6 +191,29 @@ void GeomWindow::keyPressEvent(QKeyEvent* event)
     return;
   }
 
+  // don't broadcast these for now
+  // TODO - lock with broadcast??? Is there enough probablility that the subseries
+  //   of different surfaces will align???
+  int index = dominantsurf != -1 ? dominantsurf : secondarysurf != -1 ? secondarysurf : 0;
+  Surf_Data* sd = meshes[index]->data;
+
+
+  if ((keysym == Qt::Key_Left || keysym == Qt::Key_Right) &&
+    (matchesModifiers(event->modifiers(), Qt::ShiftModifier, true))) {
+    // go forward/back in time one subseries.  Don't repeat
+    sd->SubseriesAdvance(keysym == Qt::Key_Right ? 1 : -1);
+    UpdateAndRedraw();
+  }
+
+  else if (keysym == Qt::Key_Plus && matchesModifiers(event->modifiers(), Qt::ControlModifier, true)) {
+    // Add the current subseries to the subseries stack.
+    sd->StackSubseries();
+  }
+  else if (keysym == Qt::Key_Minus && matchesModifiers(event->modifiers(), Qt::ControlModifier, true)) {
+    // Remove the current subseries to the subseries stack.
+    sd->UnstackSubseries();
+  }
+
   if (keysym == Qt::Key_Escape) {
     map3d_quit(masterWindow ? (QWidget*)masterWindow : (QWidget*)this);
   }

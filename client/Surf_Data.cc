@@ -244,6 +244,66 @@ void Surf_Data::FrameAdvance(int delta_frames, bool loopIfPastEnd /* = false */)
   }
 }
 
+int Surf_Data::CurrentSubseries()
+{
+  int subseriesNum = 0;
+  for (; subseriesNum < subseriesStartFrames.size(); subseriesNum++)
+  {
+    int nextSubseriesFrame = subseriesNum < subseriesStartFrames.size() - 1 ? subseriesStartFrames[subseriesNum + 1] : numframes;
+    if (nextSubseriesFrame >= framenum)
+      break;
+  }
+  return subseriesNum;
+}
+
+void Surf_Data::SubseriesAdvance(int delta_subseries)
+{
+  for (int i = 0; i < abs(delta_subseries); i++)
+  {
+    // find the current subseries.  We don't care about efficiency since this function was designed
+    // to really should be called with +/- 1
+    int currentSubseries = CurrentSubseries();
+    int currentSubseriesFrame = subseriesStartFrames[currentSubseries];
+    int prevSubseriesFrame = currentSubseries > 0 ? subseriesStartFrames[currentSubseries - 1] : 0;
+    int nextSubseriesFrame = currentSubseries < subseriesStartFrames.size() - 1 ? subseriesStartFrames[currentSubseries + 1] : numframes;
+
+    int posWithinSubseries = framenum - currentSubseriesFrame;
+    if (delta_subseries < 0 && prevSubseriesFrame + posWithinSubseries > 0)
+      framenum = prevSubseriesFrame + posWithinSubseries;
+    if (delta_subseries > 0 && nextSubseriesFrame+posWithinSubseries < numframes)
+      framenum = nextSubseriesFrame + posWithinSubseries;
+  }
+}
+
+void Surf_Data::StackSubseries()
+{
+  int series = CurrentSubseries();
+  for (int i = 0; i < subseriesToStack.size(); i++)
+    if (subseriesToStack[i] == series)
+      return;
+  subseriesToStack.push_back(series);
+  // should be subseriesToStack.insert(series), but that crashes for some reason
+}
+
+void Surf_Data::UnstackSubseries()
+{
+  int series = CurrentSubseries();
+  for (int i = 0; i < subseriesToStack.size(); i++)
+    if (subseriesToStack[i] == series)
+    {
+      // sight, this crashes too. subseriesToStack.erase(subseriesToStack.begin() + i);
+      for (int j = i; j < subseriesToStack.size() - 1; j++) // do manual erase
+      {
+        subseriesToStack[j] = subseriesToStack[j + 1];
+      }
+      subseriesToStack.pop_back();
+      i--;
+    }
+
+  // should be subseriesToStack.erase(CurrentSubseries());
+}
+
+
 void Surf_Data::get_minmax(float &min, float &max)
 {
   int curframe = framenum;
@@ -559,7 +619,7 @@ void Surf_Data::SetupGlobalFids()
 	{
 		if (globalfidtypes[i] == FI_SUBSERIES)
 		{
-			subseriesStartFrames.push_back((int)globalfids[i]);
+			subseriesStartFrames.push_back((int)globalfids[i] - 1); // they come in 1-based, and 1 should be the first
 		}
 	}
 	// TODO - this asserts on win32 debug

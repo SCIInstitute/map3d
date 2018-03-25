@@ -39,8 +39,11 @@ public:
   void MenuEvent(int menu_data);
 
   void DrawNode();
+  void DrawPlot(int left, int right); // draws ONLY the plot, from [left to right), covering the entire plot space
   void SetStyle(int x);
 
+  // gets the frame range for specified subseries.  Entire series if subseriesNum < 0
+  void getFrameRange(int subseriesNum, int& left, int& right);
 
   bool rms;
   PickInfo *pick;
