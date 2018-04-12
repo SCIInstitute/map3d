@@ -258,6 +258,8 @@ int Surf_Data::CurrentSubseries()
 
 void Surf_Data::SubseriesAdvance(int delta_subseries)
 {
+  if (subseriesStartFrames.size() == 0)
+    return; // nothing to do!
   for (int i = 0; i < abs(delta_subseries); i++)
   {
     // find the current subseries.  We don't care about efficiency since this function was designed
