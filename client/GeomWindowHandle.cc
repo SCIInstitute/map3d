@@ -205,7 +205,8 @@ void GeomWindow::keyPressEvent(QKeyEvent* event)
     UpdateAndRedraw();
   }
 
-  else if (keysym == Qt::Key_Plus && matchesModifiers(event->modifiers(), Qt::ControlModifier, true)) {
+  // don't do exact match with these, because you need shift to get the plus on the main keyboard
+  else if (keysym == Qt::Key_Plus && matchesModifiers(event->modifiers(), Qt::ControlModifier, false)) {
     // Add the current subseries to the subseries stack.
     sd->StackSubseries();
   }
