@@ -1140,15 +1140,33 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
   matlabarray tet;
   matlabarray seg;
   matlabarray cha;
-  
+
+  if (ma.iscell()) {
+    ma = ma.getcell(index);
+    index = 0;
+  }
   if (ma.isstruct()) {
-    if (ma.isfieldCI("pts")) pts = ma.getfieldCI(index,"pts");
-    if (ma.isfieldCI("pts_mv")) pts_mv = ma.getfieldCI(index,"pts_mv");
-    if (ma.isfieldCI("node")) pts = ma.getfieldCI(index,"node");
+    // some matlab files have their data buried one layer deep.  Look there if there is exactly one field and it is not a points name
+    if (ma.getnumfields() == 1 && !ma.isfieldCI("pts_mv") && !ma.isfieldCI("pts") && !ma.isfieldCI("points") && !ma.isfieldCI("node") && !ma.isfieldCI("nodes")) {
+      std::string name = ma.getfieldname(0);
+      ma = ma.getfieldCI(index, name);
+      if (ma.iscell()) {
+        ma = ma.getcell(index);
+        index = 0;
+      }
+    }
+  }
+  if (ma.isstruct()) {
+    if (ma.isfieldCI("pts_mv")) pts_mv = ma.getfieldCI(index, "pts_mv");
+    if (ma.isfieldCI("pts")) pts = ma.getfieldCI(index, "pts");
+    if (ma.isfieldCI("points")) pts = ma.getfieldCI(index, "points");
+    if (ma.isfieldCI("node")) pts = ma.getfieldCI(index, "node");
+    if (ma.isfieldCI("nodes")) pts = ma.getfieldCI(index, "nodes");
 
     if (ma.isfieldCI("fac")) fac = ma.getfieldCI(index,"fac");
-    if (ma.isfieldCI("face")) fac = ma.getfieldCI(index,"face");
-    
+    if (ma.isfieldCI("face")) fac = ma.getfieldCI(index, "face");
+    if (ma.isfieldCI("faces")) fac = ma.getfieldCI(index, "faces");
+
     if (ma.isfieldCI("cell")) tet = ma.getfieldCI(index,"cell"); 
     if (ma.isfieldCI("tet")) tet = ma.getfieldCI(index,"tet");
     if (ma.isfieldCI("tetra")) tet = ma.getfieldCI(index,"tetra");
@@ -1157,30 +1175,6 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
     
     if (ma.isfieldCI("edge")) seg = ma.getfieldCI(index,"edge");
     if (ma.isfieldCI("seg")) seg = ma.getfieldCI(index,"seg");
-  }
-  else if (ma.iscell()) {
-    
-    cell = ma.getcell(index);
-	
-    if(cell.isstruct()) {
-      if (cell.isfieldCI("pts")) pts = cell.getfieldCI(0,"pts");
-      if (cell.isfieldCI("pts_mv")) pts_mv = cell.getfieldCI(0,"pts_mv");
-      if (cell.isfieldCI("node")) pts = cell.getfieldCI(0,"node");
-      
-      if (cell.isfieldCI("fac")) fac = cell.getfieldCI(0,"fac");
-      if (cell.isfieldCI("face")) fac = cell.getfieldCI(0,"face");
-      
-      if (cell.isfieldCI("cell")) tet = cell.getfieldCI(0,"cell"); 
-      if (cell.isfieldCI("tet")) tet = cell.getfieldCI(0,"tet");
-      if (cell.isfieldCI("tetra")) tet = cell.getfieldCI(0,"tetra");
-      
-      if (cell.isfieldCI("channels")) cha = cell.getfieldCI(0,"channels");
-      
-      if (cell.isfieldCI("edge")) seg = cell.getfieldCI(0,"edge");
-      if (cell.isfieldCI("seg")) seg = cell.getfieldCI(0,"seg");
-    }
-	
-    
   }
   
   /* BUILD IN SOME MORE ROBUSTNESS */
@@ -1239,7 +1233,7 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
   if (!seg.isempty()) num_element_types++;
   if (!tet.isempty()) num_element_types++;
 
-  if (num_element_types > 1 || num_element_types == 0) {
+  if (num_element_types > 1) {
     printf("Must only specify one of fac (%sspeficied), seg (%sspecified), or tetra (%sspecified)\n", (fac.isempty() ? "not " : ""), (seg.isempty() ? "not " : ""), (tet.isempty() ? "not " : ""));
     return 0;
   }
@@ -1301,30 +1295,33 @@ long ReadMatlabGeomFile(Map3d_Geom* geom, long insurfnum)
     element_array = &tet;
   }
   else {
+    // not an error - we're okay with no connectivity
     printf("Non-existent fac, seg, or tet array\n");
-    return 0;
   }
 
-  geom->SetupMap3dSurfElements(element_array->getn(), pts_per_element);
-  long* elements = new long[geom->numelements*pts_per_element];
-  element_array->getnumericarray(elements, geom->numelements*pts_per_element);
+  if (element_array)
+  {
+    geom->SetupMap3dSurfElements(element_array->getn(), pts_per_element);
+    long* elements = new long[geom->numelements*pts_per_element];
+    element_array->getnumericarray(elements, geom->numelements*pts_per_element);
 
-  // allow for 0-based files if there is a zero in the file
-  for (int i = 0; i < geom->numelements; i++) {
-    for (int j = 0; j < pts_per_element; j++) {
-      if (elements[i*pts_per_element+j] == 0) {
-        base = 0;
+    // allow for 0-based files if there is a zero in the file
+    for (int i = 0; i < geom->numelements; i++) {
+      for (int j = 0; j < pts_per_element; j++) {
+        if (elements[i*pts_per_element + j] == 0) {
+          base = 0;
+        }
       }
     }
-  }
 
-  for (int i = 0; i < geom->numelements; i++) {
-    for (int j = 0; j < pts_per_element; j++) {
-      geom->elements[i][j] = elements[i*pts_per_element+j]-base;
+    for (int i = 0; i < geom->numelements; i++) {
+      for (int j = 0; j < pts_per_element; j++) {
+        geom->elements[i][j] = elements[i*pts_per_element + j] - base;
+      }
     }
-  }
 
-  delete[] elements;
+    delete[] elements;
+  }
     
   geom->channels = (long*) calloc(sizeof(long), geom->numpts);
   if (!cha.isempty()) {
