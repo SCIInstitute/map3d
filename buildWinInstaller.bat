@@ -1,5 +1,6 @@
-rem VS 2012 Command Prompt needs to be opened
-rem This assumes that Qt is in C:\Qt\Qt5.4.0\5.4\msvc2012_opengl
+rem VS Command Prompt needs to be opened
+rem This assumes that QTDIR is set 
+rem see README for info
 
 set PATH=%PATH%;%QTDIR%\bin;C:\Program Files (x86)\NSIS
 
