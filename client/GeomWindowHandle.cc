@@ -778,8 +778,9 @@ void GeomWindow::mousePressEvent(QMouseEvent * event)
 {
   setMoveCoordinates(event);
   int button = mouseButtonOverride(event);
-  
-  if (button == Qt::RightButton){       // right click
+  int newModifiers = button == event->buttons() ? event->modifiers() : Qt::NoModifier;
+
+  if (button == Qt::RightButton && !matchesModifiers(newModifiers, Qt::ControlModifier, true)){       // right click
     int menu_data = OpenMenu(mapToGlobal(event->pos()));
     if (menu_data >= 0)
       MenuEvent(menu_data);
@@ -872,7 +873,7 @@ void GeomWindow::HandleButtonPress(QMouseEvent * event, float xn, float yn)
       if (keep_picking)
 		keep_picking = !Pick(loop, x, y);
   	}
-    // MIDDLE MOUSE DOWN + CTRL = pick for DELETE TRIANGLE
+    // RIGHT MOUSE DOWN + CTRL = pick for DELETE TRIANGLE
     else if (button == Qt::RightButton && matchesModifiers(newModifiers, Qt::ControlModifier, true) &&
 		((!map3d_info.lockgeneral && (dominantsurf == loop || length == 1)) || map3d_info.lockgeneral)) {
 	  if (keep_picking)
